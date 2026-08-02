@@ -13,7 +13,7 @@ import {
   InputOTPSlot,
   useToast
 } from '@/components'
-import { getVerifyEmailResendCooldownSeconds } from '@/consts'
+import { getVerifyEmailResendCooldownSeconds, VERIFY_USER_EMAIL } from '@/consts'
 import { useUserStore } from '@/store'
 
 export default function VerifyEmail() {
@@ -31,6 +31,12 @@ export default function VerifyEmail() {
     setVerifyEmailSentAt
   } = useUserStore()
   const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (!VERIFY_USER_EMAIL) {
+      router.replace('/')
+    }
+  }, [router])
 
   const resendRemaining = useMemo(() => {
     if (!verifyEmailSentAt) {

@@ -35,5 +35,13 @@ dist
 lib
 packages/server/static
 *.tsbuildinfo
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfplan
+crash.log
+terraform.tfvars
+terraform.tfvars.json
+**/secrets/*.env
 /.claude
 assets/*-e2e-*.png

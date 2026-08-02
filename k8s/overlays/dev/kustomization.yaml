@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: heyform-dev
+
+resources:
+  - namespace.yaml
+  - ../../base
+
+configMapGenerator:
+  - name: heyform-config
+    literals:
+      - NODE_ENV=production
+      - APP_LISTEN_HOSTNAME=0.0.0.0
+      - APP_LISTEN_PORT=9157
+      - APP_HOMEPAGE_URL=https://heyform.testudosrl.dev
+      - CORS_ALLOWED_ORIGINS=https://heyform.testudosrl.dev
+      - COOKIE_DOMAIN=heyform.testudosrl.dev
+      - ENABLE_GOOGLE_FONTS=false
+      - VERIFY_USER_EMAIL=false
+      - MONGO_URI=mongodb://mongo:27017/heyform
+      - REDIS_HOST=keydb
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+labels:
+  - pairs:
+      environment: development
+    includeSelectors: false
+
+images:
+  - name: heyform
+    newName: europe-west1-docker.pkg.dev/testudo-dev/docker-repo-dev/heyform
+    digest: sha256:08fef3ef8c2467428a6499dc834612ba126ad8f397990802270930de3f854fa3

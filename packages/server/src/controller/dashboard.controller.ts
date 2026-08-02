@@ -9,7 +9,8 @@ import {
   ENABLE_GOOGLE_FONTS,
   GOOGLE_RECAPTCHA_KEY,
   STRIPE_PUBLISHABLE_KEY,
-  VERIFY_EMAIL_RESEND_COOLDOWN
+  VERIFY_EMAIL_RESEND_COOLDOWN,
+  VERIFY_USER_EMAIL
 } from '@environments'
 import { hs } from '@heyform-inc/utils'
 
@@ -24,6 +25,7 @@ export class DashboardController {
       enableGoogleFonts: ENABLE_GOOGLE_FONTS,
       stripePublishableKey: STRIPE_PUBLISHABLE_KEY,
       googleRecaptchaKey: GOOGLE_RECAPTCHA_KEY,
+      verifyUserEmail: VERIFY_USER_EMAIL,
       verifyEmailResendCooldownSeconds: Math.ceil(hs(VERIFY_EMAIL_RESEND_COOLDOWN) / 1000)
     }
   }
