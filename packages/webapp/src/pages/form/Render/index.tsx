@@ -1,6 +1,7 @@
 import { FormModel } from '@heyform-inc/shared-types-enums'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
+import { CollaborativeSession, EndpointService } from './service/endpoint'
 import { getPreferredLanguage } from './utils/brower-language'
 import { FormService } from '@/services'
 import { useParam, useQuery } from '@/utils'
@@ -13,16 +14,36 @@ import { Renderer } from './components/Renderer'
 const LANGUAGES = ['en', 'de', 'fr', 'pl', 'pt-br', 'ja', 'zh-cn', 'zh-tw']
 
 export default function FormRender() {
-  const { formId } = useParam()
+  const { formId, collaborationToken } = useParam()
   const query = useQuery()
 
   const [form, setForm] = useState<FormModel | null>(null)
   const [locale, setLocale] = useState<string>()
+  const [collaboration, setCollaboration] = useState<CollaborativeSession>()
+  const handleCollaborationChange = useCallback((session: CollaborativeSession) => {
+    setCollaboration(current => {
+      if (!current || session.completed || session.revision >= current.revision) {
+        return session
+      }
+
+      return current
+    })
+  }, [])
 
   async function fetchData() {
-    const result = await FormService.publicForm(formId)
+    const [result, sharedSession] = await Promise.all([
+      FormService.publicForm(formId),
+      collaborationToken
+        ? EndpointService.collaborativeSession(collaborationToken)
+        : Promise.resolve(undefined)
+    ])
+
+    if (sharedSession && sharedSession.formId !== formId) {
+      throw new Error('This shared response belongs to a different form')
+    }
 
     setForm(result)
+    setCollaboration(sharedSession)
     setLocale(getPreferredLanguage(LANGUAGES, result.form.settings.locale || LANGUAGES[0]))
 
     return true
@@ -32,7 +53,13 @@ export default function FormRender() {
     <Async fetch={fetchData}>
       {form && (
         <div id="heyform-render-root">
-          <Renderer form={form} query={query} locale={locale!} />
+          <Renderer
+            form={form}
+            query={query}
+            locale={locale!}
+            collaboration={collaboration}
+            onCollaborationChange={handleCollaborationChange}
+          />
         </div>
       )}
     </Async>

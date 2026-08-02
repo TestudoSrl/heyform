@@ -1052,6 +1052,12 @@
     "share": {
       "title": "Partager",
       "unpublishedTip": "Ce formulaire contient des modifications non publiées. Veuillez publier la dernière version avant de partager le formulaire.",
+      "collaborative": {
+        "headline": "Réponse partagée",
+        "subHeadline": "Créez un lien spécial pour permettre à plusieurs personnes de remplir ensemble une seule réponse. Les modifications sont synchronisées et le groupe ne soumet qu'une fois. Le lien expire après 30 jours.",
+        "create": "Créer un lien partagé",
+        "createAnother": "Créer une autre réponse partagée"
+      },
       "link": {
         "headline": "Lien à partager",
         "viaX": "Partager sur X",

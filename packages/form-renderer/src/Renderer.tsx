@@ -8,7 +8,7 @@ import {
 import * as Tooltip from '@radix-ui/react-tooltip'
 import clsx from 'clsx'
 import type { FC } from 'react'
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 
 import { flattenFieldsWithGroups, parseFields, progressPercentage } from './utils'
 import { applyLogicToFields } from '@heyform-inc/answer-utils'
@@ -36,8 +36,12 @@ export interface FormRendererProps {
   alwaysShowNextButton?: boolean
   enableQuestionList?: boolean
   enableNavigationArrows?: boolean
+  sharedValues?: Record<string, any>
+  sharedRevision?: number
+  sharedSubmitted?: boolean
   ssr?: boolean
   onSubmit?: (values: Record<string, any>, isPartial?: boolean, stripe?: IStripe) => Promise<void>
+  onValuesChange?: (changes: Record<string, any>) => void
 }
 
 function initStore(
@@ -45,6 +49,7 @@ function initStore(
   locale: string,
   autoSave: boolean,
   allowPayment: boolean,
+  initialValues?: Record<string, any>,
   ssr?: boolean
 ): IState {
   const list = parseFields(form.fields, form.translations?.[locale])
@@ -62,7 +67,7 @@ function initStore(
     .filter(l => l.payloads.some(p => p.action.kind === ActionEnum.NAVIGATE))
     .map(l => l.fieldId)
 
-  const values = getStorage(form.id, autoSave)
+  const values = initialValues || getStorage(form.id, autoSave)
   const { fields, variables } = applyLogicToFields(
     [...allFields, ...thankYouFields].filter(Boolean) as FormField[],
     form.logics,
@@ -95,6 +100,7 @@ function initStore(
     scrollTo: 'next',
     settings: form.settings,
     autoSave,
+    changeVersion: 0,
     locale,
     theme: getTheme(form.themeSettings?.theme),
     logo: form.themeSettings?.logo
@@ -114,8 +120,12 @@ export const FormRenderer: FC<FormRendererProps> = ({
   customUrlRedirects = false,
   enableQuestionList,
   enableNavigationArrows,
+  sharedValues,
+  sharedRevision,
+  sharedSubmitted,
   ssr = false,
-  onSubmit
+  onSubmit,
+  onValuesChange
 }) => {
   const [isAndroid, setAndroid] = useState(false)
 
@@ -150,8 +160,9 @@ export const FormRenderer: FC<FormRendererProps> = ({
       alwaysShowNextButton,
       enableQuestionList: isQuestionListEnabled,
       enableNavigationArrows: isNavigationArrowsEnabled,
+      isCollaborative: !!onValuesChange,
       onSubmit,
-      ...initStore(form, locale, autoSave, allowPayment, ssr),
+      ...initStore(form, locale, autoSave, allowPayment, sharedValues, ssr),
       query
     }),
     [
@@ -161,15 +172,52 @@ export const FormRenderer: FC<FormRendererProps> = ({
       isQuestionListEnabled,
       isNavigationArrowsEnabled,
       onSubmit,
+      onValuesChange,
       form,
       locale,
       autoSave,
       allowPayment,
+      sharedValues,
       ssr,
       query
     ]
   )
   const [state, dispatch] = useReducer(StoreReducer, memoState)
+  const notifiedVersionRef = useRef(0)
+  const sharedValuesRef = useRef(sharedValues)
+  sharedValuesRef.current = sharedValues
+
+  useEffect(() => {
+    if (sharedValuesRef.current) {
+      dispatch({
+        type: 'syncValues',
+        payload: { values: sharedValuesRef.current }
+      })
+    }
+  }, [sharedRevision])
+
+  useEffect(() => {
+    if (
+      onValuesChange &&
+      state.changeVersion &&
+      state.changeVersion !== notifiedVersionRef.current
+    ) {
+      notifiedVersionRef.current = state.changeVersion
+      onValuesChange(state.changedValues || {})
+    }
+  }, [onValuesChange, state.changeVersion, state.changedValues])
+
+  useEffect(() => {
+    if (sharedSubmitted && !state.isSubmitted) {
+      dispatch({
+        type: 'setIsSubmitted',
+        payload: {
+          isSubmitted: true,
+          thankYouFieldId: state.thankYouFields[0]?.id
+        }
+      })
+    }
+  }, [sharedSubmitted, state.isSubmitted, state.thankYouFields])
 
   // Form suspended
   if (form.suspended) {

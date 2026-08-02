@@ -1048,6 +1048,12 @@
     "share": {
       "title": "Udostępnij",
       "unpublishedTip": "Ten formularz ma nieopublikowane zmiany. Proszę opublikować najnowszą wersję przed udostępnieniem formularza.",
+      "collaborative": {
+        "headline": "Wspólna odpowiedź",
+        "subHeadline": "Utwórz specjalny link, aby kilka osób mogło wspólnie wypełnić jedną odpowiedź. Zmiany są synchronizowane, a grupa wysyła formularz tylko raz. Link wygasa po 30 dniach.",
+        "create": "Utwórz wspólny link",
+        "createAnother": "Utwórz kolejną wspólną odpowiedź"
+      },
       "link": {
         "headline": "Link do udostępnienia",
         "viaX": "Udostępnij na X",

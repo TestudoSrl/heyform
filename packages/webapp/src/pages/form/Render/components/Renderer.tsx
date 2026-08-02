@@ -11,9 +11,9 @@ import {
   FormModel,
   HiddenFieldAnswer
 } from '@heyform-inc/shared-types-enums'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
-import { EndpointService } from '../service/endpoint'
+import { CollaborativeSession, EndpointService } from '../service/endpoint'
 import { recaptchaToken } from '../utils/captcha'
 import { isStripeEnabled } from '../utils/payment'
 import { Uploader } from '../utils/uploader'
@@ -28,14 +28,58 @@ interface RendererProps {
   query: Record<string, Any>
   locale: string
   contactId?: string
+  collaboration?: CollaborativeSession
+  onCollaborationChange?: (session: CollaborativeSession) => void
 }
 
 let captchaRef: Any = null
 
-export const Renderer: FC<RendererProps> = ({ form, query, locale, contactId }) => {
+export const Renderer: FC<RendererProps> = ({
+  form,
+  query,
+  locale,
+  contactId,
+  collaboration,
+  onCollaborationChange
+}) => {
   const openTokenRef = useRef<string>('')
   const passwordTokenRef = useRef<string>('')
   const [isPasswordChecked, setIsPasswordChecked] = useState(false)
+  const pendingChangesRef = useRef<Record<string, Any>>({})
+  const syncPromiseRef = useRef<Promise<void> | null>(null)
+
+  const flushCollaborativeChanges = useCallback(
+    (changes: Record<string, Any>): Promise<void> => {
+      if (!collaboration || collaboration.completed) {
+        return Promise.resolve()
+      }
+
+      Object.entries(changes).forEach(([fieldId, value]) => {
+        pendingChangesRef.current[fieldId] = typeof value === 'undefined' ? null : value
+      })
+
+      if (!syncPromiseRef.current) {
+        syncPromiseRef.current = (async () => {
+          let latest: CollaborativeSession | undefined
+
+          while (Object.keys(pendingChangesRef.current).length > 0) {
+            const pending = pendingChangesRef.current
+            pendingChangesRef.current = {}
+            latest = await EndpointService.updateCollaborativeSession(collaboration.token, pending)
+          }
+
+          if (latest) {
+            onCollaborationChange?.(latest)
+          }
+        })().finally(() => {
+          syncPromiseRef.current = null
+        })
+      }
+
+      return syncPromiseRef.current
+    },
+    [collaboration, onCollaborationChange]
+  )
 
   function loadExternalScript(id: string, src: string): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -157,18 +201,25 @@ export const Renderer: FC<RendererProps> = ({ form, query, locale, contactId }) 
         })
         .filter(Boolean) as HiddenFieldAnswer[]
 
+      const submissionAnswers = {
+        ...values,
+        ...file
+      }
+
+      if (collaboration) {
+        await flushCollaborativeChanges(submissionAnswers)
+      }
+
       const { clientSecret } = await EndpointService.completeSubmission({
         formId: form.id,
         contactId,
-        answers: {
-          ...values,
-          ...file
-        },
+        answers: submissionAnswers,
         hiddenFields,
         openToken: openTokenRef.current,
         passwordToken: passwordTokenRef.current,
         partialSubmission,
-        ...(token || {})
+        ...(token || {}),
+        collaborativeToken: collaboration?.token
       })
 
       if (stripe && helper.isValid(clientSecret)) {
@@ -211,6 +262,30 @@ export const Renderer: FC<RendererProps> = ({ form, query, locale, contactId }) 
     }
   }, [])
 
+  useEffect(() => {
+    if (!collaboration || collaboration.completed) {
+      return
+    }
+
+    const interval = window.setInterval(async () => {
+      if (syncPromiseRef.current) {
+        return
+      }
+
+      try {
+        const session = await EndpointService.collaborativeSession(collaboration.token)
+
+        if (!syncPromiseRef.current) {
+          onCollaborationChange?.(session)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }, 1_500)
+
+    return () => window.clearInterval(interval)
+  }, [collaboration?.token, collaboration?.completed, onCollaborationChange])
+
   if (form.settings?.requirePassword && !isPasswordChecked) {
     return <PasswordCheck form={form} onFinish={handlePasswordFinish} />
   }
@@ -236,6 +311,16 @@ export const Renderer: FC<RendererProps> = ({ form, query, locale, contactId }) 
         customUrlRedirects={(form.settings as Any)?.customUrlRedirects}
         enableQuestionList={form.settings?.enableQuestionList}
         enableNavigationArrows={form.settings?.enableNavigationArrows}
+        sharedValues={collaboration?.values}
+        sharedRevision={collaboration?.revision}
+        sharedSubmitted={collaboration?.completed}
+        onValuesChange={
+          collaboration
+            ? changes => {
+                flushCollaborativeChanges(changes).catch(console.error)
+              }
+            : undefined
+        }
         onSubmit={handleSubmit}
       />
 

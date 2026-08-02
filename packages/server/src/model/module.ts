@@ -9,6 +9,8 @@ import {
   AppTokenSchema,
   BrandKitModel,
   BrandKitSchema,
+  CollaborativeSessionModel,
+  CollaborativeSessionSchema,
   EmailTemplateModel,
   EmailTemplateSchema,
   FormAnalyticModel,
@@ -52,6 +54,7 @@ import {
 } from './index'
 
 export const ModelModule = MongooseModule.forFeature([
+  { name: CollaborativeSessionModel.name, schema: CollaborativeSessionSchema },
   { name: EmailTemplateModel.name, schema: EmailTemplateSchema },
   { name: FormModel.name, schema: FormSchema },
   { name: FormAnalyticModel.name, schema: FormAnalyticSchema },

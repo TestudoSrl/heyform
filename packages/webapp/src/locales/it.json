@@ -1110,6 +1110,12 @@
     "share": {
       "title": "Condividi",
       "unpublishedTip": "Questo modulo ha modifiche non pubblicate. Pubblica l'ultima versione prima di condividere il modulo.",
+      "collaborative": {
+        "headline": "Risposta condivisa",
+        "subHeadline": "Crea un link speciale per permettere a più persone di compilare insieme un'unica risposta. Le modifiche vengono sincronizzate e il gruppo invia una sola volta. Il link scade dopo 30 giorni.",
+        "create": "Crea link condiviso",
+        "createAnother": "Crea un'altra risposta condivisa"
+      },
       "link": {
         "headline": "Link di condivisione",
         "viaX": "Condividi su X",

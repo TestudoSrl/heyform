@@ -61,10 +61,12 @@ export { PublishFormResolver } from './form/publish-form.resolver'
 export { MoveFormResolver } from './form/move-form.resolver'
 export { FormIntegrationsResolver } from './form/form-integrations.resolver'
 export { AIResolver } from './form/ai.resolver'
+export { CreateCollaborativeSessionResolver } from './form/create-collaborative-session.resolver'
 
 export { OpenFormResolver } from './endpoint/open-form.resolver'
 export { CompleteSubmissionResolver } from './endpoint/complete-submission.resolver'
 export { FormPasswordResolver } from './endpoint/form-password.resolver'
+export { CollaborativeSessionResolver } from './endpoint/collaborative-session.resolver'
 
 export { SubmissionsResolver } from './submission/submissions.resolver'
 export { DeleteSubmissionResolver } from './submission/delete-submission.resolver'

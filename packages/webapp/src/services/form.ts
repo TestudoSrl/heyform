@@ -14,6 +14,7 @@ import { apollo } from '@/utils'
 
 import {
   COMPLETE_SUBMISSION_GQL,
+  CREATE_COLLABORATIVE_SESSION_GQL,
   CREATE_FIELDS_WITH_AI_GQL,
   CREATE_FORM_FIELD_GQL,
   CREATE_FORM_GQL,
@@ -54,6 +55,19 @@ import {
 import { TemplateType } from '@/types'
 
 export class FormService {
+  static async createCollaborativeSession(formId: string): Promise<{
+    token: string
+    formId: string
+    values: Record<string, Any>
+    revision: number
+    completed: boolean
+  }> {
+    return apollo.mutate({
+      mutation: CREATE_COLLABORATIVE_SESSION_GQL,
+      variables: { input: { formId } }
+    })
+  }
+
   static async forms(projectId: string, status = FormStatusEnum.NORMAL) {
     return apollo.query({
       query: FORMS_GQL,

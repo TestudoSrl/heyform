@@ -24,7 +24,54 @@ const COMPLETE_SUBMISSION_GQL = `mutation completeSubmission($input: CompleteSub
 	}
 }`
 
+const COLLABORATIVE_SESSION_GQL = `query collaborativeSession($input: CollaborativeSessionInput!) {
+  collaborativeSession(input: $input) {
+    token
+    formId
+    values
+    revision
+    completed
+  }
+}`
+
+const UPDATE_COLLABORATIVE_SESSION_GQL = `mutation updateCollaborativeSession($input: UpdateCollaborativeSessionInput!) {
+  updateCollaborativeSession(input: $input) {
+    token
+    formId
+    values
+    revision
+    completed
+  }
+}`
+
+export interface CollaborativeSession {
+  token: string
+  formId: string
+  values: Record<string, Any>
+  revision: number
+  completed: boolean
+}
+
 export class EndpointService {
+  static async collaborativeSession(token: string): Promise<CollaborativeSession> {
+    const result = await axios({
+      query: COLLABORATIVE_SESSION_GQL,
+      variables: { input: { token } }
+    })
+    return result.collaborativeSession
+  }
+
+  static async updateCollaborativeSession(
+    token: string,
+    changes: Record<string, Any>
+  ): Promise<CollaborativeSession> {
+    const result = await axios({
+      query: UPDATE_COLLABORATIVE_SESSION_GQL,
+      variables: { input: { token, changes } }
+    })
+    return result.updateCollaborativeSession
+  }
+
   static async openForm(formId: string): Promise<string> {
     const result = await axios({
       query: OPEN_FORM_GQL,
@@ -82,6 +129,7 @@ export class EndpointService {
     // Google reCAPTCHA token
     recaptchaToken?: string
     partialSubmission?: boolean
+    collaborativeToken?: string
   }): Promise<{ clientSecret?: string }> {
     const result = await axios({
       query: COMPLETE_SUBMISSION_GQL,

@@ -73,6 +73,49 @@ export class CompleteSubmissionInput {
   @IsString()
   @IsOptional()
   recaptchaToken?: string
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  collaborativeToken?: string
+}
+
+@InputType()
+export class CollaborativeSessionInput {
+  @Field()
+  @IsString()
+  token: string
+}
+
+@InputType()
+export class CreateCollaborativeSessionInput {
+  @Field()
+  @IsString()
+  formId: string
+}
+
+@InputType()
+export class UpdateCollaborativeSessionInput extends CollaborativeSessionInput {
+  @Field(type => GraphQLJSONObject)
+  changes: Record<string, any>
+}
+
+@ObjectType()
+export class CollaborativeSessionType {
+  @Field()
+  token: string
+
+  @Field()
+  formId: string
+
+  @Field(type => GraphQLJSONObject)
+  values: Record<string, any>
+
+  @Field()
+  revision: number
+
+  @Field()
+  completed: boolean
 }
 
 @ObjectType()
