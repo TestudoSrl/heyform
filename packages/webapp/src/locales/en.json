@@ -1110,6 +1110,12 @@
     "share": {
       "title": "Share",
       "unpublishedTip": "This form has unpublished changes. Please publish the latest version before sharing the form.",
+      "collaborative": {
+        "headline": "Shared response",
+        "subHeadline": "Create a special link so several people can fill in one response together. Changes are synchronized and the group submits only once. The link expires after 30 days.",
+        "create": "Create shared link",
+        "createAnother": "Create another shared response"
+      },
       "link": {
         "headline": "Share Link",
         "viaX": "Share on X",

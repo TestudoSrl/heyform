@@ -626,6 +626,18 @@ export const COMPLETE_SUBMISSION_GQL = gql`
   }
 `
 
+export const CREATE_COLLABORATIVE_SESSION_GQL = gql`
+  mutation createCollaborativeSession($input: CreateCollaborativeSessionInput!) {
+    createCollaborativeSession(input: $input) {
+      token
+      formId
+      values
+      revision
+      completed
+    }
+  }
+`
+
 export const CREATE_FORM_GQL = gql`
   mutation createForm($input: CreateFormInput!) {
     createForm(input: $input)

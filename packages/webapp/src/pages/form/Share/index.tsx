@@ -4,11 +4,14 @@ import {
   IconBrandX,
   IconExclamationCircle,
   IconMail,
-  IconQrcode
+  IconQrcode,
+  IconUsersGroup
 } from '@tabler/icons-react'
-import { useMemo } from 'react'
+import { useRequest } from 'ahooks'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { FormService } from '@/services'
 import { getDecoratedURL, useParam } from '@/utils'
 
 import { Button, Tooltip } from '@/components'
@@ -26,8 +29,16 @@ export default function FormShare() {
   const { openModal } = useAppStore()
   const { sharingURLPrefix } = useWorkspaceStore()
   const { form, selectEmbedType } = useFormStore()
+  const [collaborativeLink, setCollaborativeLink] = useState('')
 
   const shareLink = useMemo(() => sharingURLPrefix + '/form/' + formId, [formId, sharingURLPrefix])
+  const { loading: isCreatingCollaborativeLink, run: createCollaborativeLink } = useRequest(
+    async () => {
+      const session = await FormService.createCollaborativeSession(formId)
+      setCollaborativeLink(`${shareLink}/shared/${session.token}`)
+    },
+    { manual: true }
+  )
 
   function handleShareEmail() {
     const url = getDecoratedURL('mailto:', {
@@ -134,6 +145,45 @@ export default function FormShare() {
               </Tooltip>
             </div>
           </div>
+        </section>
+
+        <section id="collaborative-link">
+          <div className="flex items-center gap-2">
+            <IconUsersGroup className="text-secondary h-5 w-5" />
+            <h2 className="hf-section-title">{t('form.share.collaborative.headline')}</h2>
+          </div>
+          <p className="text-secondary mt-1 text-sm/6">
+            {t('form.share.collaborative.subHeadline')}
+          </p>
+
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+            {collaborativeLink ? (
+              <div className="hf-card border-input flex min-w-0 flex-1 items-center gap-x-4 rounded-lg border sm:max-w-2xl">
+                <div className="h-10 flex-1 truncate pl-4 text-sm leading-10">
+                  {collaborativeLink}
+                </div>
+                <Button.Copy className="rounded-l-none" text={collaborativeLink} />
+              </div>
+            ) : (
+              <Button
+                loading={isCreatingCollaborativeLink}
+                disabled={form?.isDraft}
+                onClick={() => createCollaborativeLink()}
+              >
+                {t('form.share.collaborative.create')}
+              </Button>
+            )}
+          </div>
+
+          {collaborativeLink && (
+            <button
+              type="button"
+              className="text-secondary hover:text-primary mt-2 text-sm underline"
+              onClick={() => createCollaborativeLink()}
+            >
+              {t('form.share.collaborative.createAnother')}
+            </button>
+          )}
         </section>
 
         <LinkSettings />
