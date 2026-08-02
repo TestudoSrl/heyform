@@ -1048,6 +1048,12 @@
     "share": {
       "title": "Teilen",
       "unpublishedTip": "Dieses Formular enthält unveröffentlichte Änderungen. Bitte veröffentlichen Sie die neueste Version, bevor Sie das Formular teilen.",
+      "collaborative": {
+        "headline": "Gemeinsame Antwort",
+        "subHeadline": "Erstellen Sie einen speziellen Link, damit mehrere Personen gemeinsam eine einzige Antwort ausfüllen können. Änderungen werden synchronisiert und die Gruppe sendet nur einmal ab. Der Link läuft nach 30 Tagen ab.",
+        "create": "Gemeinsamen Link erstellen",
+        "createAnother": "Weitere gemeinsame Antwort erstellen"
+      },
       "link": {
         "headline": "Link teilen",
         "viaX": "Auf X teilen",

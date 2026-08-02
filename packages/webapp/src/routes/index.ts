@@ -231,6 +231,14 @@ const routes = [
       loginRequired: false,
       title: 'form.render.title'
     }
+  },
+  {
+    path: '/form/:formId/shared/:collaborationToken',
+    component: FormRender,
+    options: {
+      loginRequired: false,
+      title: 'form.render.title'
+    }
   }
 ]
 

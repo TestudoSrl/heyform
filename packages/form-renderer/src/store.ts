@@ -93,6 +93,8 @@ export interface IState {
   parameters?: Variable[]
   variables: AnyMap
   values: AnyMap
+  changedValues?: AnyMap
+  changeVersion?: number
   autoSave?: boolean
   settings?: FormSettings
   percentage: number
@@ -115,6 +117,7 @@ export interface IState {
   theme: FormTheme
   stripe?: IStripe
   onSubmit?: (values: Record<string, any>, isPartial?: boolean, stripe?: IStripe) => Promise<void>
+  isCollaborative?: boolean
 }
 
 const actions: any = {
@@ -158,7 +161,37 @@ const actions: any = {
       variables,
       percentage,
       questionCount,
-      isScrollNextDisabled
+      isScrollNextDisabled,
+      changedValues: values,
+      changeVersion: (state.changeVersion || 0) + 1
+    }
+  },
+
+  syncValues: (state: IState, { values }: any) => {
+    const newValues: AnyMap = { ...(values || {}) }
+
+    // Files only exist in the browser until upload, so a remote sync must not discard them.
+    Object.entries(state.values).forEach(([fieldId, value]) => {
+      if (isFile(value)) {
+        newValues[fieldId] = value
+      }
+    })
+
+    const { fields, variables } = applyLogicToFields(
+      [...state.allFields, ...state.thankYouFields].filter(Boolean) as FormField[],
+      state.logics,
+      state.parameters,
+      newValues
+    )
+    const questionCount = fields.filter(f => QUESTION_FIELD_KINDS.includes(f.kind)).length
+
+    return {
+      ...state,
+      fields,
+      values: newValues,
+      variables,
+      percentage: progressPercentage(Object.keys(newValues).length, questionCount),
+      questionCount
     }
   },
 

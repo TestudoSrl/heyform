@@ -222,6 +222,17 @@ export const Form: FC<FormProps> = ({
   function handleValuesChange(changes: any, values: any) {
     restProps.onValuesChange?.(changes, values)
 
+    if (state.isCollaborative) {
+      dispatch({
+        type: 'setValues',
+        payload: {
+          values: {
+            [field.id]: getValues ? getValues(values) : values
+          }
+        }
+      })
+    }
+
     if (autoSubmit) {
       if (isLastBlock) {
         const value = getValues ? getValues(changes) : changes
@@ -277,6 +288,12 @@ export const Form: FC<FormProps> = ({
       form.validateFields()
     }
   }, [state.errorFieldId])
+
+  useEffect(() => {
+    if (state.isCollaborative) {
+      form.setFieldsValue(restProps.initialValues || {})
+    }
+  }, [form, restProps.initialValues, state.isCollaborative])
 
   return (
     <RCForm
