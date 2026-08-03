@@ -22,7 +22,9 @@ export default function FormRender() {
   const [collaboration, setCollaboration] = useState<CollaborativeSession>()
   const handleCollaborationChange = useCallback((session: CollaborativeSession) => {
     setCollaboration(current => {
-      if (!current || session.completed || session.revision >= current.revision) {
+      // Equal revisions carry no new server state. Replacing them would make
+      // rc-field-form reapply stale shared values while a local edit is pending.
+      if (!current || session.completed || session.revision > current.revision) {
         return session
       }
 
