@@ -1,15 +1,23 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator'
-import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json'
-
 import {
   FieldKindEnum,
   Property,
   SubmissionCategoryEnum,
   Variable
 } from '@heyform-inc/shared-types-enums'
+import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator'
 
 import { FormDetailInput, HiddenFieldType, PropertyInput, PropertyType } from './form.graphql'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json'
+
+@InputType()
+export class SubmissionLocationsInput extends FormDetailInput {
+  @Field()
+  start: Date
+
+  @Field()
+  end: Date
+}
 
 @InputType()
 export class DeleteSubmissionInput extends FormDetailInput {
@@ -187,4 +195,13 @@ export class SubmissionAnswersType {
 
   @Field(type => [Answer2Type])
   answers: Answer2Type[]
+}
+
+@ObjectType()
+export class SubmissionLocationType {
+  @Field()
+  code: string
+
+  @Field()
+  total: number
 }

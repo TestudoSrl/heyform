@@ -1,4 +1,5 @@
-import { test, expect } from 'vitest'
+import { expect, test } from 'vitest'
+
 import { flattenFields } from '../src'
 import fields from './fixtures/fields.json'
 

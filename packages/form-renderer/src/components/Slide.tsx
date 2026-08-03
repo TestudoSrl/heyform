@@ -2,8 +2,9 @@ import clsx from 'clsx'
 import type { FC, WheelEvent } from 'react'
 import { useEffect, useState } from 'react'
 
-import { IComponentProps } from '../typings'
 import { Timeout } from '../utils'
+
+import { IComponentProps } from '../typings'
 
 interface SlideProps extends Omit<IComponentProps, 'onChange'> {
   index: number

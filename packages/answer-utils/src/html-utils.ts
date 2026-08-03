@@ -1,6 +1,7 @@
-import { helper, htmlToText } from '@heyform-inc/utils'
 import { parse as html5Parse } from 'html5parser'
 import { IAttribute } from 'html5parser/src/types'
+
+import { helper, htmlToText } from '@heyform-inc/utils'
 
 interface HTMLWalkOptions {
   allowedTags?: string[]
@@ -32,9 +33,36 @@ const ALLOWED_ATTRIBUTES = [
   'data-mention',
   'data-variable',
   'data-hiddenfield',
-  'contenteditable',
-  'style'
+  'contenteditable'
 ]
+
+const UNSAFE_URL_PROTOCOLS = new Set(['javascript', 'vbscript', 'data'])
+const URL_PROTOCOL_CONTROL_CHARS_REGEX = /[\u0000-\u001f\u007f\s]+/g
+
+export function isUnsafeUrlProtocol(value: unknown): boolean {
+  const matched = String(value || '')
+    .trimStart()
+    .match(/^([^:]+):/)
+
+  if (!matched) {
+    return false
+  }
+
+  const protocol = matched[1].replace(URL_PROTOCOL_CONTROL_CHARS_REGEX, '').toLowerCase()
+  return UNSAFE_URL_PROTOCOLS.has(protocol)
+}
+
+function escapeText(value: unknown): string {
+  return String(value).replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+function escapeAttribute(value: unknown): string {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
 
 function getAttributes(row: IAttribute[], allowedAttributes: string[] = []): Record<string, any> {
   const result: Record<string, any> = {}
@@ -42,9 +70,14 @@ function getAttributes(row: IAttribute[], allowedAttributes: string[] = []): Rec
   if (helper.isValidArray(row)) {
     row.forEach(a => {
       const name = a.name.value.toLowerCase()
+      const value = a.value?.value
 
       if (allowedAttributes.includes(name)) {
-        result[name] = a.value?.value
+        if (name === 'href' && helper.isValid(value) && isUnsafeUrlProtocol(value)) {
+          return
+        }
+
+        result[name] = value
       }
     })
   }
@@ -141,7 +174,7 @@ function serialize(schemas?: any[], option?: HTMLWalkOptions): string {
   return schemas!
     .map(schema => {
       if (helper.isString(schema)) {
-        return schema
+        return escapeText(schema)
       }
 
       if (!helper.isValidArray(schema)) {
@@ -188,7 +221,8 @@ function serialize(schemas?: any[], option?: HTMLWalkOptions): string {
 
         property = Object.keys(attributes!)
           .filter(key => customOption.allowedAttributes!.includes(key))
-          .map(key => ` ${key}="${attributes![key]}"`)
+          .filter(key => key !== 'href' || !isUnsafeUrlProtocol(attributes![key]))
+          .map(key => ` ${key}="${escapeAttribute(attributes![key])}"`)
           .join('')
       }
 

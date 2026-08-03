@@ -1,8 +1,9 @@
 import type { FC } from 'react'
 
+import { isFile, useTranslation } from '../utils'
+
 import { FileUploader, FormField } from '../components'
 import { useStore } from '../store'
-import { isFile, useTranslation } from '../utils'
 import type { BlockProps } from './Block'
 import { Block } from './Block'
 import { Form } from './Form'

@@ -1,8 +1,7 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { Auth, User } from '@decorator'
 import { VerifyEmailInput } from '@graphql'
 import { UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { AuthService, UserService } from '@service'
 
 @Resolver()
@@ -18,7 +17,6 @@ export class VerifyEmailResolver {
     @User() user: UserModel,
     @Args('input') input: VerifyEmailInput
   ): Promise<boolean> {
-    // Check if verify email attempts is exceeded
     const attemptsKey = `limit:verify_email:${user.id}`
 
     await this.authService.attemptsCheck(attemptsKey, async () => {

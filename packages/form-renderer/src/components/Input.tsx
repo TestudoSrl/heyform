@@ -1,6 +1,7 @@
+import type { ChangeEvent, CompositionEvent, FC, KeyboardEvent, Ref } from 'react'
+import { useEffect, useImperativeHandle, useRef, useState } from 'react'
+
 import { helper } from '@heyform-inc/utils'
-import type { ChangeEvent, FC, KeyboardEvent, CompositionEvent, Ref } from 'react'
-import { useEffect, useRef, useState, useImperativeHandle } from 'react'
 
 import { IComponentProps } from '../typings'
 

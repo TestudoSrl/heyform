@@ -1,9 +1,9 @@
 import type { Layout as FormLayout } from '@heyform-inc/shared-types-enums'
-import { deepEqual, helper } from '@heyform-inc/utils'
 import type { FC } from 'react'
 import { memo } from 'react'
 
 import { isURL } from '../utils'
+import { deepEqual, helper } from '@heyform-inc/utils'
 
 function filterStyle(brightness?: number) {
   if (!brightness) {

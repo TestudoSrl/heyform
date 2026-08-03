@@ -1,9 +1,10 @@
 import type { FC } from 'react'
 
+import { useTranslation } from '../utils'
+
 import { FormField, Rate } from '../components'
 import { RATING_SHAPE_ICONS } from '../consts'
 import { useStore } from '../store'
-import { useTranslation } from '../utils'
 import type { BlockProps } from './Block'
 import { Block } from './Block'
 import { Form } from './Form'

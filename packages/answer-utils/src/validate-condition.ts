@@ -1,4 +1,17 @@
 import {
+  AnswerValue,
+  ChoiceValue,
+  ComparisonEnum,
+  FieldKindEnum,
+  FormField,
+  LogicCondition,
+  STATEMENT_FIELD_KINDS,
+  TextCondition
+} from '@heyform-inc/shared-types-enums'
+
+import { helper } from '@heyform-inc/utils'
+
+import {
   isAfterDate,
   isBeforeDate,
   isContains,
@@ -11,17 +24,6 @@ import {
   isSameDate,
   isStartsWith
 } from './helper'
-import {
-  AnswerValue,
-  ChoiceValue,
-  ComparisonEnum,
-  FieldKindEnum,
-  FormField,
-  LogicCondition,
-  STATEMENT_FIELD_KINDS,
-  TextCondition
-} from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
 
 const NO_LOGIC_FIELD_KINDS = [...STATEMENT_FIELD_KINDS, FieldKindEnum.GROUP]
 

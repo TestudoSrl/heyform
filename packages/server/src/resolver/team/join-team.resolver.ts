@@ -1,9 +1,9 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
 import { Auth, User } from '@decorator'
 import { JoinTeamInput } from '@graphql'
 import { TeamRoleEnum, UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { MailService, TeamService, UserService } from '@service'
 
 @Resolver()
@@ -23,11 +23,13 @@ export class JoinTeamResolver {
       throw new NotFoundException('The workspace does not exist')
     }
 
-    if (team.inviteCode !== input.inviteCode) {
+    const invitation = await this.teamService.findJoinableByInvite(input.teamId, input.inviteCode)
+
+    if (!invitation && team.allowJoinByInviteLink) {
       throw new BadRequestException('The invitation code of the workspace does not match')
     }
 
-    if (!team.allowJoinByInviteLink) {
+    if (!invitation) {
       throw new BadRequestException('The workspace is not allowed to join')
     }
 

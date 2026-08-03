@@ -1,11 +1,8 @@
-import _isUUID from 'validator/lib/isUUID'
+import { IsEmailOptions, default as _isEmail } from 'validator/lib/isEmail'
 import _isFQDN from 'validator/lib/isFQDN'
-import {
-  default as _isNumeric,
-  IsNumericOptions
-} from 'validator/lib/isNumeric'
-import { default as _isEmail, IsEmailOptions } from 'validator/lib/isEmail'
-import { default as _isURL, IsURLOptions } from 'validator/lib/isURL'
+import { IsNumericOptions, default as _isNumeric } from 'validator/lib/isNumeric'
+import { IsURLOptions, default as _isURL } from 'validator/lib/isURL'
+import _isUUID from 'validator/lib/isUUID'
 
 import { type } from './type'
 

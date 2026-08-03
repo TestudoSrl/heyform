@@ -1,10 +1,10 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
 import { Auth, User } from '@decorator'
 import { BCRYPT_SALT } from '@environments'
 import { UpdateUserPasswordInput } from '@graphql'
 import { UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { AuthService, MailService, UserService } from '@service'
 import { comparePassword, passwordHash } from '@utils'
 
@@ -22,7 +22,6 @@ export class UpdateUserPasswordResolver {
     @User() user: UserModel,
     @Args('input') input: UpdateUserPasswordInput
   ): Promise<boolean> {
-    // Check if update password attempts is exceeded
     const attemptsKey = `limit:update_password:${user.id}`
 
     await this.authService.attemptsCheck(attemptsKey, async () => {
@@ -37,7 +36,11 @@ export class UpdateUserPasswordResolver {
       password: await passwordHash(input.newPassword, BCRYPT_SALT)
     })
 
-    this.mailService.passwordChangeAlert(user.email)
+    if (result) {
+      await this.authService.invalidateSessions(user.id)
+      this.mailService.passwordChangeAlert(user.email, user.lang)
+    }
+
     return result
   }
 }

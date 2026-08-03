@@ -1,4 +1,5 @@
 import { ActionEnum, ComparisonEnum, LogicPayload } from '@heyform-inc/shared-types-enums'
+
 import { helper } from '@heyform-inc/utils'
 
 const OTHER_COMPARISONS = [ComparisonEnum.IS_EMPTY, ComparisonEnum.IS_NOT_EMPTY]

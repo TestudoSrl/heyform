@@ -1,63 +1,125 @@
-import { pickObject } from '@heyform-inc/utils'
+const recaptchaClientIds: Record<'standard' | 'enterprise', number | null> = {
+  standard: null,
+  enterprise: null
+}
+const RECAPTCHA_CONTAINER_ID = 'heyform-recaptcha-container'
 
-import { GEETEST_CAPTCHA_ID, GOOGLE_RECAPTCHA_KEY } from '@/consts'
-
-export function initGeeTest(): Promise<any> {
-  return new Promise(resolve => {
-    window.initGeetest(
-      {
-        captchaId: GEETEST_CAPTCHA_ID,
-        product: 'bind',
-        mask: {
-          outside: false,
-          bgColor: '#00000000'
-        },
-        hideBar: ['close']
-      },
-      (instance: any) => {
-        instance.onReady(() => {
-          resolve(instance)
-        })
-      }
-    )
-  })
+function hasNoClientsError(err: unknown): boolean {
+  const message = err instanceof Error ? err.message : String(err || '')
+  return message.includes('No reCAPTCHA clients exist')
 }
 
-export function recaptchaToken(instance: any): Promise<string> {
+function ensureRecaptchaContainer(): HTMLElement {
+  let container = document.getElementById(RECAPTCHA_CONTAINER_ID)
+
+  if (!container) {
+    container = document.createElement('div')
+    container.id = RECAPTCHA_CONTAINER_ID
+    container.style.display = 'none'
+    document.body.appendChild(container)
+  }
+
+  return container
+}
+
+function ensureWidgetClient(
+  instance: Any,
+  siteKey: string,
+  kind: 'standard' | 'enterprise'
+): number {
+  if (recaptchaClientIds[kind] !== null) {
+    return recaptchaClientIds[kind] as number
+  }
+
+  const container = ensureRecaptchaContainer()
+
+  recaptchaClientIds[kind] = instance.render(container, {
+    sitekey: siteKey,
+    size: 'invisible'
+  })
+
+  return recaptchaClientIds[kind] as number
+}
+
+function resetWidgetClient(kind: 'standard' | 'enterprise') {
+  recaptchaClientIds[kind] = null
+}
+
+export function recaptchaToken(instance: Any): Promise<string> {
   return new Promise((resolve, reject) => {
     instance.ready(() => {
-      instance
-        .execute(GOOGLE_RECAPTCHA_KEY, {
-          action: 'submit'
-        })
+      const key = window.heyform.googleRecaptchaKey
+
+      if (!key) {
+        reject(new Error('Google reCAPTCHA key is not configured'))
+        return
+      }
+
+      const standard = instance
+      const enterprise = instance?.enterprise
+      const executors = [
+        { client: standard, kind: 'standard' as const },
+        { client: enterprise, kind: 'enterprise' as const }
+      ].filter(executor => typeof executor.client?.execute === 'function')
+
+      if (executors.length < 1) {
+        reject(new Error('reCAPTCHA execute API is unavailable'))
+        return
+      }
+
+      const executeScoreFlow = async () => {
+        let lastError: unknown
+
+        for (const executor of executors) {
+          try {
+            return await executor.client.execute(key, { action: 'submit' })
+          } catch (err) {
+            lastError = err
+          }
+        }
+
+        throw lastError
+      }
+
+      executeScoreFlow()
         .then(resolve)
-        .catch(reject)
-    })
-  })
-}
+        .catch(async (scoreErr: unknown) => {
+          if (!hasNoClientsError(scoreErr)) {
+            reject(scoreErr)
+            return
+          }
 
-export function geeTestToken(instance: any): Promise<any> {
-  return new Promise((resolve, reject) => {
-    instance.onSuccess(() => {
-      const values = instance.getValidate()
-      const data = pickObject(values, [
-        ['lot_number', 'lotNumber'],
-        ['captcha_output', 'captchaOutput'],
-        ['pass_token', 'passToken'],
-        ['gen_time', 'genTime']
-      ])
+          try {
+            for (const executor of executors) {
+              if (typeof executor.client?.render !== 'function') {
+                continue
+              }
 
-      instance.reset()
-      resolve(data)
-    })
+              let clientId = ensureWidgetClient(executor.client, key, executor.kind)
+              let token: string
 
-    instance.onClose((err: any) => {
-      reject(err)
-    })
+              try {
+                token = await executor.client.execute(clientId)
+              } catch (widgetErr) {
+                // Recreate widget client once if Google reports stale/missing clients.
+                if (!hasNoClientsError(widgetErr)) {
+                  throw widgetErr
+                }
 
-    instance.onError((err: any) => {
-      console.error(err)
-      reject(new Error(err.msg))
+                resetWidgetClient(executor.kind)
+                clientId = ensureWidgetClient(executor.client, key, executor.kind)
+                token = await executor.client.execute(clientId)
+              }
+
+              resolve(token)
+              return
+            }
+
+            reject(scoreErr)
+          } catch (fallbackErr) {
+            reject(fallbackErr)
+          }
+        })
     })
   })
 }

@@ -1,12 +1,11 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
 
 import { Auth, Team, TeamGuard, User } from '@decorator'
 import { APP_HOMEPAGE_URL } from '@environments'
 import { InviteMemberInput } from '@graphql'
+import { helper } from '@heyform-inc/utils'
 import { TeamModel, UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { MailService, TeamService, UserService } from '@service'
 
 @Resolver()
@@ -41,11 +40,15 @@ export class InviteMemberResolver {
     const emails = helper.uniqueArray(input.emails.filter(email => !exists.includes(email)))
 
     for (const email of emails) {
-      this.mailService.teamInvitation(email, {
-        userName: user.name,
-        teamName: team.name,
-        link: `${APP_HOMEPAGE_URL}/workspace/${team.id}/invitation/${team.inviteCode}`
-      })
+      this.mailService.teamInvitation(
+        email,
+        {
+          userName: user.name,
+          teamName: team.name,
+          link: `${APP_HOMEPAGE_URL}/workspace/${team.id}/invitation/${team.inviteCode}`
+        },
+        user.lang
+      )
     }
 
     return true

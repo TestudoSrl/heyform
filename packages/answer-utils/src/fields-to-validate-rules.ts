@@ -1,5 +1,3 @@
-import { getDateFormat } from './helper'
-import { htmlUtils } from './html-utils'
 import {
   FieldKindEnum,
   FormField,
@@ -7,7 +5,11 @@ import {
   QUESTION_FIELD_KINDS,
   Validation
 } from '@heyform-inc/shared-types-enums'
+
+import { htmlUtils } from './html-utils'
 import { helper } from '@heyform-inc/utils'
+
+import { getDateFormat } from './helper'
 
 export interface FieldsToValidateRules
   extends FormField,

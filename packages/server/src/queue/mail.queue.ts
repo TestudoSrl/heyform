@@ -20,7 +20,7 @@ export class MailQueue extends BaseQueue {
   }
 
   @Process()
-  async sendMail(job: Job<MailQueueJob>) {
+  async process(job: Job<MailQueueJob>) {
     return smtpSendMail(this.options, job.data.data)
   }
 }

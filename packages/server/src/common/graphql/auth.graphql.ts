@@ -1,6 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql'
 import { IsEmail, IsOptional, Length, Matches } from 'class-validator'
 
+import { Field, InputType } from '@nestjs/graphql'
 import { LowerCase } from '@utils'
 
 @InputType()
@@ -30,7 +30,7 @@ export class SignUpInput extends SendResetPasswordEmailInput {
   name: string
 
   @Field()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!#$%&()*+\-,.\/\\:<=>?@\[\]^_{|}~0-9a-zA-Z]{8,}$/, {
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!#$%&()*+\-,./\\:<=>?@[\]^_{|}~0-9a-zA-Z]{8,}$/, {
     message: 'Invalid password'
   })
   @Length(8, 100, {
@@ -53,7 +53,7 @@ export class ResetPasswordInput extends SendResetPasswordEmailInput {
   code: string
 
   @Field()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!#$%&()*+\-,.\/\\:<=>?@\[\]^_{|}~0-9a-zA-Z]{8,}$/, {
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!#$%&()*+\-,./\\:<=>?@[\]^_{|}~0-9a-zA-Z]{8,}$/, {
     message: 'Invalid password'
   })
   @Length(8, 100, {

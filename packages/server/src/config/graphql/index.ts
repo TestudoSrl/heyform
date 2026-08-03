@@ -1,36 +1,36 @@
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled'
+import { ApolloDriverConfig } from '@nestjs/apollo'
 import { Injectable } from '@nestjs/common'
-import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql'
-import { UserInputError } from 'apollo-server-express'
-import { ValidationError } from 'class-validator'
 
 import { helper } from '@heyform-inc/utils'
-
-import { LowerCaseDirective } from '@utils'
+import { GqlOptionsFactory } from '@nestjs/graphql'
+import { lowerDirective, lowerDirectiveTransformer } from '@utils'
 
 @Injectable()
-export class GraphqlService implements GqlOptionsFactory {
-  async createGqlOptions(): Promise<GqlModuleOptions> {
+export class GraphqlService implements GqlOptionsFactory<ApolloDriverConfig> {
+  async createGqlOptions(): Promise<ApolloDriverConfig> {
     return {
-      schemaDirectives: {
-        lower: LowerCaseDirective
+      buildSchemaOptions: {
+        directives: [lowerDirective]
       },
       resolverValidationOptions: {
-        requireResolversForResolveType: false
+        requireResolversForResolveType: 'ignore'
       },
       autoSchemaFile: true,
-      bodyParserConfig: { limit: '10mb' },
       introspection: true,
-      playground: false,
+      plugins: [ApolloServerPluginLandingPageDisabled()],
+      transformSchema: schema => lowerDirectiveTransformer(schema),
       formatError: e => {
-        if (e instanceof ValidationError || e instanceof UserInputError) {
-          return {
-            code: e.extensions.code,
-            message: e.message
-          }
-        }
-
-        const response = e.extensions.exception?.response
-        let code = e.extensions.code
+        const originalError =
+          e.extensions?.originalError && typeof e.extensions.originalError === 'object'
+            ? (e.extensions.originalError as Record<string, any>)
+            : undefined
+        const response =
+          originalError && 'response' in originalError
+            ? (originalError as { response?: any }).response
+            : undefined
+        const { response: _response, ...exception } = originalError ?? {}
+        let code = e.extensions?.code
         let message = e.message as string
 
         if (helper.isValid(response)) {
@@ -45,24 +45,14 @@ export class GraphqlService implements GqlOptionsFactory {
           }
         }
 
-        delete e.extensions.exception.response
-
         return {
           code,
           message: e.message,
-          ...e.extensions.exception,
+          ...exception,
           ...{ message }
         }
       },
-      formatResponse: response => {
-        return response
-      },
-      context: ({ req, res }) => ({ req, res }),
-      cors: {
-        credentials: true,
-        origin: true
-      },
-      uploads: false
+      context: ({ req, res }) => ({ req, res })
     }
   }
 }

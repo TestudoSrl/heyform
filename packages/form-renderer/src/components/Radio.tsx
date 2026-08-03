@@ -2,8 +2,9 @@ import { IconCheck, IconPhoto } from '@tabler/icons-react'
 import clsx from 'clsx'
 import type { FC, ReactNode } from 'react'
 
-import { IComponentProps } from '../typings'
 import { isURL, useKey } from '../utils'
+
+import { IComponentProps } from '../typings'
 
 export interface RadioOption {
   keyName?: string

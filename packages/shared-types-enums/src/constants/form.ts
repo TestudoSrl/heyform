@@ -1,14 +1,8 @@
 import { FieldKindEnum } from '../enums/form'
 
-export const OTHER_FIELD_KINDS = [
-  FieldKindEnum.WELCOME,
-  FieldKindEnum.THANK_YOU
-]
+export const OTHER_FIELD_KINDS = [FieldKindEnum.WELCOME, FieldKindEnum.THANK_YOU]
 
-export const STATEMENT_FIELD_KINDS = [
-  FieldKindEnum.STATEMENT,
-  ...OTHER_FIELD_KINDS
-]
+export const STATEMENT_FIELD_KINDS = [FieldKindEnum.STATEMENT, ...OTHER_FIELD_KINDS]
 
 export const QUESTION_FIELD_KINDS = [
   // Group
@@ -59,25 +53,13 @@ export const INPUT_FIELD_KINDS = [
   FieldKindEnum.URL
 ]
 
-export const CHOICES_FIELD_KINDS = [
-  FieldKindEnum.MULTIPLE_CHOICE,
-  FieldKindEnum.PICTURE_CHOICE
-]
+export const CHOICES_FIELD_KINDS = [FieldKindEnum.MULTIPLE_CHOICE, FieldKindEnum.PICTURE_CHOICE]
 
-export const FORM_FIELD_KINDS = [
-  ...QUESTION_FIELD_KINDS,
-  ...STATEMENT_FIELD_KINDS
-]
+export const FORM_FIELD_KINDS = [...QUESTION_FIELD_KINDS, ...STATEMENT_FIELD_KINDS]
 
-export const CHOICE_FIELD_KINDS = [
-  FieldKindEnum.YES_NO, 
-  ...CHOICES_FIELD_KINDS
-]
+export const CHOICE_FIELD_KINDS = [FieldKindEnum.YES_NO, ...CHOICES_FIELD_KINDS]
 
-export const RATING_FIELD_KINDS = [
-  FieldKindEnum.RATING, 
-  FieldKindEnum.OPINION_SCALE
-]
+export const RATING_FIELD_KINDS = [FieldKindEnum.RATING, FieldKindEnum.OPINION_SCALE]
 
 export const UNSELECTABLE_FIELD_KINDS = [
   FieldKindEnum.WELCOME,

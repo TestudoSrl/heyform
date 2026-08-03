@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
 import { helper } from '@heyform-inc/utils'
-
 import { TemplateModel } from '@model'
 
 @Injectable()

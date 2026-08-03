@@ -1,4 +1,3 @@
-import { isNumber } from './helper'
 import {
   AnswerValue,
   CalculateEnum,
@@ -6,7 +5,10 @@ import {
   StringCalculateAction,
   Variable
 } from '@heyform-inc/shared-types-enums'
+
 import { helper } from '@heyform-inc/utils'
+
+import { isNumber } from './helper'
 
 export function calculateAction(
   action: NumberCalculateAction | StringCalculateAction,

@@ -1,7 +1,9 @@
-import { CURRENCY_SYMBOLS } from './consts'
 import { Answer, FullNameValue, ServerSidePaymentValue } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
 import Big from 'big.js'
+
+import { helper } from '@heyform-inc/utils'
+
+import { CURRENCY_SYMBOLS } from './consts'
 
 function fileUpload(answer: Answer, livePreview = false) {
   if (livePreview) {

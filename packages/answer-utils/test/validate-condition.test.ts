@@ -1,6 +1,7 @@
-import { test, expect } from 'vitest'
-import { validateCondition } from '../src'
 import { ComparisonEnum, FieldKindEnum, FormField } from '@heyform-inc/shared-types-enums'
+import { expect, test } from 'vitest'
+
+import { validateCondition } from '../src'
 
 test('validate text condition', () => {
   const field: FormField = {

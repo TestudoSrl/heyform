@@ -1,5 +1,6 @@
-import { parsePlainAnswer } from './answer-to-plain'
 import { Answer } from '@heyform-inc/shared-types-enums'
+
+import { parsePlainAnswer } from './answer-to-plain'
 
 export function answersToApiObject(answers: Answer[]): Record<string, any> {
   const result: Record<string, any> = {}

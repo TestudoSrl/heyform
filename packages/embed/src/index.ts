@@ -1,10 +1,11 @@
 import { getConfigs } from './config'
+import { logger } from './utils'
+
 import { FullPage } from './full-page'
 import { Modal } from './modal'
 import { Popup } from './popup'
 import { Standard } from './standard'
 import './style.scss'
-import { logger } from './utils'
 
 const loaded = new Set<string>()
 const instances = new Map<string, Modal<any> | Popup<any>>()
@@ -22,19 +23,19 @@ function main() {
         switch (c.type) {
           case 'modal':
             return instances.set(key, new Modal(c))
-    
+
           case 'popup':
             return instances.set(key, new Popup(c))
-    
+
           case 'fullpage':
             return new FullPage(c)
-    
+
           default:
             return new Standard(c)
         }
       }
     })
-  
+
     logger.info('Configs', JSON.stringify(configs))
   } catch (err) {
     logger.error(err)

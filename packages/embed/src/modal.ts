@@ -1,8 +1,9 @@
+import { $, Dom, colorIsDark, isPlainObject, logger } from './utils'
+
 import IconClose from './assets/icon-close.svg'
 import IconLoading from './assets/icon-loading.svg'
 import { Standard } from './standard'
 import { ModalSettings } from './type'
-import { $, Dom, colorIsDark, isPlainObject, logger } from './utils'
 
 const MODAL_TEMPLATE = `
   <div id="{containerId}" class="heyform__modal heyform__modal-{size}">
@@ -106,9 +107,12 @@ export class Modal<T extends ModalSettings> extends Standard<T> {
         switch (data.eventName) {
           case 'HIDE_EMBED_MODAL':
           case 'HIDE_EMBED_POPUP':
-            return setTimeout(() => {
-              this.close()
-            }, (this.settings.autoClose || 0) * 1_000)
+            return setTimeout(
+              () => {
+                this.close()
+              },
+              (this.settings.autoClose || 0) * 1_000
+            )
         }
       }
     }

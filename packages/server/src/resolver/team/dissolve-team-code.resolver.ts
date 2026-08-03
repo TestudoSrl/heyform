@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Query, Resolver } from '@nestjs/graphql'
 
 import { Auth, Team, TeamGuard, User } from '@decorator'
 import { TeamDetailInput } from '@graphql'
 import { TeamModel, UserModel } from '@model'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { AuthService, MailService } from '@service'
 
 @Resolver()
@@ -25,14 +25,17 @@ export class DissolveTeamCodeResolver {
       throw new BadRequestException("You don't have permission to dissolve workspace")
     }
 
-    // Add a code of dissolve team to cache
     const key = `verify_dissolve_team:${team.id}`
     const code = await this.authService.getVerificationCode(key)
 
-    this.mailService.teamDeletionRequest(user.email, {
-      teamName: team.name,
-      code
-    })
+    this.mailService.teamDeletionRequest(
+      user.email,
+      {
+        teamName: team.name,
+        code
+      },
+      user.lang
+    )
 
     return true
   }

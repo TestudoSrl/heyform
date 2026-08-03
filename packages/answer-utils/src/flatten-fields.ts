@@ -1,4 +1,5 @@
 import { FieldKindEnum, FormField } from '@heyform-inc/shared-types-enums'
+
 import { helper } from '@heyform-inc/utils'
 
 export function flattenFields(fields?: FormField[], withGroup = false): FormField[] {

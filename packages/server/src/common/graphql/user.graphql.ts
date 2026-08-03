@@ -1,7 +1,17 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
 import { IsEmail, IsOptional, Length, Matches } from 'class-validator'
 
+import { UserLangEnum } from '@model'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
 import { LowerCase } from '@utils'
+
+@InputType()
+export class CdnTokenInput {
+  @Field()
+  mime: string
+
+  @Field()
+  filename: string
+}
 
 @InputType()
 export class UpdateUserInput {
@@ -16,6 +26,10 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   @IsOptional()
   restoreGravatar?: boolean
+
+  @Field({ nullable: true })
+  @IsOptional()
+  lang?: UserLangEnum
 }
 
 @InputType()
@@ -45,7 +59,7 @@ export class UpdateUserPasswordInput {
   currentPassword: string
 
   @Field()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!#$%&()*+\-,.\/\\:<=>?@\[\]^_{|}~0-9a-zA-Z]{8,}$/, {
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!#$%&()*+\-,./\\:<=>?@[\]^_{|}~0-9a-zA-Z]{8,}$/, {
     message: 'Invalid password'
   })
   @Length(8, 100, {
@@ -69,7 +83,7 @@ export class UserDetailType {
   avatar?: string
 
   @Field({ nullable: true })
-  lang?: string
+  lang?: UserLangEnum
 
   @Field()
   isEmailVerified: boolean

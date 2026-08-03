@@ -1,4 +1,5 @@
-import { test, expect } from 'vitest'
+import { expect, test } from 'vitest'
+
 import { type } from '../src'
 
 test('10 is number', () => {
@@ -60,4 +61,16 @@ test('/\\./ is regexp', () => {
 
 test('new Error() is error', () => {
   expect(type(new Error())).toBe('error')
+})
+
+test('null is null', () => {
+  expect(type(null)).toBe('null')
+})
+
+test('undefined is undefined', () => {
+  expect(type(undefined)).toBe('undefined')
+})
+
+test('bigint is bigint', () => {
+  expect(type(10n)).toBe('bigint')
 })

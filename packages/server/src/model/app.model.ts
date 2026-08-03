@@ -70,14 +70,13 @@ export class AppModel extends Document {
 
   @Prop({
     type: Map,
-    required: false
+    required: true
   })
-  config?: Record<string, any>
+  config: Record<string, any>
 
   @Prop({
     type: Number,
-    required: true,
-    enum: Object.values(AppStatusEnum)
+    required: true
   })
   status: AppStatusEnum
 }

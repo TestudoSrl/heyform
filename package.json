@@ -1,46 +1,69 @@
 {
   "name": "heyform",
   "homepage": "https://heyform.net",
-  "author": "Heyooo, Inc.",
+  "author": "EarlyBird, Inc.",
   "license": "AGPL-3.0",
   "private": true,
   "engines": {
     "pnpm": ">=8",
-    "node": ">=16"
+    "node": ">=20"
   },
-	"scripts": {
-		"dev": "run-p dev:webapp dev:server",
-		"dev:webapp": "pnpm --filter ./packages/webapp dev",
-		"dev:server": "pnpm --filter ./packages/server dev",
-		"build": "run-p build:server build:webapp",
-		"build:server": "pnpm --filter ./packages/server build",
-		"build:webapp": "pnpm --filter ./packages/webapp build",
-		"build:deps": "pnpm --filter ./packages/utils build && pnpm --filter ./packages/shared-types-enums build && pnpm --filter ./packages/answer-utils build"
-	},
+  "scripts": {
+    "dev": "run-p dev:webapp dev:server",
+    "dev:webapp": "pnpm --filter ./packages/webapp dev",
+    "dev:server": "pnpm --filter ./packages/server dev",
+    "build:server": "pnpm --filter ./packages/server build",
+    "build:webapp": "pnpm --filter ./packages/webapp build",
+    "format": "prettier --write \"packages/**/*.{js,ts,tsx,css}\"",
+    "lint": "node scripts/run-oxlint.js packages",
+    "postinstall": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "if ! command -v node >/dev/null 2>&1; then for d in \"$HOME\"/.nvm/versions/node/*/bin; do [ -d \"$d\" ] && PATH=\"$d:$PATH\"; done; export PATH; fi; ./node_modules/.bin/lint-staged --concurrent false"
+  },
+  "lint-staged": {
+    "*.{js,json}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "prettier --parser=typescript --write",
+      "node scripts/run-oxlint.js packages --fix --ignore-pattern '*.d.ts'"
+    ]
+  },
   "dependencies": {
-    "npm-run-all": "^4.1.5"
+    "@trivago/prettier-plugin-sort-imports": "4.3.0",
+    "lint-staged": "^15.5.1",
+    "npm-run-all": "^4.1.5",
+    "oxlint": "^1.6.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "simple-git-hooks": "^2.13.0"
   },
-	"pnpm": {
-		"neverBuiltDependencies": [],
-		"overrides": {
-			"apollo-upload-client": "17.0.0",
-			"fs-capacitor": "6.2.0",
-			"multer": "1.4.5-lts.1",
-			"express": "4.19.2",
-			"dayjs": "^1.11.3",
-			"i18next": "^21.9.1",
-			"cross-fetch": "3.1.5",
-			"ip": "2.0.1",
-			"ws": "7.4.6",
-			"got": "11.8.5",
-			"react-i18next": "^11.18.6",
-			"@babel/traverse": "^7.24.1",
-			"node-fetch": "2.6.7",
-			"lodash": "4.17.21",
-			"qs": "^6.12.0",
-			"busboy": "1.6.0",
-			"axios": "1.6.8",
-			"minimist": "^1.2.6"
-		}
-	}
+  "pnpm": {
+    "neverBuiltDependencies": [],
+    "overrides": {
+      "apollo-upload-client": "17.0.0",
+      "fs-capacitor": "6.2.0",
+      "multer": "1.4.5-lts.1",
+      "express": "4.19.2",
+      "dayjs": "^1.11.3",
+      "i18next": "^21.9.1",
+      "cross-fetch": "3.1.5",
+      "ip": "2.0.1",
+      "ws": "7.4.6",
+      "got": "11.8.5",
+      "react-i18next": "^11.18.6",
+      "@babel/traverse": "^7.24.1",
+      "node-fetch": "2.6.7",
+      "lodash": "4.17.21",
+      "qs": "^6.12.0",
+      "busboy": "1.6.0",
+      "fast-xml-parser": "5.3.8",
+      "axios": "1.6.8",
+      "minimist": "^1.2.6",
+      "nanoid": "3.3.11",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    }
+  }
 }

@@ -1,13 +1,7 @@
-import { clone } from './clone'
-import {
-  isArray,
-  isNan,
-  isNil,
-  isObject,
-  isPlainObject,
-  isValid
-} from './helper'
 import * as objectPath from 'object-path'
+
+import { clone } from './clone'
+import { isArray, isNan, isNil, isObject, isPlainObject, isValid } from './helper'
 
 export { deepEqual } from 'fast-equals'
 
@@ -73,6 +67,10 @@ export function pickValidValues<T = string | number | boolean>(
   target: Record<string, T>,
   fields: Array<string | string[]>
 ): Record<string, T> {
+  if (!isObject(target) || !isArray(fields)) {
+    return {}
+  }
+
   const dist: Record<string, T> = {}
 
   fields.forEach(field => {
@@ -80,11 +78,17 @@ export function pickValidValues<T = string | number | boolean>(
     let alias: string | undefined
 
     if (isArray(field)) {
+      if (field.length === 0 || isNil(field[0])) {
+        return
+      }
+
       key = field[0]
 
-      if (field.length > 1) {
-        alias = field[1]
+      if (field.length > 1 && !isNil(field[1])) {
+        alias = String(field[1])
       }
+    } else if (isNil(field)) {
+      return
     }
 
     let value = target[key]
@@ -101,9 +105,7 @@ export function pickValidValues<T = string | number | boolean>(
   return dist
 }
 
-export function removeObjectNil(
-  target: Record<string, any>
-): Record<string, any> {
+export function removeObjectNil(target: Record<string, any>): Record<string, any> {
   if (!isObject(target)) {
     return {}
   }
@@ -129,7 +131,7 @@ export function copyObjectValues(
   dist: Record<string, any>,
   keyMaps: Array<string | string[]>
 ): void {
-  if (!isObject(target) || !isObject(dist)) {
+  if (!isObject(target) || !isObject(dist) || !isArray(keyMaps)) {
     return
   }
 
@@ -138,9 +140,16 @@ export function copyObjectValues(
     let distKey: string
 
     if (isArray(keys)) {
-      targetKey = keys[0]
-      distKey = keys[1]
+      if (keys.length === 0 || isNil(keys[0])) {
+        continue
+      }
+
+      targetKey = String(keys[0])
+      distKey = !isNil(keys[1]) ? String(keys[1]) : targetKey
     } else {
+      if (isNil(keys)) {
+        continue
+      }
       targetKey = String(keys)
       distKey = targetKey
     }

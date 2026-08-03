@@ -1,7 +1,5 @@
-import { applyLogicToFields, validateFields } from '@heyform-inc/answer-utils'
 import type { FormField } from '@heyform-inc/shared-types-enums'
 import { FieldKindEnum, NumberPrice } from '@heyform-inc/shared-types-enums'
-import { clone, helper } from '@heyform-inc/utils'
 import { IconChevronRight } from '@tabler/icons-react'
 import Big from 'big.js'
 import clsx from 'clsx'
@@ -9,8 +7,6 @@ import type { FormProps as RCFormProps } from 'rc-field-form'
 import RCForm, { Field, useForm } from 'rc-field-form'
 import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 
-import { Submit } from '../components'
-import { removeStorage, useStore } from '../store'
 import {
   getNavigateFieldId,
   sendMessageToParent,
@@ -19,6 +15,11 @@ import {
   useTranslation,
   validateLogicField
 } from '../utils'
+import { applyLogicToFields, validateFields } from '@heyform-inc/answer-utils'
+import { clone, helper } from '@heyform-inc/utils'
+
+import { Submit } from '../components'
+import { removeStorage, useStore } from '../store'
 
 interface FormProps extends RCFormProps {
   field: FormField
@@ -221,6 +222,17 @@ export const Form: FC<FormProps> = ({
   function handleValuesChange(changes: any, values: any) {
     restProps.onValuesChange?.(changes, values)
 
+    if (state.isCollaborative) {
+      dispatch({
+        type: 'setValues',
+        payload: {
+          values: {
+            [field.id]: getValues ? getValues(values) : values
+          }
+        }
+      })
+    }
+
     if (autoSubmit) {
       if (isLastBlock) {
         const value = getValues ? getValues(changes) : changes
@@ -277,6 +289,12 @@ export const Form: FC<FormProps> = ({
     }
   }, [state.errorFieldId])
 
+  useEffect(() => {
+    if (state.isCollaborative) {
+      form.setFieldsValue(restProps.initialValues || {})
+    }
+  }, [form, restProps.initialValues, state.isCollaborative])
+
   return (
     <RCForm
       className={clsx('heyform-form', {
@@ -302,14 +320,6 @@ export const Form: FC<FormProps> = ({
           <Field shouldUpdate={true}>
             <Submit text={t('Submit')} loading={loading} />
           </Field>
-          {isLastBlock && (
-            <div className="heyform-submit-warn">
-              {t('Never submit passwords!')} -{' '}
-              <a href={state.reportAbuseURL} target="_blank" rel="noreferrer">
-                {t('Report Abuse')}
-              </a>
-            </div>
-          )}
         </>
       ) : (
         <div className="mt-8 flex items-center gap-2">

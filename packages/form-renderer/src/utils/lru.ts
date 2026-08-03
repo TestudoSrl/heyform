@@ -65,11 +65,7 @@ export class LRU {
   }
 
   get<T = any>(key: string): T | undefined {
-    if (
-      !this.cache.keys.includes(key) ||
-      // eslint-disable-next-line no-prototype-builtins
-      !this.cache.items.hasOwnProperty(key)
-    ) {
+    if (!this.cache.keys.includes(key) || !this.cache.items.hasOwnProperty(key)) {
       return
     }
 
@@ -96,7 +92,7 @@ export class LRU {
 
     // Pop first item
     if (this.cache.keys.length >= this.capacity) {
-      const k = this.cache.keys.pop()!
+      const k = this.cache.keys.shift()!
       this.destroy(k)
     }
 

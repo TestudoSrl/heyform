@@ -1,7 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
-
 import { CaptchaKindEnum, FieldKindEnum } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
+import { BadRequestException, Injectable } from '@nestjs/common'
 
 import {
   AKISMET_KEY,
@@ -9,10 +7,9 @@ import {
   FORM_ENCRYPTION_KEY,
   GOOGLE_RECAPTCHA_SECRET
 } from '@environments'
+import { helper } from '@heyform-inc/utils'
 import { aesDecryptObject, akismet, recaptcha } from '@utils'
 import { Logger } from '@utils'
-
-import { AuthService } from './auth.service'
 
 interface VerifySpamOptions {
   answers: any[]
@@ -24,7 +21,7 @@ interface VerifySpamOptions {
 export class EndpointService {
   private readonly logger!: Logger
 
-  constructor(private readonly authService: AuthService) {
+  constructor() {
     this.logger = new Logger('EndpointService')
   }
 
@@ -50,15 +47,6 @@ export class EndpointService {
     switch (captchaKind) {
       case CaptchaKindEnum.GOOGLE_RECAPTCHA:
         result = await this.verifyRecaptcha(input.recaptchaToken)
-        break
-
-      case CaptchaKindEnum.GEETEST_CAPTCHA:
-        result = await this.authService.gt4Validate({
-          lotNumber: input.lotNumber,
-          captchaOutput: input.captchaOutput,
-          passToken: input.passToken,
-          genTime: input.genTime
-        })
         break
     }
 

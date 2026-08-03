@@ -1,14 +1,7 @@
-import { IParseOptions, IStringifyOptions, parse, stringify } from 'qs'
 import { convert } from 'html-to-text'
+import { IParseOptions, IStringifyOptions, parse, stringify } from 'qs'
 
-import {
-  isEmpty,
-  isBoolean,
-  isTrue,
-  isNumber,
-  isValid,
-  isString
-} from './helper'
+import { isBoolean, isEmpty, isNumber, isString, isTrue, isValid } from './helper'
 
 export function toBool(value: unknown, defaults?: boolean): boolean {
   if (isEmpty(value)) {
@@ -47,11 +40,7 @@ export function toInteger(
 export const parseNumber = toInteger
 export const toInt = toInteger
 
-export function toFloat(
-  value: unknown,
-  defaults?: number,
-  maxValue?: number
-): number | undefined {
+export function toFloat(value: unknown, defaults?: number, maxValue?: number): number | undefined {
   let val: number
 
   if (isNumber(value)) {
@@ -69,22 +58,20 @@ export function toFloat(
 
 export function toFixed(value: number, precision = 2) {
   if (isNumber(value)) {
-    return value.toFixed(precision).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')
+    return value
+      .toFixed(precision)
+      .replace(/(\.\d*?)0+$/, '$1')
+      .replace(/\.$/, '')
   }
 }
 
-export function toJSON<T extends object>(
-  str: unknown,
-  defaults?: T
-): T | undefined {
+export function toJSON<T extends object>(str: unknown, defaults?: T): T | undefined {
   let value: T | undefined
 
   if (isValid(str) && isString(str)) {
     try {
       value = JSON.parse(str as string)
-    } catch (e) {
-      // eslint-disable-line
-    }
+    } catch (e) {}
   }
 
   if (!!defaults && !value) {
@@ -179,10 +166,7 @@ export function toDuration(value: number, options?: ToDurationOptions) {
     .join(' ')
 }
 
-export function toURLParams<T extends object>(
-  value: string,
-  options?: IParseOptions
-) {
+export function toURLParams<T extends object>(value: string, options?: IParseOptions) {
   return parse(value, options) as T
 }
 
@@ -209,7 +193,7 @@ export function htmlToText(html: string, limit = 100) {
       { selector: 'video', format: 'skip' },
       { selector: 'audio', format: 'skip' },
       { selector: 'iframe', format: 'skip' }
-    ],
+    ]
   }).replace(/\n/g, ' ')
 
   if (limit > 0 && value.length > limit) {

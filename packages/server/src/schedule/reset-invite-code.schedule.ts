@@ -1,7 +1,6 @@
 import { Process, Processor } from '@nestjs/bull'
 
 import { timestamp } from '@heyform-inc/utils'
-
 import { TeamService } from '@service'
 
 import { BaseQueue } from '../queue/base.queue'

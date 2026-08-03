@@ -1,5 +1,17 @@
-import { test, expect } from 'vitest'
-import { toBool, toInteger, toFloat, toJSON, toIntlNumber, toDuration, toURLParams, toURLQuery, toFixed, htmlToText } from '../src'
+import { expect, test } from 'vitest'
+
+import {
+  htmlToText,
+  toBool,
+  toDuration,
+  toFixed,
+  toFloat,
+  toInteger,
+  toIntlNumber,
+  toJSON,
+  toURLParams,
+  toURLQuery
+} from '../src'
 
 test('bool', () => {
   expect(toBool(null)).toBe(false)
@@ -99,7 +111,14 @@ test('fixed', () => {
 })
 
 test('html to text', () => {
-  expect(htmlToText('<a href="https://github.com/heyform" title="Title">hello world</a><img src="https://github.com/heyform" alt="HeyForm" />', 0)).toBe('hello world')
-  expect(htmlToText('<a href="#">hello world<div>こんにちは世界！</div></a>')).toBe('hello world こんにちは世界！')
+  expect(
+    htmlToText(
+      '<a href="https://github.com/heyform" title="Title">hello world</a><img src="https://github.com/heyform" alt="HeyForm" />',
+      0
+    )
+  ).toBe('hello world')
+  expect(htmlToText('<a href="#">hello world<div>こんにちは世界！</div></a>')).toBe(
+    'hello world こんにちは世界！'
+  )
   expect(htmlToText('<a href="#">hello world</a>', 5)).toBe('hello')
 })

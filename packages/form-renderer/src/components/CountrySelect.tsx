@@ -1,13 +1,14 @@
-import { helper } from '@heyform-inc/utils'
 import type { Options as PopperOptions } from '@popperjs/core/lib/types'
 import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react'
 import clsx from 'clsx'
 import type { CSSProperties, FC, MouseEvent } from 'react'
 import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 
+import { stopEvent, useKey, useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
 import { COUNTRIES } from '../consts'
 import { AnyMap, IComponentProps } from '../typings'
-import { stopEvent, useKey, useTranslation } from '../utils'
 import { FlagIcon } from './FlagIcon'
 import { XIcon } from './Icons'
 import { Input } from './Input'
@@ -297,7 +298,6 @@ export const CountrySelect: FC<CountrySelectProps> = ({
           <div className="heyform-select-value">
             {selected && <FlagIcon className="mr-2" countryCode={selected.value} />}
             {enableLabel && (
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               <span className="heyform-select-label" data-placeholder={placeholder}>
                 {selected && t(selected.label)}

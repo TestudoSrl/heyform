@@ -1,10 +1,9 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-import { IsOptional, Max } from 'class-validator'
-
 import { FormField, FormKindEnum, InteractiveModeEnum } from '@heyform-inc/shared-types-enums'
+import { IsOptional, Max } from 'class-validator'
 
 import { FormFieldType, ThemeSettingsType } from './form.graphql'
 import { ProjectDetailInput } from './project.graphql'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
 
 @InputType()
 export class TemplatesInput {

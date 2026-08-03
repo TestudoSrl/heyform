@@ -1,21 +1,19 @@
-import { Injectable } from '@nestjs/common'
 import { InjectQueue } from '@nestjs/bull'
+import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 import { Queue } from 'bull'
+import { Model } from 'mongoose'
+import * as apps from 'src/apps'
 
-import { IntegrationModel, IntegrationStatusEnum } from '@model'
-
-import { AppService } from './app.service'
+import { FormModel, IntegrationModel, IntegrationStatusEnum } from '@model'
 
 @Injectable()
 export class IntegrationService {
   constructor(
     @InjectModel(IntegrationModel.name)
     private readonly integrationModel: Model<IntegrationModel>,
-    private readonly appService: AppService,
-    @InjectQueue('IntegrationEmailQueue') private readonly emailQueue: Queue,
-    @InjectQueue('IntegrationWebhookQueue') private readonly webhookQueue: Queue
+    @InjectQueue('IntegrationQueue') private readonly integrationQueue: Queue,
+    @InjectQueue('SubmissionNotificationQueue') private readonly submissionNotificationQueue: Queue
   ) {}
 
   async findById(id: string): Promise<IntegrationModel | null> {
@@ -54,18 +52,18 @@ export class IntegrationService {
       },
       updates
     )
-    return !!result?.ok
+    return result.acknowledged
   }
 
   async updateAllBy(conditions: Record<string, any>, updates: Record<string, any>): Promise<any> {
     const result = await this.integrationModel.updateMany(conditions, updates)
-    return result?.n > 0
+    return result.matchedCount > 0
   }
 
   async createOrUpdate(
     formId: string,
     appId: string,
-    updates: Record<string, any>
+    updates: Partial<IntegrationModel>
   ): Promise<string> {
     const integration = await this.findOne(formId, appId)
 
@@ -86,35 +84,33 @@ export class IntegrationService {
       formId,
       appId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
-  public async addQueue(formId: string, submissionId: string): Promise<void> {
+  public async addQueue(form: FormModel, submissionId: string): Promise<void> {
+    // Email notification Queue
+    if ((form.settings as any)?.enableEmailNotification) {
+      this.submissionNotificationQueue.add({
+        formId: form.id,
+        submissionId
+      })
+    }
+
     const integrations = await this.integrationModel.find({
-      formId,
+      formId: form.id,
       status: IntegrationStatusEnum.ACTIVE
     })
 
     for (const integration of integrations) {
-      const app = await this.appService.findById(integration.appId)
+      const app = apps[integration.appId]
 
-      if (!app) {
-        continue
-      }
-
-      const data = {
-        integrationId: integration.id,
-        submissionId
-      }
-
-      switch (app.uniqueId) {
-        case 'email':
-          this.emailQueue.add(data)
-          break
-
-        case 'webhook':
-          this.webhookQueue.add(data)
-          break
+      if (app) {
+        this.integrationQueue.add({
+          appId: integration.appId,
+          formId: form.id,
+          integrationId: integration.id,
+          submissionId
+        })
       }
     }
   }

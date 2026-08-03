@@ -1,10 +1,11 @@
 import { ChoiceBadgeEnum } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
 import clsx from 'clsx'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
-import { IComponentProps } from '../typings'
 import { getChoiceKeyName, useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
+import { IComponentProps } from '../typings'
 import type { ChoiceRadioOption } from './ChoiceRadio'
 import { ChoiceRadio } from './ChoiceRadio'
 

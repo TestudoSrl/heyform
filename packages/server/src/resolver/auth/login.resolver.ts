@@ -1,21 +1,21 @@
 import { BadRequestException, UseGuards } from '@nestjs/common'
-import { Args, Query, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
 
 import { GraphqlRequest, GraphqlResponse } from '@decorator'
 import { LoginInput } from '@graphql'
-import { BrowserIdGuard } from '@guard'
-import { AuthService, UserService } from '@service'
-import { GqlClient, comparePassword } from '@utils'
-import { ClientInfo } from '@utils'
+import { DeviceIdGuard } from '@guard'
+import { date, helper } from '@heyform-inc/utils'
+import { UserActivityKindEnum } from '@model'
+import { Args, Query, Resolver } from '@nestjs/graphql'
+import { AuthService, MailService, UserService } from '@service'
+import { ClientInfo, GqlClient, comparePassword } from '@utils'
 
 @Resolver()
-@UseGuards(BrowserIdGuard)
+@UseGuards(DeviceIdGuard)
 export class LoginResolver {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly mailService: MailService
   ) {}
 
   @Query(returns => Boolean)
@@ -28,28 +28,43 @@ export class LoginResolver {
     const user = await this.userService.findByEmail(input.email)
 
     if (helper.isEmpty(user)) {
-      throw new BadRequestException('The password does not match')
+      throw new BadRequestException('Incorrect email or password.')
     }
 
-    // Check if login attempts is exceeded
     const key = `limit:login:${user.id}`
 
     await this.authService.attemptsCheck(key, async () => {
       if (helper.isEmpty(user.password)) {
-        throw new BadRequestException('The password does not match')
+        throw new BadRequestException('Incorrect email or password.')
       }
 
       const verified = await comparePassword(input.password, user.password)
 
       if (!verified) {
-        throw new BadRequestException('The password does not match')
+        throw new BadRequestException('Incorrect email or password.')
       }
+    })
+
+    const devices = await this.authService.devices(user.id)
+
+    if (helper.isValid(devices) && !devices.includes(client.deviceId)) {
+      this.mailService.userSecurityAlert(user.email, {
+        deviceModel: `${client.userAgent.browser.name} on ${client.userAgent.os.name}`,
+        ip: client.ip,
+        loginAt: date().format('YYYY-MM-DD HH:mm:ss')
+      })
+    }
+
+    this.authService.createUserActivity({
+      kind: UserActivityKindEnum.LOGIN,
+      userId: user.id,
+      ...client
     })
 
     await this.authService.login({
       res,
       userId: user.id,
-      browserId: client.browserId
+      deviceId: client.deviceId
     })
 
     return true

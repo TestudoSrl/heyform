@@ -1,7 +1,6 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { Auth, FormGuard } from '@decorator'
 import { UpdateIntegrationStatusInput } from '@graphql'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { IntegrationService } from '@service'
 
 @Resolver()

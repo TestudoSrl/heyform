@@ -1,10 +1,9 @@
-import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { Answer } from '@heyform-inc/shared-types-enums'
+import { BadRequestException } from '@nestjs/common'
 
 import { Auth, FormGuard } from '@decorator'
 import { UpdateSubmissionAnswerInput } from '@graphql'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { SubmissionService } from '@service'
 
 @Resolver()

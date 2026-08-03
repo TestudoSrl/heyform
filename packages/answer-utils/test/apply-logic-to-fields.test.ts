@@ -1,5 +1,3 @@
-import { test, expect } from 'vitest'
-import { applyLogicToFields } from '../src'
 import {
   ActionEnum,
   CalculateEnum,
@@ -9,6 +7,9 @@ import {
   Logic,
   Variable
 } from '@heyform-inc/shared-types-enums'
+import { expect, test } from 'vitest'
+
+import { applyLogicToFields } from '../src'
 
 const fields: FormField[] = [
   {

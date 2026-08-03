@@ -1,15 +1,16 @@
 import { NumberPrice } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
 import clsx from 'clsx'
 import { RuleObject, StoreValue } from 'rc-field-form/es/interface'
 import type { FC } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
+import { useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
 import { FormField, Input } from '../components'
 import { CURRENCY_SYMBOLS } from '../consts'
 import { useStore } from '../store'
 import { getStripeElementStyle } from '../theme'
-import { useTranslation } from '../utils'
 import type { BlockProps } from './Block'
 import { Block } from './Block'
 import { Form } from './Form'

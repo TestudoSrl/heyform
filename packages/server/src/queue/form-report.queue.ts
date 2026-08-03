@@ -16,7 +16,7 @@ export class FormReportQueue extends BaseQueue {
   }
 
   @Process()
-  async generateReport(job: Job<FormReportQueueJob>): Promise<any> {
+  async process(job: Job<FormReportQueueJob>): Promise<any> {
     const { formId } = job.data
     await this.formReportService.generate(formId)
   }

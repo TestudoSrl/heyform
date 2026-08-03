@@ -1,7 +1,6 @@
-import { Query, Resolver } from '@nestjs/graphql'
-
 import { Auth, User } from '@decorator'
 import { UserModel } from '@model'
+import { Query, Resolver } from '@nestjs/graphql'
 import { AuthService, MailService } from '@service'
 
 @Resolver()
@@ -17,7 +16,7 @@ export class UserDeletionCodeResolver {
     const key = `user_deletion:${user.id}`
     const code = await this.authService.getVerificationCode(key)
 
-    await this.mailService.accountDeletionRequest(user.email, code)
+    await this.mailService.accountDeletionRequest(user.email, code, user.lang)
 
     return true
   }

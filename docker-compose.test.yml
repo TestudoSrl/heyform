@@ -1,0 +1,73 @@
+version: '3.9'
+
+networks:
+  heyform-mongo:
+  heyform-keydb:
+
+services:
+  heyform:
+    image: heyform-local:test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - mongo
+      - keydb
+    ports:
+      - '9157:9157'
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9157/health/ready >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    env_file:
+      - .env
+    environment:
+      APP_HOMEPAGE_URL: ${APP_HOMEPAGE_URL:-http://localhost:9157}
+      SESSION_KEY: ${SESSION_KEY:?SESSION_KEY is required}
+      FORM_ENCRYPTION_KEY: ${FORM_ENCRYPTION_KEY:?FORM_ENCRYPTION_KEY is required}
+      MONGO_URI: mongodb://mongo:27017/heyform
+      REDIS_HOST: keydb
+      REDIS_PORT: 6379
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_SERVERNAME: ${SMTP_SERVERNAME:-}
+      SMTP_IGNORE_CERT: ${SMTP_IGNORE_CERT:-false}
+    volumes:
+      # Keep uploads between restarts (covers both current static path and runtime-served path)
+      - ./assets:/app/packages/server/static/upload
+      - ./assets:/app/packages/server/uploads
+    networks:
+      - heyform-mongo
+      - heyform-keydb
+
+  mongo:
+    image: percona/percona-server-mongodb:4.4
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - heyform-mongo
+
+  keydb:
+    image: eqalpha/keydb:latest
+    restart: unless-stopped
+    ports:
+      - '9514:6379'
+    command: keydb-server --appendonly yes --protected-mode no
+    volumes:
+      - keydb_data:/data
+    networks:
+      - heyform-keydb
+
+volumes:
+  mongodb_data:
+  keydb_data:

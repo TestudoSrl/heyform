@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 import { InjectRedis } from '@svtslv/nestjs-ioredis'
 import { Redis } from 'ioredis'
 
@@ -31,6 +31,34 @@ export class RedisService {
 
   public get(key: string): Promise<string | null> {
     return this.redis.get(key)
+  }
+
+  public async getInt(key: string, defaultValue = 0): Promise<number> {
+    const result = await this.get(key)
+
+    return parseInt(result, defaultValue)
+  }
+
+  public async throttler(key: string, limit: number, ttl: string) {
+    const cache = await this.get(key)
+    let count = 0
+
+    if (!cache) {
+      await this.multi([
+        ['incr', key],
+        ['expire', key, hs(ttl)]
+      ])
+    } else {
+      count = parseInt(cache, 0)
+    }
+
+    if (count >= limit) {
+      const timeLeft = await this.redis.ttl(key)
+
+      throw new ConflictException(`Too many requests. Please try again in ${timeLeft} seconds.`)
+    }
+
+    await this.incr(key)
   }
 
   public set({ key, value, duration }: SetOptions): Promise<any> {
@@ -68,7 +96,7 @@ export class RedisService {
     return this.del(key)
   }
 
-  public multi(commands: string[][]): Promise<[Error | null, any][]> {
+  public multi(commands: any[][]): Promise<[Error | null, any][]> {
     return this.redis.multi(commands).exec()
   }
 
@@ -78,5 +106,9 @@ export class RedisService {
 
   public del(key: string): Promise<number> {
     return this.redis.del(key)
+  }
+
+  public ping(): Promise<'PONG'> {
+    return this.redis.ping() as Promise<'PONG'>
   }
 }

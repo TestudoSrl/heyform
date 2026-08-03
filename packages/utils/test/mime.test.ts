@@ -1,5 +1,6 @@
-import { test, expect } from 'vitest'
-import { mime, commonImageMimeTypes, commonFileMimeTypes } from '../src'
+import { expect, test } from 'vitest'
+
+import { commonFileMimeTypes, commonImageMimeTypes, mime } from '../src'
 
 test('image mime type', () => {
   expect(mime('.jpg')).toBe('image/jpeg')
@@ -11,6 +12,7 @@ test('common image mime type', () => {
 
 test('common file mime type', () => {
   expect(commonFileMimeTypes).toMatchSnapshot()
+  expect(commonFileMimeTypes).not.toContain('image/svg+xml')
 })
 
 test('mime', () => {
@@ -45,7 +47,7 @@ test('mime', () => {
     { input: null, expected: undefined },
     { input: undefined, expected: undefined },
     { input: 42, expected: undefined },
-    { input: {}, expected: undefined },
+    { input: {}, expected: undefined }
   ]
 
   configs.forEach(row => {

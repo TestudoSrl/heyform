@@ -1,11 +1,23 @@
 import { MongooseModule } from '@nestjs/mongoose'
 
 import {
+  AppCodeModel,
+  AppCodeSchema,
   AppModel,
   AppSchema,
+  AppTokenModel,
+  AppTokenSchema,
+  BrandKitModel,
+  BrandKitSchema,
+  CollaborativeSessionModel,
+  CollaborativeSessionSchema,
+  EmailTemplateModel,
+  EmailTemplateSchema,
   FormAnalyticModel,
   FormAnalyticSchema,
   FormModel,
+  FormOpenHistoryModel,
+  FormOpenHistorySchema,
   FormReportModel,
   FormReportSchema,
   FormSchema,
@@ -31,6 +43,10 @@ import {
   TeamSchema,
   TemplateModel,
   TemplateSchema,
+  ThirdPartyOauthModel,
+  ThirdPartyOauthSchema,
+  UserActivityModel,
+  UserActivitySchema,
   UserModel,
   UserSchema,
   UserSocialAccountModel,
@@ -38,8 +54,11 @@ import {
 } from './index'
 
 export const ModelModule = MongooseModule.forFeature([
+  { name: CollaborativeSessionModel.name, schema: CollaborativeSessionSchema },
+  { name: EmailTemplateModel.name, schema: EmailTemplateSchema },
   { name: FormModel.name, schema: FormSchema },
   { name: FormAnalyticModel.name, schema: FormAnalyticSchema },
+  { name: FormOpenHistoryModel.name, schema: FormOpenHistorySchema },
   { name: FormReportModel.name, schema: FormReportSchema },
   { name: IntegrationModel.name, schema: IntegrationSchema },
   { name: SubmissionModel.name, schema: SubmissionSchema },
@@ -50,9 +69,17 @@ export const ModelModule = MongooseModule.forFeature([
   { name: TeamMemberModel.name, schema: TeamMemberSchema },
   { name: TemplateModel.name, schema: TemplateSchema },
   { name: UserModel.name, schema: UserSchema },
-  { name: UserSocialAccountModel.name, schema: UserSocialAccountSchema },
+  { name: UserActivityModel.name, schema: UserActivitySchema },
+  {
+    name: UserSocialAccountModel.name,
+    schema: UserSocialAccountSchema
+  },
   { name: AppModel.name, schema: AppSchema },
+  { name: AppCodeModel.name, schema: AppCodeSchema },
+  { name: AppTokenModel.name, schema: AppTokenSchema },
+  { name: ThirdPartyOauthModel.name, schema: ThirdPartyOauthSchema },
   { name: ProjectModel.name, schema: ProjectSchema },
   { name: ProjectGroupModel.name, schema: ProjectGroupSchema },
-  { name: ProjectMemberModel.name, schema: ProjectMemberSchema }
+  { name: ProjectMemberModel.name, schema: ProjectMemberSchema },
+  { name: BrandKitModel.name, schema: BrandKitSchema }
 ])

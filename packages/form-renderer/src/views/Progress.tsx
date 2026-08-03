@@ -1,7 +1,8 @@
 import type { FC } from 'react'
 
-import { useStore } from '../store'
 import { useTranslation } from '../utils'
+
+import { useStore } from '../store'
 
 interface CircularProgressbarProps {
   current: number

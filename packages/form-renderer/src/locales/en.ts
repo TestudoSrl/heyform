@@ -1,5 +1,5 @@
 export default {
-  'Made with HeyForm': 'Made with <icon></icon> <span>HeyForm</span>',
+  'Made with HeyForm': 'Powered by <icon></icon> <span>HeyForm</span>',
   'This field is required': 'This field is required',
   'File type is not supported': 'File type is not supported',
   "File size can't exceed {{size}}": "File size can't exceed {{size}}",
@@ -7,8 +7,6 @@ export default {
   'Re-select file': 'Re-select file',
   'Upload a file or drag and drop': 'Upload a file or drag and drop',
   'Size limit': 'Size limit',
-  'Never submit passwords!': 'Never submit passwords!',
-  'Report Abuse': 'Report Abuse',
   Next: 'Next',
   Skip: 'Skip',
   Submit: 'Submit',

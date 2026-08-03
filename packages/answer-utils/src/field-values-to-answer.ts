@@ -1,7 +1,9 @@
+import { Answer, CHOICES_FIELD_KINDS, FormField } from '@heyform-inc/shared-types-enums'
+
+import { helper } from '@heyform-inc/utils'
+
 import { fieldsToValidateRules } from './fields-to-validate-rules'
 import { validate } from './validate'
-import { Answer, CHOICES_FIELD_KINDS, FormField } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
 
 export function fieldValuesToAnswers(
   fields: FormField[],
@@ -26,9 +28,7 @@ export function fieldValuesToAnswers(
           properties: rule.properties || {},
           value
         } as any)
-      } catch (_) {
-        // eslint-disable-line no-empty
-      }
+      } catch (_) {}
 
       // Partial submission does not need to throw error
       continue

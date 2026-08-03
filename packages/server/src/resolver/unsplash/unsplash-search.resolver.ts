@@ -1,10 +1,8 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
-
 import { Auth } from '@decorator'
 import { UNSPLASH_CLIENT_ID } from '@environments'
 import { UnsplashImageType, UnsplashSearchInput } from '@graphql'
+import { helper } from '@heyform-inc/utils'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { Unsplash } from '@utils'
 import { randomNumber } from '@utils'
 
@@ -29,7 +27,7 @@ export class UnsplashSearchResolver {
     return result.results.map(row => ({
       id: row.id,
       url: row.urls.regular,
-      // @ts-ignore
+
       downloadUrl: row.links.download_location,
       thumbUrl: row.urls.thumb,
       author: row.user.name,

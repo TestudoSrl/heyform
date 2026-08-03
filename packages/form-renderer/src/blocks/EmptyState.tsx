@@ -2,8 +2,9 @@ import type { FormField } from '@heyform-inc/shared-types-enums'
 import clsx from 'clsx'
 import type { FC } from 'react'
 
-import { Submit } from '../components'
 import { useKey, useTranslation } from '../utils'
+
+import { Submit } from '../components'
 import { Block, BlockProps } from './Block'
 
 interface EmptyStateProps extends Omit<BlockProps, 'field'> {

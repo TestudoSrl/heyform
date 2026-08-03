@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
 import { Auth, Team, TeamGuard } from '@decorator'
 import { TeamDetailInput } from '@graphql'
 import { TeamModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { TeamService } from '@service'
 
 @Resolver()

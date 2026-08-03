@@ -7,8 +7,6 @@ export default {
   'Re-select file': 'Dosyayı yeniden seçin',
   'Upload a file or drag and drop': 'Bir dosya yükleyin veya sürükleyip bırakın',
   'Size limit': 'Boyut sınırı',
-  'Never submit passwords!': 'Asla şifre göndermeyin!',
-  'Report Abuse': 'Suistimali Bildir',
   Next: 'İleri',
   Skip: 'Atla',
   Submit: 'Gönder',
@@ -49,12 +47,14 @@ export default {
   'End date is not valid': 'Bitiş tarihi geçerli değil',
   'End date must be after start date': 'Bitiş tarihi başlangıç tarihinden sonra olmalıdır',
   'Thank you!': 'Teşekkürler!',
-  'Thanks for completing this form. Now create your own form.': 'Bu formu doldurduğunuz için teşekkürler. Şimdi kendi formunuzu oluşturun.',
+  'Thanks for completing this form. Now create your own form.':
+    'Bu formu doldurduğunuz için teşekkürler. Şimdi kendi formunuzu oluşturun.',
   'Form unavailable': 'Form kullanılamıyor',
   'Create a heyform': 'Bir heyform oluşturun',
   "The form can't receive new submissions now.": 'Form şu anda yeni gönderim alamıyor.',
   "This page doesn't exist": 'Bu sayfa mevcut değil',
-  'If you have any questions, please contact us.': 'Herhangi bir sorunuz varsa, lütfen bizimle iletişime geçin.',
+  'If you have any questions, please contact us.':
+    'Herhangi bir sorunuz varsa, lütfen bizimle iletişime geçin.',
   Questions: 'Sorular',
   'Search country': 'Ülke ara',
   'Previous question': 'Önceki soru',
@@ -314,4 +314,3 @@ export default {
   Zambia: 'Zambiya',
   Zimbabwe: 'Zimbabve'
 }
-  

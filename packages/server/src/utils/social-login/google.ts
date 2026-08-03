@@ -2,10 +2,10 @@ import { ServiceUnavailableException } from '@nestjs/common'
 import { Credentials } from 'google-auth-library'
 import { google } from 'googleapis'
 
+import { formatLocale } from './utils'
 import { helper } from '@heyform-inc/utils'
 
 import { UserInfo } from './apple'
-import { formatLocale } from './utils'
 
 export interface GoogleSocialLoginOptions {
   clientId: string

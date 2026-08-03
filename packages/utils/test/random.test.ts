@@ -1,5 +1,6 @@
-import { test, expect } from 'vitest'
-import { random, RandomType } from '../src'
+import { expect, test } from 'vitest'
+
+import { random, randomAlpha, randomHexic, randomNumber, randomNumeric } from '../src'
 
 const len = 6
 
@@ -8,32 +9,23 @@ test('alphanumeric', () => {
   expect(str).toHaveLength(len)
 })
 
-test('upper string', () => {
-  const str = random(len, RandomType.UPPER)
-  expect(/^[A-Z]{6}$/.test(str)).toBe(true)
+test('alpha string', () => {
+  const str = randomAlpha(len)
+  expect(/^[A-Za-z]{6}$/.test(str)).toBe(true)
 })
 
-test('lower string', () => {
-  const str = random(len, RandomType.LOWER)
-  expect(/^[a-z]{6}$/.test(str)).toBe(true)
-})
-
-test('lower numeric string', () => {
-  const str = random(len, RandomType.LOWER_NUMERIC)
-  expect(/^[0-9a-z]{6}$/.test(str)).toBe(true)
-})
-
-test('upper numeric string', () => {
-  const str = random(len, RandomType.UPPER_NUMERIC)
-  expect(/^[0-9A-Z]{6}$/.test(str)).toBe(true)
-})
-
-test('number', () => {
-  const str = random(len, RandomType.NUMERIC)
+test('numeric string', () => {
+  const str = randomNumeric(len)
   expect(/^[0-9]{6}$/.test(str)).toBe(true)
 })
 
 test('hex string', () => {
-  const str = random(len, RandomType.HEXIC)
+  const str = randomHexic(len)
   expect(/^[0-9a-f]{6}$/.test(str)).toBe(true)
+})
+
+test('random number in range', () => {
+  const num = randomNumber(5, 10)
+  expect(num).toBeGreaterThanOrEqual(5)
+  expect(num).toBeLessThanOrEqual(10)
 })

@@ -1,10 +1,11 @@
-import { helper } from '@heyform-inc/utils'
 import type { FC } from 'react'
 import { useCallback } from 'react'
 
+import { sendMessageToParent } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
 import { Countdown } from '../components/Countdown'
 import { useStore } from '../store'
-import { sendMessageToParent } from '../utils'
 import { Progress } from './Progress'
 
 export const Header: FC = () => {

@@ -1,5 +1,6 @@
-import { AnyMap, EmbedConfig } from './type'
 import { $ } from './utils'
+
+import { AnyMap, EmbedConfig } from './type'
 
 const ATTR_PREFIX = 'data-heyform-'
 const HIDDEN_FIELD_PREFIX = `${ATTR_PREFIX}hiddenfield-`
@@ -23,7 +24,7 @@ export function getConfigs() {
 
         hiddenFields[key] = el.getAttribute(name)
       } else if (key.startsWith(ATTR_PREFIX)) {
-        key = key.replace(ATTR_PREFIX, '').replace(/(\-)+([a-z])/gi, (_, __, s) => s.toUpperCase())
+        key = key.replace(ATTR_PREFIX, '').replace(/(-)+([a-z])/gi, (_, __, s) => s.toUpperCase())
 
         settings[key] = el.getAttribute(name)
       }

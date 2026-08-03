@@ -1,0 +1,91 @@
+import { useMemo } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
+import { Form, Select } from '@/components'
+import { LOCALE_OPTIONS } from '@/consts'
+import { useFormStore } from '@/store'
+
+export default function FormSettingsTranslations() {
+  const { t } = useTranslation()
+  const { tempSettings } = useFormStore()
+
+  const options = useMemo(
+    () =>
+      LOCALE_OPTIONS.map(l => ({
+        value: l.value,
+        label: (
+          <div>
+            <div className="text-primary text-sm/[1.4rem] font-medium" data-slot="label">
+              {t(l.label)}
+            </div>
+            <div className="text-secondary text-xs" data-slot="translated">
+              {t(l.translated)}
+            </div>
+          </div>
+        ),
+        ariaLabel: t(l.label)
+      })),
+    [t]
+  )
+
+  const restOptions = useMemo(
+    () => options.filter(l => l.value !== tempSettings?.locale),
+    [options, tempSettings?.locale]
+  )
+
+  return (
+    <section id="translations" className="pt-10">
+      <h2 className="hf-section-title">{t('form.settings.translations.title')}</h2>
+
+      <div className="mt-4 space-y-8">
+        <Form.Item
+          className="[&_[data-slot=content]]:pt-1.5 [&_[data-slot=control]]:flex-col [&_[data-slot=control]]:sm:flex-row"
+          name="locale"
+          label={t('form.settings.translations.primaryLanguage.headline')}
+          description={t('form.settings.translations.primaryLanguage.subHeadline')}
+          isInline
+        >
+          <Select
+            className="w-full min-w-40 sm:w-auto [&_[data-slot=translated]]:hidden"
+            options={options}
+          />
+        </Form.Item>
+
+        <Form.Item
+          className="[&_[data-slot=content]]:pt-1.5"
+          name="languages"
+          label={
+            <div className="flex items-start justify-between">
+              <span>{t('form.settings.translations.translations.headline')}</span>
+            </div>
+          }
+          description={
+            <Trans
+              t={t}
+              i18nKey="form.settings.translations.translations.subHeadline"
+              components={{
+                a: (
+                  <a
+                    className="hover:text-primary underline underline-offset-4"
+                    href="https://openai.com/chatgpt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                )
+              }}
+            />
+          }
+        >
+          <Select.Multi
+            className="[&_[data-slot=translated]]:text-primary [&_[data-slot=label]]:hidden [&_[data-slot=translated]]:text-sm/[1.4rem] [&_[data-slot=translated]]:font-medium"
+            options={restOptions}
+            contentProps={{
+              align: 'end'
+            }}
+            placeholder={t('form.settings.translations.translations.placeholder')}
+          />
+        </Form.Item>
+      </div>
+    </section>
+  )
+}

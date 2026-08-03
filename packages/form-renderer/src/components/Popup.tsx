@@ -6,9 +6,10 @@ import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import { useTransition } from 'react-transition-state'
 
+import { stopEvent } from '../utils'
+
 import { TRANSITION_UNMOUNTED_STATES } from '../consts'
 import { IComponentProps } from '../typings'
-import { stopEvent } from '../utils'
 
 interface PortalProps {
   visible?: boolean

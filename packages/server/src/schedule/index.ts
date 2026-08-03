@@ -1,10 +1,9 @@
 import { BullModule } from '@nestjs/bull'
 
-import { BullOptionsFactory } from '@config'
-
 import { DeleteFormInTrashSchedule } from './delete-form-in-trash.schedule'
 import { DeleteUserAccountSchedule } from './delete-user-account.schedule'
 import { ResetInviteCodeSchedule } from './reset-invite-code.schedule'
+import { BullOptionsFactory } from '@config'
 
 export const ScheduleProviders = {
   DeleteFormInTrashSchedule,

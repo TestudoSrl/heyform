@@ -1,6 +1,3 @@
-import { calculateAction } from './calculate-action'
-import { validateRequiredField } from './validate'
-import { validateCondition } from './validate-condition'
 import {
   ActionEnum,
   AnswerValue,
@@ -13,7 +10,12 @@ import {
   StringCalculateAction,
   Variable
 } from '@heyform-inc/shared-types-enums'
+
 import { helper } from '@heyform-inc/utils'
+
+import { calculateAction } from './calculate-action'
+import { validateRequiredField } from './validate'
+import { validateCondition } from './validate-condition'
 
 interface IFormField extends FormField {
   parent?: FormField

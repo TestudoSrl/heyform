@@ -1,4 +1,3 @@
-import { applyLogicToFields } from '@heyform-inc/answer-utils'
 import {
   ActionEnum,
   FieldKindEnum,
@@ -6,11 +5,14 @@ import {
   OTHER_FIELD_KINDS,
   QUESTION_FIELD_KINDS
 } from '@heyform-inc/shared-types-enums'
-import { helper, nanoid } from '@heyform-inc/utils'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import clsx from 'clsx'
 import type { FC } from 'react'
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+
+import { flattenFieldsWithGroups, parseFields, progressPercentage } from './utils'
+import { applyLogicToFields } from '@heyform-inc/answer-utils'
+import { helper, nanoid } from '@heyform-inc/utils'
 
 import { ClosedMessage } from './blocks/ClosedMessage'
 import { SuspendedMessage } from './blocks/SuspendedMessage'
@@ -18,7 +20,6 @@ import type { IState, IStripe } from './store'
 import { StoreContext, StoreReducer, getStorage } from './store'
 import { getTheme } from './theme'
 import type { IFormModel } from './typings'
-import { flattenFieldsWithGroups, parseFields, progressPercentage } from './utils'
 import { Blocks } from './views/Blocks'
 import { Sidebar } from './views/Sidebar'
 
@@ -35,8 +36,12 @@ export interface FormRendererProps {
   alwaysShowNextButton?: boolean
   enableQuestionList?: boolean
   enableNavigationArrows?: boolean
+  sharedValues?: Record<string, any>
+  sharedRevision?: number
+  sharedSubmitted?: boolean
   ssr?: boolean
   onSubmit?: (values: Record<string, any>, isPartial?: boolean, stripe?: IStripe) => Promise<void>
+  onValuesChange?: (changes: Record<string, any>) => void
 }
 
 function initStore(
@@ -44,6 +49,7 @@ function initStore(
   locale: string,
   autoSave: boolean,
   allowPayment: boolean,
+  initialValues?: Record<string, any>,
   ssr?: boolean
 ): IState {
   const list = parseFields(form.fields, form.translations?.[locale])
@@ -61,7 +67,7 @@ function initStore(
     .filter(l => l.payloads.some(p => p.action.kind === ActionEnum.NAVIGATE))
     .map(l => l.fieldId)
 
-  const values = getStorage(form.id, autoSave)
+  const values = initialValues || getStorage(form.id, autoSave)
   const { fields, variables } = applyLogicToFields(
     [...allFields, ...thankYouFields].filter(Boolean) as FormField[],
     form.logics,
@@ -94,6 +100,7 @@ function initStore(
     scrollTo: 'next',
     settings: form.settings,
     autoSave,
+    changeVersion: 0,
     locale,
     theme: getTheme(form.themeSettings?.theme),
     logo: form.themeSettings?.logo
@@ -111,10 +118,14 @@ export const FormRenderer: FC<FormRendererProps> = ({
   reportAbuseURL,
   alwaysShowNextButton = false,
   customUrlRedirects = false,
-  enableQuestionList = false,
-  enableNavigationArrows = false,
+  enableQuestionList,
+  enableNavigationArrows,
+  sharedValues,
+  sharedRevision,
+  sharedSubmitted,
   ssr = false,
-  onSubmit
+  onSubmit,
+  onValuesChange
 }) => {
   const [isAndroid, setAndroid] = useState(false)
 
@@ -126,20 +137,87 @@ export const FormRenderer: FC<FormRendererProps> = ({
     () => !!(stripeApiKey && stripeAccountId),
     [stripeApiKey, stripeAccountId]
   )
+  const isQuestionListEnabled = useMemo(
+    () =>
+      !helper.isNil(enableQuestionList)
+        ? !!enableQuestionList
+        : !!form.settings?.enableQuestionList,
+    [enableQuestionList, form.settings?.enableQuestionList]
+  )
+  const isNavigationArrowsEnabled = useMemo(
+    () =>
+      !helper.isNil(enableNavigationArrows)
+        ? !!enableNavigationArrows
+        : helper.isNil(form.settings?.enableNavigationArrows)
+          ? true
+          : !!form.settings?.enableNavigationArrows,
+    [enableNavigationArrows, form.settings?.enableNavigationArrows]
+  )
   const memoState: IState = useMemo(
     () => ({
       reportAbuseURL,
       customUrlRedirects,
       alwaysShowNextButton,
-      enableQuestionList,
-      enableNavigationArrows,
+      enableQuestionList: isQuestionListEnabled,
+      enableNavigationArrows: isNavigationArrowsEnabled,
+      isCollaborative: !!onValuesChange,
       onSubmit,
-      ...initStore(form, locale, autoSave, allowPayment, ssr),
+      ...initStore(form, locale, autoSave, allowPayment, sharedValues, ssr),
       query
     }),
-    [form, locale, autoSave, allowPayment, query]
+    [
+      reportAbuseURL,
+      customUrlRedirects,
+      alwaysShowNextButton,
+      isQuestionListEnabled,
+      isNavigationArrowsEnabled,
+      onSubmit,
+      onValuesChange,
+      form,
+      locale,
+      autoSave,
+      allowPayment,
+      sharedValues,
+      ssr,
+      query
+    ]
   )
   const [state, dispatch] = useReducer(StoreReducer, memoState)
+  const notifiedVersionRef = useRef(0)
+  const sharedValuesRef = useRef(sharedValues)
+  sharedValuesRef.current = sharedValues
+
+  useEffect(() => {
+    if (sharedValuesRef.current) {
+      dispatch({
+        type: 'syncValues',
+        payload: { values: sharedValuesRef.current }
+      })
+    }
+  }, [sharedRevision])
+
+  useEffect(() => {
+    if (
+      onValuesChange &&
+      state.changeVersion &&
+      state.changeVersion !== notifiedVersionRef.current
+    ) {
+      notifiedVersionRef.current = state.changeVersion
+      onValuesChange(state.changedValues || {})
+    }
+  }, [onValuesChange, state.changeVersion, state.changedValues])
+
+  useEffect(() => {
+    if (sharedSubmitted && !state.isSubmitted) {
+      dispatch({
+        type: 'setIsSubmitted',
+        payload: {
+          isSubmitted: true,
+          thankYouFieldId: state.thankYouFields[0]?.id
+        }
+      })
+    }
+  }, [sharedSubmitted, state.isSubmitted, state.thankYouFields])
 
   // Form suspended
   if (form.suspended) {
@@ -151,7 +229,6 @@ export const FormRenderer: FC<FormRendererProps> = ({
     return <ClosedMessage form={form} />
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (allowPayment) {
       const paymentField = memoState.fields.find(f => f.kind === FieldKindEnum.PAYMENT)

@@ -1,28 +1,24 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-import { IsString, IsUrl } from 'class-validator'
+import { Field, ObjectType } from '@nestjs/graphql'
 
-@InputType()
-export class AppDetailInput {
+@ObjectType()
+export class AppSettingType {
   @Field()
-  @IsString()
-  clientId: string
+  type: string
 
   @Field()
-  @IsUrl()
-  redirectUri: string
-}
+  name: string
 
-@InputType()
-export class AppAuthorizeUrlInput extends AppDetailInput {
   @Field()
-  @IsString()
-  responseType: string
+  label: string
 
   @Field({ nullable: true })
-  state?: string
+  description?: string
 
   @Field({ nullable: true })
-  scope?: string
+  placeholder?: string
+
+  @Field()
+  required: boolean
 }
 
 @ObjectType()
@@ -30,27 +26,15 @@ export class AppType {
   @Field({ nullable: true })
   id: string
 
-  @Field({ nullable: true })
-  uniqueId: string
-
   @Field()
   name: string
-
-  @Field()
-  category: string
 
   @Field({ nullable: true })
   description?: string
 
   @Field({ nullable: true })
-  avatar?: string
+  icon?: string
 
-  @Field({ nullable: true })
-  homepage?: string
-
-  @Field({ nullable: true })
-  helpLinkUrl?: string
-
-  @Field({ nullable: true })
-  status?: number
+  @Field(type => [AppSettingType], { nullable: true })
+  settings?: AppSettingType[]
 }

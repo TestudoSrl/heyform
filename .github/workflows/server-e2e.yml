@@ -1,0 +1,107 @@
+name: Server E2E
+
+on:
+  push:
+    branches: [next, main]
+    paths:
+      - 'packages/server/**'
+      - 'packages/shared-types-enums/**'
+      - 'packages/utils/**'
+      - 'packages/answer-utils/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/server-e2e.yml'
+  pull_request:
+    branches: [next, main]
+    paths:
+      - 'packages/server/**'
+      - 'packages/shared-types-enums/**'
+      - 'packages/utils/**'
+      - 'packages/answer-utils/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/server-e2e.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: server-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: HTTP/GraphQL e2e suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      # Mongo and KeyDB don't ship dependable healthchecks across image
+      # versions, so the suite's own /health/ready probe (which verifies a
+      # live connection from inside the server) gates start-up instead.
+      mongo:
+        image: percona/percona-server-mongodb:6.0
+        ports:
+          - 27017:27017
+
+      keydb:
+        image: eqalpha/keydb:latest
+        ports:
+          - 6379:6379
+
+    env:
+      NODE_ENV: development
+      APP_LISTEN_HOSTNAME: 127.0.0.1
+      APP_LISTEN_PORT: '9157'
+      APP_HOMEPAGE_URL: http://127.0.0.1:9157
+      # Test-only secrets — never use these outside CI.
+      SESSION_KEY: ci-session-key-32-chars-aaaaaaaa
+      FORM_ENCRYPTION_KEY: ci-form-encryption-key-32-chars-aa
+      MONGO_URI: mongodb://127.0.0.1:27017/heyform_e2e
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: '6379'
+      E2E_BASE_URL: http://127.0.0.1:9157
+      E2E_WAIT_MS: '120000'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check server
+        run: pnpm --filter ./packages/server type-check
+
+      - name: Build server
+        run: pnpm --filter ./packages/server build
+
+      - name: Start server
+        working-directory: packages/server
+        run: |
+          mkdir -p static/upload
+          nohup pnpm start > "$RUNNER_TEMP/server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/server.pid"
+
+      - name: Run e2e tests
+        run: pnpm --filter ./packages/server test:e2e
+
+      - name: Server logs (on failure)
+        if: failure()
+        run: |
+          echo '=== Last 500 lines of server.log ==='
+          tail -n 500 "$RUNNER_TEMP/server.log" || true
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/server.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/server.pid")" 2>/dev/null || true
+          fi

@@ -1,7 +1,3 @@
-import { BadRequestException, UseGuards } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
-import { applyLogicToFields, fieldValuesToAnswers, flattenFields } from '@heyform-inc/answer-utils'
 import {
   Answer,
   CaptchaKindEnum,
@@ -10,11 +6,15 @@ import {
   SubmissionStatusEnum,
   Variable
 } from '@heyform-inc/shared-types-enums'
-import { helper, timestamp } from '@heyform-inc/utils'
+import { BadRequestException, UseGuards } from '@nestjs/common'
 
 import { CompleteSubmissionInput, CompleteSubmissionType } from '@graphql'
 import { EndpointAnonymousIdGuard } from '@guard'
+import { applyLogicToFields, fieldValuesToAnswers, flattenFields } from '@heyform-inc/answer-utils'
+import { helper, timestamp } from '@heyform-inc/utils'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import {
+  CollaborativeSessionService,
   EndpointService,
   FormReportService,
   FormService,
@@ -23,14 +23,14 @@ import {
   SubmissionIpLimitService,
   SubmissionService
 } from '@service'
-import { GqlClient } from '@utils'
-import { ClientInfo } from '@utils'
+import { ClientInfo, GqlClient, normalizeSubmissionHiddenFields } from '@utils'
 
 @Resolver()
 @UseGuards(EndpointAnonymousIdGuard)
 export class CompleteSubmissionResolver {
   constructor(
     private readonly endpointService: EndpointService,
+    private readonly collaborativeSessionService: CollaborativeSessionService,
     private readonly formService: FormService,
     private readonly submissionService: SubmissionService,
     private readonly submissionIpLimitService: SubmissionIpLimitService,
@@ -94,11 +94,34 @@ export class CompleteSubmissionResolver {
     }
 
     // Start submit time
-    const { timestamp: startAt } = this.endpointService.decryptToken(input.openToken)
+    const openToken = this.endpointService.decryptToken(input.openToken)
+
+    if (openToken.formId !== input.formId) {
+      throw new BadRequestException('Invalid form token')
+    }
+
+    const { timestamp: startAt } = openToken
 
     // Bot prevention check
     if (form.settings?.captchaKind !== CaptchaKindEnum.NONE) {
       await this.endpointService.antiBotCheck(form.settings?.captchaKind, input)
+    }
+
+    let submissionValues = input.answers
+    let collaborativeRevision: number | undefined
+
+    if (input.collaborativeToken) {
+      const session = await this.collaborativeSessionService.findActive(
+        input.collaborativeToken,
+        form.id
+      )
+
+      if (!session) {
+        throw new BadRequestException('The shared response is no longer active')
+      }
+
+      submissionValues = session.values || {}
+      collaborativeRevision = session.revision
     }
 
     // Verify user submit content
@@ -110,10 +133,10 @@ export class CompleteSubmissionResolver {
         flattenFields(form.fields, true),
         form.logics,
         form.variables,
-        input.answers
+        submissionValues
       )
 
-      answers = fieldValuesToAnswers(fields, input.answers, input.partialSubmission)
+      answers = fieldValuesToAnswers(fields, submissionValues, input.partialSubmission)
       variables = form.variables?.map(variable => ({
         ...variable,
         value: variableValues[variable.id]
@@ -145,13 +168,27 @@ export class CompleteSubmissionResolver {
 
     const endAt = timestamp()
 
+    if (input.collaborativeToken) {
+      const claimed = await this.collaborativeSessionService.claim(
+        input.collaborativeToken,
+        form.id,
+        collaborativeRevision!
+      )
+
+      if (!claimed) {
+        throw new BadRequestException(
+          'The shared response changed while it was being submitted. Please try again.'
+        )
+      }
+    }
+
     const submissionId = await this.submissionService.create({
       teamId: form.teamId,
       formId: form.id,
       category,
       title: form.name,
       answers,
-      hiddenFields: input.hiddenFields,
+      hiddenFields: normalizeSubmissionHiddenFields(form.hiddenFields, input.hiddenFields),
       variables,
       startAt,
       endAt,
@@ -188,7 +225,7 @@ export class CompleteSubmissionResolver {
     this.formReportService.addQueue(form.id)
 
     // Integration Queue
-    this.integrationService.addQueue(form.id, submissionId)
+    this.integrationService.addQueue(form, submissionId)
 
     return result
   }

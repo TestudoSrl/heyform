@@ -1,6 +1,7 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common'
-import { GqlExecutionContext } from '@nestjs/graphql'
 import 'reflect-metadata'
+
+import { GqlExecutionContext } from '@nestjs/graphql'
 
 import { UserAgent as UserAgentInterface, parseUserAgent } from '../user-agent'
 

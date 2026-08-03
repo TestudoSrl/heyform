@@ -1,7 +1,7 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
 import { IsArray, IsOptional } from 'class-validator'
 
 import { TeamDetailInput } from './team.graphql'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
 
 @InputType()
 export class CreateProjectInput extends TeamDetailInput {

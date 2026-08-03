@@ -1,4 +1,6 @@
-import { parseJson, parseNumber, parseBool, htmlToText } from '../src'
+import { expect, test } from 'vitest'
+
+import { htmlToText, parseBool, parseJson, parseNumber } from '../src'
 
 test('json', () => {
   const value = parseJson('{"a": 1}')
@@ -45,6 +47,11 @@ test('bool with string', () => {
   expect(value).toBe(false)
 })
 
+test('bool with false string', () => {
+  const value = parseBool('false')
+  expect(value).toBe(false)
+})
+
 test('init', () => {
   const value = parseNumber('10')
   expect(value).toBe(10)
@@ -70,6 +77,20 @@ test('init with max value', () => {
   expect(value).toBe(30)
 })
 
+test('init with invalid number', () => {
+  const value = parseNumber('not-a-number')
+  expect(value).toBe(undefined)
+})
+
+test('init with invalid number and default', () => {
+  const value = parseNumber('not-a-number', 5)
+  expect(value).toBe(5)
+})
+
 test('html to text', () => {
   expect(htmlToText('<a href="#">hello</a>')).toBe('hello')
+})
+
+test('html to text without limit', () => {
+  expect(htmlToText('<strong>hello</strong>', 0)).toBe('hello')
 })

@@ -1,11 +1,10 @@
 import { BadRequestException, Headers, UseGuards } from '@nestjs/common'
-import { Args, Query, Resolver } from '@nestjs/graphql'
-
-import { timestamp } from '@heyform-inc/utils'
 
 import { FORM_ENCRYPTION_KEY } from '@environments'
 import { VerifyPasswordInput } from '@graphql'
 import { EndpointAnonymousIdGuard } from '@guard'
+import { timestamp } from '@heyform-inc/utils'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { FormService } from '@service'
 import { aesEncryptObject } from '@utils'
 

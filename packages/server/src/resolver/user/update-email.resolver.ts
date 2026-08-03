@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
 import { Auth, User } from '@decorator'
 import { UpdateEmailInput } from '@graphql'
 import { UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { AuthService, UserService } from '@service'
 
 @Resolver()
@@ -25,10 +25,11 @@ export class UpdateEmailResolver {
       throw new BadRequestException('The email address is already exists')
     }
 
-    // Check if change email attempts is exceeded
     const attemptsKey = `limit:change_email:${user.id}`
 
     await this.authService.attemptsCheck(attemptsKey, async () => {
+      //
+
       const key = `verify_email:${user.id}:${input.email}`
       await this.authService.checkVerificationCode(key, input.code)
     })

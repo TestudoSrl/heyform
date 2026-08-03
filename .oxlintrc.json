@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "jsx-a11y", "jest", "import"],
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "build",
+    "*.config.js",
+    "*.config.mjs",
+    "*.test.ts",
+    "*.d.ts"
+  ],
+  "rules": {
+    "no-useless-spread": "error",
+    "no-accumulating-spread": "error",
+    "no-useless-fallback-in-spread": "error",
+    "no-constant-binary-expression": "error",
+    "no-useless-rename": "error",
+    "no-useless-call": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "warn",
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
+}

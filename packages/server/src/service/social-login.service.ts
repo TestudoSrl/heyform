@@ -1,24 +1,22 @@
+import { SocialLoginTypeEnum } from '@heyform-inc/shared-types-enums'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
-import { SocialLoginTypeEnum } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
-
+import { UserService } from './user.service'
 import {
   APPLE_LOGIN_KEY_ID,
   APPLE_LOGIN_PRIVATE_KEY_PATH,
   APPLE_LOGIN_TEAM_ID,
   APPLE_LOGIN_WEB_CLIENT_ID,
+  APP_DISABLE_REGISTRATION,
   APP_HOMEPAGE_URL,
   GOOGLE_LOGIN_CLIENT_ID,
-  GOOGLE_LOGIN_CLIENT_SECRET,
-  APP_DISABLE_REGISTRATION
+  GOOGLE_LOGIN_CLIENT_SECRET
 } from '@environments'
+import { helper } from '@heyform-inc/utils'
 import { UserSocialAccountModel } from '@model'
 import { UserInfo, appleLoginUrl, appleUserInfo, googleLoginUrl, googleUserInfo } from '@utils'
-
-import { UserService } from './user.service'
 
 const appleOptions = {
   webClientId: APPLE_LOGIN_WEB_CLIENT_ID,
@@ -96,7 +94,7 @@ export class SocialLoginService {
     const result = await this.userSocialAccountModel.deleteOne({
       userId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   async create(data: UserSocialAccountModel | any): Promise<string | undefined> {

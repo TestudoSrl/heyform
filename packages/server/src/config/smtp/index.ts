@@ -1,11 +1,11 @@
 import {
   SMTP_HOST,
+  SMTP_IGNORE_CERT,
   SMTP_PASSWORD,
   SMTP_PORT,
-  SMTP_USER,
   SMTP_SECURE,
-  SMTP_IGNORE_CERT,
-  SMTP_SERVERNAME
+  SMTP_SERVERNAME,
+  SMTP_USER
 } from '@environments'
 import { SmtpOptions } from '@utils'
 

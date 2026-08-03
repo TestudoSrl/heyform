@@ -7,8 +7,6 @@ export default {
   'Re-select file': 'Datei erneut auswählen',
   'Upload a file or drag and drop': 'Laden Sie eine Datei hoch oder ziehen Sie sie per Drag & Drop',
   'Size limit': 'Größenlimit',
-  'Never submit passwords!': 'Geben Sie niemals Passwörter ein!',
-  'Report Abuse': 'Missbrauch melden',
   Next: 'Nächster',
   Skip: 'Überspringen',
   Submit: 'Einreichen',

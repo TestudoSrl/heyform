@@ -1,55 +1,29 @@
-const numeric = '0123456789'
-const hexic = '0123456789abcdef'
-const lower = 'abcdefghijklmnopqrstuvwxyz'
-const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-const length = 6
+const NUMERIC = '0123456789'
+const HEXIC = '0123456789abcdef'
+const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const ALPHANUMERIC = ALPHA + NUMERIC
 
-export enum RandomType {
-  LOWER,
-  UPPER,
-  NUMERIC,
-  HEXIC,
-  LOWER_NUMERIC,
-  UPPER_NUMERIC,
-  ALPHANUMERIC
+export function random(len: number = 6, alphabet: string = ALPHANUMERIC): string {
+  let result = ''
+  const length = alphabet.length
+  for (let i = 0; i < len; i++) {
+    result += alphabet.charAt(Math.floor(Math.random() * length))
+  }
+  return result
 }
 
-export function random(
-  len = length * 2,
-  type = RandomType.ALPHANUMERIC
-): string {
-  let alphabet: string = numeric + lower + upper
+export function randomHexic(len: number): string {
+  return random(len, HEXIC)
+}
 
-  switch (type) {
-    case RandomType.LOWER:
-      alphabet = lower
-      break
-    case RandomType.UPPER:
-      alphabet = upper
-      break
-    case RandomType.HEXIC:
-      alphabet = hexic
-      break
-    case RandomType.NUMERIC:
-      alphabet = numeric
-      break
-    case RandomType.LOWER_NUMERIC:
-      alphabet = lower + numeric
-      break
-    case RandomType.UPPER_NUMERIC:
-      alphabet = upper + numeric
-      break
-    case RandomType.ALPHANUMERIC:
-      alphabet = lower + upper + numeric
-      break
-  }
+export function randomAlpha(len: number): string {
+  return random(len, ALPHA)
+}
 
-  let str = ''
-  const alphabetLength = alphabet.length
+export function randomNumeric(len: number): string {
+  return random(len, NUMERIC)
+}
 
-  for (let i = 0; i < len; i++) {
-    str += alphabet.charAt(Math.floor(Math.random() * alphabetLength))
-  }
-
-  return str
+export function randomNumber(min: number, max: number): number {
+  return Math.ceil(Math.random() * (max - min) + min)
 }

@@ -1,6 +1,3 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document } from 'mongoose'
-
 import {
   Answer,
   HiddenFieldAnswer,
@@ -8,6 +5,8 @@ import {
   SubmissionStatusEnum,
   Variable
 } from '@heyform-inc/shared-types-enums'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Document } from 'mongoose'
 
 import { UserAgent } from '@utils'
 
@@ -26,7 +25,6 @@ export class SubmissionModel extends Document {
   @Prop({
     type: String,
     required: true,
-    enum: Object.values(SubmissionCategoryEnum),
     default: SubmissionCategoryEnum.INBOX
   })
   category: SubmissionCategoryEnum
@@ -34,13 +32,13 @@ export class SubmissionModel extends Document {
   @Prop({ required: true })
   title: string
 
-  @Prop()
+  @Prop({ type: [Object], default: [] })
   answers: Answer[]
 
-  @Prop({ default: [] })
+  @Prop({ type: [Object], default: [] })
   hiddenFields?: HiddenFieldAnswer[]
 
-  @Prop({ default: [] })
+  @Prop({ type: [Object], default: [] })
   variables?: Variable[]
 
   @Prop()
@@ -52,14 +50,12 @@ export class SubmissionModel extends Document {
   @Prop()
   ip: string
 
-  @Prop()
+  @Prop({ type: Object })
   userAgent: UserAgent
 
-  @Prop()
   @Prop({
     type: Number,
     required: true,
-    enum: Object.values(SubmissionStatusEnum),
     default: SubmissionStatusEnum.PUBLIC
   })
   status: SubmissionStatusEnum

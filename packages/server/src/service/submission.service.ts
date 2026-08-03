@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-
 import {
   Answer,
   SubmissionCategoryEnum,
   SubmissionStatusEnum
 } from '@heyform-inc/shared-types-enums'
-import { date, helper } from '@heyform-inc/utils'
-
-import { FormModel, SubmissionModel } from '@model'
-import { getUpdateQuery } from '@utils'
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
 import { FormService } from './form.service'
+import { date, helper } from '@heyform-inc/utils'
+import { SubmissionModel } from '@model'
+import { getUpdateQuery } from '@utils'
+
+const { isValid } = helper
 
 interface FindSubmissionOptions {
   formId: string
@@ -119,7 +119,7 @@ export class SubmissionService {
   async findAllGroupInFieldIds(
     formId: string,
     fieldIds: string[],
-    limit = 5
+    limit = 10
   ): Promise<SubmissionModel[]> {
     if (helper.isEmpty(fieldIds)) {
       return []
@@ -185,7 +185,7 @@ export class SubmissionService {
   public async countAllInTeam(teamId: string): Promise<number> {
     const forms = await this.formService.findAllInTeam(teamId)
 
-    if (helper.isValid(forms)) {
+    if (isValid(forms)) {
       return this.countAll(
         forms.map(f => f._id),
         {
@@ -200,22 +200,11 @@ export class SubmissionService {
   }
 
   public countAll(formIds: string[], filters: Record<string, any> = {}): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.submissionModel.countDocuments(
-        {
-          formId: {
-            $in: formIds
-          },
-          ...filters
-        },
-        (err, count) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(count)
-          }
-        }
-      )
+    return this.submissionModel.countDocuments({
+      formId: {
+        $in: formIds
+      },
+      ...filters
     })
   }
 
@@ -282,7 +271,7 @@ export class SubmissionService {
     const result = await this.submissionModel.updateOne(conditions, {
       status: SubmissionStatusEnum.PRIVATE
     })
-    return result?.n > 0
+    return result.matchedCount > 0
   }
 
   public async deleteByIds(formId: string, submissionIds?: string[]): Promise<boolean> {
@@ -297,7 +286,7 @@ export class SubmissionService {
     }
 
     const result = await this.submissionModel.deleteMany(conditions)
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async deleteAll(formId: string | string[]): Promise<boolean> {
@@ -312,7 +301,7 @@ export class SubmissionService {
     }
 
     const result = await this.submissionModel.deleteMany(conditions)
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async updateCategory({
@@ -331,7 +320,7 @@ export class SubmissionService {
         category
       }
     )
-    return result?.n > 0
+    return result.matchedCount > 0
   }
 
   async findByIds(formId: string, submissionIds: string[]): Promise<SubmissionModel[]> {
@@ -390,7 +379,7 @@ export class SubmissionService {
         }
       }
     )
-    return !!result?.ok
+    return result.acknowledged
   }
 
   async updateAnswer(submissionId: string, answer: Answer): Promise<boolean> {
@@ -409,36 +398,7 @@ export class SubmissionService {
         $set: getUpdateQuery(updates, 'answers.$', false)
       }
     )
-    return !!result?.ok
-  }
-
-  async findLocations(formId: string, start: Date, end: Date): Promise<any[]> {
-    return this.submissionModel
-      .aggregate<FormModel>([
-        {
-          $match: {
-            formId,
-            createdAt: {
-              $gte: start,
-              $lte: end
-            }
-          }
-        },
-        {
-          $sort: {
-            total: -1
-          }
-        },
-        { $limit: 10 },
-        {
-          $project: {
-            _id: 0,
-            code: '$_id',
-            total: 1
-          }
-        }
-      ])
-      .exec()
+    return result.acknowledged
   }
 
   async analytic(formId: string, startAt: number, endAt: number) {
@@ -453,10 +413,10 @@ export class SubmissionService {
       {
         $group: {
           _id: null,
-          averageTime: {
+          avgAverageTime: {
             $avg: { $subtract: ['$endAt', '$startAt'] }
           },
-          submissionCount: { $sum: 1 }
+          avgSubmissionCount: { $sum: 1 }
         }
       }
     ])

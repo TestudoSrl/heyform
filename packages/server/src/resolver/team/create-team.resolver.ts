@@ -1,8 +1,7 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { Auth, User } from '@decorator'
 import { CreateTeamInput } from '@graphql'
 import { TeamRoleEnum, UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { ProjectService, TeamService } from '@service'
 
 @Resolver()
@@ -31,8 +30,7 @@ export class CreateTeamResolver {
       role: TeamRoleEnum.ADMIN
     })
 
-    // Create project
-    await this.projectService.createByNewTeam(teamId, user.id, user.name)
+    await this.projectService.createByNewTeam(teamId, user.id, input.projectName)
 
     return teamId
   }

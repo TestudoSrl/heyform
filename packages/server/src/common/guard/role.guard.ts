@@ -1,10 +1,9 @@
-import { BadRequestException, CanActivate, ExecutionContext, Inject } from '@nestjs/common'
+import { BadRequestException, CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { GqlExecutionContext } from '@nestjs/graphql'
 
 import { helper } from '@heyform-inc/utils'
-
 import { TeamModel, TeamRoleEnum } from '@model'
+import { GqlExecutionContext } from '@nestjs/graphql'
 import { FormService, TeamService } from '@service'
 
 export enum RoleGuardScopeEnum {
@@ -30,15 +29,13 @@ function parseRequest(req: any, keys: string[]): any {
   return value
 }
 
+@Injectable()
 export class RoleGuard implements CanActivate {
-  private readonly reflector: Reflector
-
   constructor(
-    @Inject('FormService') private readonly formService: FormService,
-    @Inject('TeamService') private readonly teamService: TeamService
-  ) {
-    this.reflector = new Reflector()
-  }
+    private readonly reflector: Reflector,
+    private readonly formService: FormService,
+    private readonly teamService: TeamService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context)

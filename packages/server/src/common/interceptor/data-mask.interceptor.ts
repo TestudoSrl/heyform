@@ -1,17 +1,11 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common'
-import { ClassTransformOptions, plainToClass } from 'class-transformer'
+import { ClassTransformOptions, plainToInstance } from 'class-transformer'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
+import { DATA_MASK_OPTIONS } from '@decorator'
 import { helper } from '@heyform-inc/utils'
 
-import { DATA_MASK_OPTIONS } from '@decorator'
-
-// NOTE (external)
-
-// NOTE (external)
-// We need to deduplicate them here due to the circular dependency
-// between core and common packages
 const REFLECTOR = 'Reflector'
 
 export type TypeFunc = (returns?: void) => any
@@ -35,7 +29,7 @@ export class DataMaskInterceptor implements NestInterceptor {
   ): PlainObject | PlainObject[] {
     const types = options.typeFunc()
     const returnType = helper.isArray(types) ? types[0] : types
-    return plainToClass(returnType, response, options)
+    return plainToInstance(returnType, response, options)
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

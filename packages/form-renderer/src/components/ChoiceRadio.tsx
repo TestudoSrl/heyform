@@ -1,10 +1,11 @@
-import { helper } from '@heyform-inc/utils'
 import { IconCheck, IconPhoto } from '@tabler/icons-react'
 import clsx from 'clsx'
 import { FC, ReactNode, useCallback, useMemo } from 'react'
 
-import { IComponentProps } from '../typings'
 import { isURL, stopEvent, useKey, useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
+import { IComponentProps } from '../typings'
 import { Input } from './Input'
 
 export interface ChoiceRadioOption {
@@ -73,7 +74,6 @@ export const ChoiceRadio: FC<ChoiceRadioProps> = ({
         <Input
           value={value}
           placeholder={t('Type your answer')}
-          autoFocus={true}
           onBlur={onBlur}
           onClick={stopEvent}
           onChange={handleInputChange}

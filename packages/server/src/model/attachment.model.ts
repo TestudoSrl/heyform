@@ -29,7 +29,6 @@ export class AttachmentModel extends Document {
   @Prop({
     type: Number,
     required: true,
-    enum: Object.values(AttachmentStatusEnum),
     default: AttachmentStatusEnum.PUBLIC
   })
   status: AttachmentStatusEnum

@@ -1,38 +1,48 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common'
-import { GeeTest, GeeTestValidateOptions, GeeTestValidateResponse } from 'gt4-node-sdk'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
+import { RedisService } from './redis.service'
 import {
-  RandomType,
-  helper,
-  hs,
-  isDateExpired,
-  parseNumber,
-  random,
-  timestamp
-} from '@heyform-inc/utils'
-
-import {
+  COOKIE_DEVICE_ID_NAME,
   COOKIE_LOGIN_IN_NAME,
   COOKIE_SESSION_NAME,
   CookieOptionsFactory,
   SessionOptionsFactory
 } from '@config'
 import {
-  GEETEST_CAPTCHA_ID,
-  GEETEST_CAPTCHA_KEY,
   SESSION_KEY,
   SESSION_MAX_AGE,
   VERIFICATION_CODE_EXPIRE,
-  VERIFICATION_CODE_LIMIT
+  VERIFICATION_CODE_LIMIT,
+  VERIFY_EMAIL_RESEND_COOLDOWN,
+  VERIFY_EMAIL_RESEND_DAILY_LIMIT
 } from '@environments'
+import {
+  helper,
+  hs,
+  isDateExpired,
+  nanoid,
+  parseNumber,
+  random,
+  timestamp
+} from '@heyform-inc/utils'
+import { UserActivityKindEnum, UserActivityModel } from '@model'
 import { aesDecryptObject, aesEncryptObject } from '@utils'
+import { UserAgent } from '@utils'
 
-import { RedisService } from './redis.service'
+interface UserActivity {
+  kind: UserActivityKindEnum
+  userId: string
+  deviceId: string
+  ip: string
+  userAgent: UserAgent
+}
 
 interface LoginOptions {
   res: any
   userId: string
-  browserId: string
+  deviceId: string
 }
 
 interface AttemptsCheckOptions {
@@ -44,13 +54,24 @@ const DEFAULT_ATTEMPTS_OPTIONS = {
   max: 5,
   expire: '15m'
 }
+const NUMERIC_ALPHABET = '0123456789'
+const OAUTH_STATE_COOKIE_NAME = 'HEYFORM_OAUTH_STATE'
+const OAUTH_STATE_MAX_AGE = hs('10m')
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(
+    @InjectModel(UserActivityModel.name)
+    private readonly userActivityModel: Model<UserActivityModel>,
+    private readonly redisService: RedisService
+  ) {}
 
   private static sessionKey(userId: string): string {
     return `sess:${userId}`
+  }
+
+  async invalidateSessions(userId: string): Promise<void> {
+    await this.redisService.del(AuthService.sessionKey(userId))
   }
 
   async devices(userId: string): Promise<string[]> {
@@ -59,22 +80,91 @@ export class AuthService {
       key
     })
 
-    return Object.keys(result as Object)
+    return Object.keys(result as object)
   }
 
-  async login({ res, userId, browserId }: LoginOptions): Promise<void> {
+  getDeviceId(req: any): string {
+    return req.cookies?.[COOKIE_DEVICE_ID_NAME] || req.headers?.['x-device-id'] || nanoid()
+  }
+
+  async createOAuthState(req: any, res: any, deviceId: string): Promise<string> {
+    const state = nanoid(32)
+    const key = `oauth_state:${state}`
+
+    await this.redisService.set({
+      key,
+      value: this.getDeviceId({
+        ...req,
+        headers: {
+          ...req.headers,
+          'x-device-id': deviceId
+        }
+      }),
+      duration: '10m'
+    })
+
+    res.cookie(
+      OAUTH_STATE_COOKIE_NAME,
+      state,
+      CookieOptionsFactory({
+        httpOnly: true,
+        maxAge: OAUTH_STATE_MAX_AGE,
+        path: '/connect',
+        sameSite: 'none',
+        secure: true
+      })
+    )
+
+    return state
+  }
+
+  async verifyOAuthState(req: any, res: any, state?: string): Promise<void> {
+    const cookieState = req.cookies?.[OAUTH_STATE_COOKIE_NAME]
+
+    if (helper.isEmpty(state) || state !== cookieState) {
+      throw new BadRequestException('Invalid OAuth state')
+    }
+
+    const key = `oauth_state:${state}`
+    const deviceId = await this.redisService.get(key)
+
+    if (helper.isEmpty(deviceId)) {
+      throw new BadRequestException('Invalid OAuth state')
+    }
+
+    req.headers = {
+      ...req.headers,
+      'x-device-id': deviceId
+    }
+    req.cookies = {
+      ...req.cookies,
+      [COOKIE_DEVICE_ID_NAME]: deviceId
+    }
+
+    await this.redisService.del(key)
+    res.clearCookie(
+      OAUTH_STATE_COOKIE_NAME,
+      CookieOptionsFactory({
+        maxAge: 0,
+        path: '/connect',
+        sameSite: 'none',
+        secure: true
+      })
+    )
+  }
+
+  async login({ res, userId, deviceId }: LoginOptions): Promise<void> {
     const maxLoginNum = 20
     const loginAt = timestamp()
     const key = AuthService.sessionKey(userId)
 
     await this.redisService.hset({
       key,
-      field: browserId,
+      field: deviceId,
       value: loginAt,
       duration: SESSION_MAX_AGE
     })
 
-    // If more than maxLoginNum devices are logged in, delete earlier sessions
     const devices = await this.devices(userId)
     const len = devices.length
 
@@ -87,7 +177,7 @@ export class AuthService {
 
     this.setSession(res, {
       loginAt: timestamp(),
-      browserId,
+      deviceId,
       id: userId
     })
     res.cookie(COOKIE_LOGIN_IN_NAME, true, CookieOptionsFactory())
@@ -106,11 +196,38 @@ export class AuthService {
     } catch (_) {}
   }
 
-  async isExpired(userId: string, browserId: string): Promise<boolean> {
+  async removeSession(req: any, res: any): Promise<void> {
+    const session = this.getSession(req)
+
+    if (helper.isValid(session?.id) && helper.isValid(session?.deviceId)) {
+      await this.redisService.hdel({
+        key: AuthService.sessionKey(session.id),
+        field: session.deviceId
+      })
+    }
+
+    const sessionCookieOptions = SessionOptionsFactory({
+      expires: new Date(0),
+      maxAge: 0,
+      path: '/'
+    })
+    const loginCookieOptions = CookieOptionsFactory({
+      expires: new Date(0),
+      maxAge: 0,
+      path: '/'
+    })
+
+    res.clearCookie(COOKIE_SESSION_NAME, sessionCookieOptions)
+    res.clearCookie(COOKIE_LOGIN_IN_NAME, loginCookieOptions)
+    res.cookie(COOKIE_SESSION_NAME, '', sessionCookieOptions)
+    res.cookie(COOKIE_LOGIN_IN_NAME, '', loginCookieOptions)
+  }
+
+  async isExpired(userId: string, deviceId: string): Promise<boolean> {
     const key = `sess:${userId}`
     const result = await this.redisService.hget({
       key,
-      field: browserId
+      field: deviceId
     })
     const loginAt = Number(result)
 
@@ -121,16 +238,33 @@ export class AuthService {
     return isDateExpired(loginAt, timestamp(), SESSION_MAX_AGE)
   }
 
-  async renew(userId: string, browserId: string): Promise<void> {
+  async renew(userId: string, deviceId: string): Promise<void> {
     const key = `sess:${userId}`
     const now = timestamp()
 
     await this.redisService.hset({
       key,
-      field: browserId,
+      field: deviceId,
       value: now,
       duration: SESSION_MAX_AGE
     })
+  }
+
+  async createUserActivity(userActivity: UserActivity): Promise<UserActivityModel> {
+    return this.userActivityModel.create(userActivity as any)
+  }
+
+  async failRemaining(key: string, max: number): Promise<number> {
+    const result = await this.redisService.get(key)
+    const amount = parseNumber(result, 0)
+    return max - amount
+  }
+
+  async failIncrease(key: string): Promise<void> {
+    await this.redisService.multi([
+      ['incr', key],
+      ['expire', key, String(hs('15m'))]
+    ])
   }
 
   async attemptsCheck(
@@ -162,7 +296,11 @@ export class AuthService {
     }
   }
 
-  async getVerificationCode(key: string, length = 6, type = RandomType.NUMERIC): Promise<string> {
+  async getVerificationCode(
+    key: string,
+    length = 6,
+    type: string = NUMERIC_ALPHABET
+  ): Promise<string> {
     const code = random(length, type)
 
     await this.redisService.hset({
@@ -174,7 +312,7 @@ export class AuthService {
 
     // Delete the oldest one if the number of code is exceeded the VERIFICATION_CODE_LIMIT
     const result = await this.redisService.hget({ key })
-    const fields = Object.keys(result as Object)
+    const fields = Object.keys(result as object)
     const count = fields.length
 
     if (count > VERIFICATION_CODE_LIMIT) {
@@ -183,6 +321,47 @@ export class AuthService {
         field: fields.splice(0, count - VERIFICATION_CODE_LIMIT)
       })
     }
+
+    return code
+  }
+
+  async getVerificationCodeWithRateLimit(key: string): Promise<string> {
+    const cooldownKey = `cooldown:${key}`
+    const dailyLimitKey = `limit:day:${key}`
+    const now = timestamp()
+    const cooldownMs = hs(VERIFY_EMAIL_RESEND_COOLDOWN)
+    const dailyCount = parseNumber(await this.redisService.get(dailyLimitKey), 0)
+
+    if (dailyCount >= VERIFY_EMAIL_RESEND_DAILY_LIMIT) {
+      throw new ForbiddenException('Too many code emails sent today. Please try again later.')
+    }
+
+    const cooldownUntil = parseNumber(await this.redisService.get(cooldownKey), 0)
+
+    if (cooldownUntil > now) {
+      const waitSeconds = Math.ceil((cooldownUntil - now) / 1000)
+      const unit = waitSeconds === 1 ? 'second' : 'seconds'
+      throw new ForbiddenException(
+        `Please wait ${waitSeconds} ${unit} before requesting another code email.`
+      )
+    }
+
+    const code = await this.getVerificationCode(key)
+
+    if (dailyCount > 0) {
+      await this.redisService.incr(dailyLimitKey)
+    } else {
+      await this.redisService.multi([
+        ['incr', dailyLimitKey],
+        ['expire', dailyLimitKey, hs('1d')]
+      ])
+    }
+
+    await this.redisService.set({
+      key: cooldownKey,
+      value: now + cooldownMs,
+      duration: VERIFY_EMAIL_RESEND_COOLDOWN
+    })
 
     return code
   }
@@ -202,19 +381,5 @@ export class AuthService {
     if (expired < timestamp()) {
       throw new BadRequestException('Verification code expired')
     }
-  }
-
-  async gt4Validate(input: GeeTestValidateOptions): Promise<GeeTestValidateResponse> {
-    const gt = new GeeTest({
-      captchaId: GEETEST_CAPTCHA_ID,
-      captchaKey: GEETEST_CAPTCHA_KEY
-    })
-    const res = await gt.validate(input)
-
-    if (res.result !== 'success') {
-      throw new BadRequestException(res.reason)
-    }
-
-    return res
   }
 }

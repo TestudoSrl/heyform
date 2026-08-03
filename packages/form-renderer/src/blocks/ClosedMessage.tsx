@@ -1,8 +1,9 @@
 import { FormModel } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
 import { FC } from 'react'
 
 import { useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
 import { ThankYou } from './ThankYou'
 
 interface ClosedMessageProps {

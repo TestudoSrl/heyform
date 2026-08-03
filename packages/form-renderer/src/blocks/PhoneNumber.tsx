@@ -1,12 +1,13 @@
-import { helper } from '@heyform-inc/utils'
 import clsx from 'clsx'
 import { isValidPhoneNumber } from 'libphonenumber-js'
 import type { FC } from 'react'
 import { useState } from 'react'
 
+import { useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
 import { FormField, PhoneNumberInput } from '../components'
 import { useStore } from '../store'
-import { useTranslation } from '../utils'
 import type { BlockProps } from './Block'
 import { Block } from './Block'
 import { Form } from './Form'

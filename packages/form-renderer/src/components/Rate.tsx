@@ -2,8 +2,9 @@ import clsx from 'clsx'
 import type { FC, ReactNode } from 'react'
 import { useState } from 'react'
 
-import { IComponentProps } from '../typings'
 import { useKey } from '../utils'
+
+import { IComponentProps } from '../typings'
 
 export interface RateProps extends Omit<IComponentProps, 'onChange'> {
   itemRender: (index: number) => ReactNode

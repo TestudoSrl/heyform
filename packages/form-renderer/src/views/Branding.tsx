@@ -1,9 +1,10 @@
 import { FC } from 'react'
 import { Trans } from 'react-i18next'
 
+import { useTranslation } from '../utils'
+
 import { LogoIcon } from '../components'
 import { useStore } from '../store'
-import { useTranslation } from '../utils'
 
 export const Branding: FC = () => {
   const { state } = useStore()
@@ -20,7 +21,7 @@ export const Branding: FC = () => {
         i18nKey="Made with HeyForm"
         components={{
           icon: <LogoIcon className="inline h-4 w-4" />,
-          span: <span className="font-bold" />
+          span: <span className="font-medium" />
         }}
       />
     </a>

@@ -15,12 +15,8 @@
     "sourceMap": true,
     "importHelpers": true,
     "resolveJsonModule": true,
-		"moduleResolution": "node",
+    "moduleResolution": "node",
     "skipLibCheck": true
   },
-  "exclude": [
-    "coverage",
-    "lib",
-    "node_modules"
-  ]
+  "exclude": ["coverage", "lib", "node_modules"]
 }

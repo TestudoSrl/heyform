@@ -29,8 +29,7 @@ export class TeamActivityModel extends Document {
 
   @Prop({
     type: Number,
-    required: true,
-    enum: Object.values(TeamActivityKindEnum)
+    required: true
   })
   kind: TeamActivityKindEnum
 

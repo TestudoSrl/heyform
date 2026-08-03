@@ -1,6 +1,5 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-
 import { FormDetailInput } from './form.graphql'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
 
 @InputType()
 export class ConnectStripeInput extends FormDetailInput {

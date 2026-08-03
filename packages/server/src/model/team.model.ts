@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 
-import { date, nanoid } from '@heyform-inc/utils'
-
-import { INVITE_CODE_EXPIRE_DAYS } from '@environments'
-
+import { BrandKitModel } from './brand-kit.model'
 import { ProjectModel } from './project.model'
+import { INVITE_CODE_EXPIRE_DAYS } from '@environments'
+import { date, nanoid } from '@heyform-inc/utils'
 
 @Schema({
   timestamps: true
@@ -22,6 +21,9 @@ export class TeamModel extends Document {
 
   @Prop()
   avatar?: string
+
+  @Prop()
+  removeBranding?: boolean
 
   @Prop({ default: () => nanoid(), unique: true })
   inviteCode: string
@@ -52,6 +54,9 @@ export class TeamModel extends Document {
 
   // Member count
   memberCount?: number
+
+  // Team brand kits
+  brandKits?: BrandKitModel[]
 
   // If the user is team owner
   isOwner?: boolean

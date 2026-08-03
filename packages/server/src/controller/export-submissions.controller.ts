@@ -1,12 +1,10 @@
 import { BadRequestException, Controller, Get, Query, Res } from '@nestjs/common'
 import { Response } from 'express'
 
+import { Auth, FormGuard } from '@decorator'
+import { ExportSubmissionsDto } from '@dto'
 import { flattenFields } from '@heyform-inc/answer-utils'
 import { date } from '@heyform-inc/utils'
-
-import { Auth, FormGuard, Team } from '@decorator'
-import { ExportSubmissionsDto } from '@dto'
-import { TeamModel } from '@model'
 import { ExportFileService, FormService, SubmissionService } from '@service'
 
 @Controller()
@@ -18,11 +16,10 @@ export class ExportSubmissionsController {
     private readonly exportFileService: ExportFileService
   ) {}
 
-  @Get('/export/submissions')
+  @Get('/api/export/submissions')
   @FormGuard()
   async exportSubmissions(
     @Query() input: ExportSubmissionsDto,
-    @Team() team: TeamModel,
     @Res() res: Response
   ): Promise<void> {
     const form = await this.formService.findById(input.formId)

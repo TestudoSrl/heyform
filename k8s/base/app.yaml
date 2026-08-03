@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: heyform-uploads
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heyform
+  annotations:
+    cloud.google.com/backend-config: '{"default":"heyform-backend-config"}'
+    cloud.google.com/neg: '{"ingress":true}'
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: heyform
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heyform
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: heyform
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: heyform
+    spec:
+      terminationGracePeriodSeconds: 45
+      containers:
+        - name: heyform
+          image: heyform:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9157
+          envFrom:
+            - configMapRef:
+                name: heyform-config
+            - secretRef:
+                name: heyform-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/packages/server/static/upload
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: heyform-uploads

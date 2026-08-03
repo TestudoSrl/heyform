@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
 import { Auth, ProjectGuard } from '@decorator'
 import { ProjectMemberInput } from '@graphql'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { ProjectService } from '@service'
 
 @Resolver()

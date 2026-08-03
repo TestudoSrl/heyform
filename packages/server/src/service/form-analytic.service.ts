@@ -2,15 +2,21 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
-import { date, helper } from '@heyform-inc/utils'
-
-import { FormAnalyticModel } from '@model'
 import { SubmissionService } from './submission.service'
+import { date, helper } from '@heyform-inc/utils'
+import { FormAnalyticModel } from '@model'
 
 interface FormAnalyticOptions {
   formId: string
+  startAt: Date
   endAt: Date
-  range: number
+  isNext?: boolean
+}
+
+interface FormAnalyticResult {
+  avgTotalVisits: number
+  avgSubmissionCount: number
+  avgAverageTime: number
 }
 
 @Injectable()
@@ -21,9 +27,7 @@ export class FormAnalyticService {
     private readonly submissionService: SubmissionService
   ) {}
 
-  public async summary({ formId, endAt, range }: FormAnalyticOptions) {
-    const startAt = date(endAt).subtract(range, 'days').startOf('day').toDate()
-
+  public async summary({ formId, startAt, endAt, isNext }: FormAnalyticOptions) {
     const [avgTotalVisits, result] = await Promise.all([
       this.getAverageTotalVisits(formId, startAt, endAt),
       this.submissionService.analytic(
@@ -34,17 +38,25 @@ export class FormAnalyticService {
     ])
 
     const analytic = {
-      totalVisits: avgTotalVisits,
-      submissionCount: 0,
-      averageTime: 0
+      avgTotalVisits: 0,
+      avgSubmissionCount: 0,
+      avgAverageTime: 0
     }
 
-    if (helper.isValidArray(result)) {
-      analytic.submissionCount = result[0].submissionCount
-      analytic.averageTime = result[0].averageTime
-    }
+    if (avgTotalVisits > 0) {
+      analytic.avgTotalVisits = avgTotalVisits
 
-    return analytic
+      if (helper.isValidArray(result)) {
+        analytic.avgSubmissionCount = result[0].avgSubmissionCount
+        analytic.avgAverageTime = result[0].avgAverageTime
+      }
+
+      return analytic
+    } else if (isNext) {
+      return analytic
+    } else {
+      return {} as FormAnalyticResult
+    }
   }
 
   public async getAverageTotalVisits(formId: string, startAt: Date, endAt: Date): Promise<number> {
@@ -69,9 +81,6 @@ export class FormAnalyticService {
     return result[0]?.avgTotalVisits || 0
   }
 
-  /**
-   * Increase total visits
-   */
   public async updateTotalVisits(formId: string): Promise<void> {
     const formAnalytic = await this.findFormAnalyticInToday(formId)
 
@@ -104,5 +113,23 @@ export class FormAnalyticService {
         $lte: today.endOf('day')
       }
     })
+  }
+
+  public async delete(formId: string | string[]): Promise<boolean> {
+    let result: any
+
+    if (helper.isValidArray(formId)) {
+      result = await this.formAnalyticModel.deleteMany({
+        formId: {
+          $in: formId as string[]
+        }
+      })
+    } else {
+      result = await this.formAnalyticModel.deleteOne({
+        formId: formId as string
+      })
+    }
+
+    return (result.deletedCount ?? 0) > 0
   }
 }

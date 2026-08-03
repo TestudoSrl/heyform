@@ -1,7 +1,6 @@
+import { Choice, FieldKindEnum, Property } from '@heyform-inc/shared-types-enums'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
-
-import { Choice, FieldKindEnum, Property } from '@heyform-inc/shared-types-enums'
 
 interface Choose extends Choice {
   count: number

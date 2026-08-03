@@ -16,11 +16,7 @@ export function type(obj: any): string {
   const typeLower = type.toLowerCase()
 
   if (typeLower !== 'object') {
-    if (
-      typeLower === 'number' ||
-      typeLower === 'boolean' ||
-      typeLower === 'string'
-    ) {
+    if (typeLower === 'number' || typeLower === 'boolean' || typeLower === 'string') {
       return type
     }
     return typeLower

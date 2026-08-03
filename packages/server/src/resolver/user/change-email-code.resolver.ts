@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Query, Resolver } from '@nestjs/graphql'
 
 import { Auth, User } from '@decorator'
 import { ChangeEmailCodeInput } from '@graphql'
 import { UserModel } from '@model'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { AuthService, MailService, UserService } from '@service'
 import { isDisposableEmail } from '@utils'
 
@@ -33,11 +33,14 @@ export class ChangeEmailCodeResolver {
       throw new BadRequestException('The email address is already exists')
     }
 
-    // Add a code of new email address to cache
-    const key = `verify_email:${user.id}:${input.email}`
-    const code = await this.authService.getVerificationCode(key)
+    //
 
-    this.mailService.emailVerificationRequest(input.email, code)
+    //
+
+    const key = `verify_email:${user.id}:${input.email}`
+    const code = await this.authService.getVerificationCodeWithRateLimit(key)
+
+    this.mailService.emailVerificationRequest(input.email, code, user.lang)
 
     return true
   }

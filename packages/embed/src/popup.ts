@@ -1,9 +1,10 @@
+import { $, Dom, colorIsDark, logger } from './utils'
+
 import IconClose from './assets/icon-close.svg'
 import IconLoading from './assets/icon-loading.svg'
 import IconMessage from './assets/icon-message.svg'
 import { Modal } from './modal'
 import { AnyMap, PopupSettings } from './type'
-import { $, Dom, colorIsDark, logger } from './utils'
 
 const POPUP_TEMPLATE = `
   <div id="{containerId}" class="heyform__popup heyform__popup-{position}">

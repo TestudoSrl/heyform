@@ -1,8 +1,9 @@
 import type { FormField } from '@heyform-inc/shared-types-enums'
 import type { FC } from 'react'
 
-import { useStore } from '../store'
 import { replaceHTML } from '../utils'
+
+import { useStore } from '../store'
 import { WelcomeBranding } from '../views/Branding'
 import type { BlockProps } from './Block'
 import { EmptyState } from './EmptyState'

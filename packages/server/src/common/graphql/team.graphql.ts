@@ -1,8 +1,19 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-import { ArrayMinSize, IsArray, IsEmail, IsEnum, IsOptional, IsUrl, Length } from 'class-validator'
+import {
+  ArrayMinSize,
+  IsArray,
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsObject,
+  IsOptional,
+  IsUrl,
+  Length
+} from 'class-validator'
 
-import { ProjectType } from '@graphql'
-import { ProjectModel, TeamRoleEnum } from '@model'
+import { FormType, ProjectType } from '@graphql'
+import { FormModel, ProjectModel, TeamRoleEnum } from '@model'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @InputType()
 export class CreateTeamInput {
@@ -20,12 +31,21 @@ export class CreateTeamInput {
   @IsOptional()
   @IsArray()
   members?: string[]
+
+  @Field()
+  projectName: string
 }
 
 @InputType()
 export class TeamDetailInput {
   @Field()
   teamId: string
+}
+
+@InputType()
+export class SearchTeamInput extends TeamDetailInput {
+  @Field()
+  query: string
 }
 
 @InputType()
@@ -49,6 +69,43 @@ export class InviteMemberInput extends TeamDetailInput {
 }
 
 @InputType()
+export class TeamCdnTokenInput {
+  @Field()
+  teamId: string
+
+  @Field()
+  mime: string
+
+  @Field()
+  filename: string
+}
+
+@InputType()
+export class CreateBrandKitInput extends TeamDetailInput {
+  @Field({ nullable: true })
+  @IsUrl()
+  @IsOptional()
+  logo: string
+
+  @Field(type => GraphQLJSONObject)
+  @IsObject()
+  theme: Record<string, any>
+}
+
+@InputType()
+export class UpdateBrandKitInput extends TeamDetailInput {
+  @Field({ nullable: true })
+  @IsUrl()
+  @IsOptional()
+  logo: string
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsObject()
+  @IsOptional()
+  theme: Record<string, any>
+}
+
+@InputType()
 export class UpdateTeamInput extends TeamDetailInput {
   @Field({ nullable: true })
   @Length(1, 30, {
@@ -61,6 +118,11 @@ export class UpdateTeamInput extends TeamDetailInput {
   @IsUrl()
   @IsOptional()
   avatar?: string
+
+  @Field({ nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  removeBranding?: boolean
 }
 
 @InputType()
@@ -143,6 +205,18 @@ export class PublicTeamType {
 }
 
 @ObjectType()
+class BrandKitType {
+  @Field()
+  id: string
+
+  @Field({ nullable: true })
+  logo?: string
+
+  @Field(type => GraphQLJSONObject)
+  theme: Record<string, any>
+}
+
+@ObjectType()
 export class TeamType extends PublicTeamType {
   @Field()
   ownerId: string
@@ -165,18 +239,21 @@ export class TeamType extends PublicTeamType {
   @Field(type => [ProjectType], { nullable: true })
   projects?: ProjectModel[]
 
+  @Field(type => [BrandKitType], { nullable: true })
+  brandKits: BrandKitType[]
+
   @Field(type => Number, { nullable: true })
   role?: TeamRoleEnum
 
   @Field({ nullable: true })
-  trialEndAt?: number
+  removeBranding?: boolean
 
   @Field()
   createdAt: Date
 }
 
 @ObjectType()
-export class TeamSubscriptionType {
+export class TeamOverviewType {
   @Field({ nullable: true })
   memberCount?: number
 
@@ -212,4 +289,25 @@ export class TeamMemberType {
 
   @Field()
   isOwner?: boolean
+}
+
+@ObjectType()
+class DocType {
+  @Field()
+  id: string
+
+  @Field()
+  title: string
+
+  @Field()
+  description: string
+}
+
+@ObjectType()
+export class SearchTeamType {
+  @Field(type => [FormType], { nullable: true })
+  forms: FormModel[]
+
+  @Field(type => [DocType], { nullable: true })
+  docs: DocType[]
 }

@@ -367,11 +367,14 @@ button.button-icon-only {
 }
 
 .heyform-radio-container {
-  @apply flex w-full rounded p-2 transition;
+  @apply flex w-full rounded-md px-3 py-2 transition;
 
   background-color: var(--heyform-answer-opacity-10-color);
   color: var(--heyform-answer-color);
-  box-shadow: var(--heyform-answer-opacity-60-color) 0 0 0 1px inset;
+
+  &:hover {
+    background-color: var(--heyform-answer-opacity-30-color);
+  }
 }
 
 .heyform-radio-content {
@@ -416,8 +419,7 @@ button.button-icon-only {
 
 .heyform-radio-selected {
   .heyform-radio-container {
-    border-color: var(--heyform-answer-opacity-80-color);
-    box-shadow: var(--heyform-answer-opacity-80-color) 0 0 0 2px inset;
+    box-shadow: none;
   }
 
   .heyform-radio-hotkey {
@@ -545,6 +547,10 @@ button.button-icon-only {
 
 .heyform-root {
   background-color: var(--heyform-background-color);
+  --heyform-form-max-width: 1120px;
+  --heyform-question-transition-duration: 1000ms;
+  --heyform-question-transition-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --heyform-question-transition-distance: 100vh;
 }
 
 .heyform-root-android {
@@ -599,6 +605,11 @@ button.button-icon-only {
   z-index: 8;
 }
 
+.heyform-body-leaving {
+  pointer-events: none;
+  z-index: 7;
+}
+
 .heyform-block-container {
   @apply z-10;
 
@@ -617,6 +628,22 @@ button.button-icon-only {
   @apply relative z-10 h-full overflow-hidden md:absolute md:inset-0 md:h-auto;
 
   &.heyform-block-float_left,
+  &.heyform-block-float_right {
+    @media (min-width: 800px) {
+      left: 50%;
+      right: auto;
+      width: 100%;
+      max-width: var(--heyform-form-max-width, 1120px);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+      box-sizing: border-box;
+      transform: translateX(-50%);
+    }
+  }
+
+  &.heyform-block-float_left,
   &.heyform-block-split_left,
   &.heyform-block-float_right,
   &.heyform-block-split_right {
@@ -631,11 +658,29 @@ button.button-icon-only {
     }
   }
 
-  &.heyform-block-float_left,
   &.heyform-block-split_left {
     .heyform-scroll-wrapper {
       @media (min-width: 800px) {
         margin-left: 50%;
+      }
+    }
+  }
+
+  &.heyform-block-float_left,
+  &.heyform-block-float_right {
+    .heyform-scroll-wrapper {
+      @media (min-width: 800px) {
+        width: calc(50% - 20px);
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+    }
+  }
+
+  &.heyform-block-float_left {
+    .heyform-scroll-wrapper {
+      @media (min-width: 800px) {
+        margin-left: calc(50% + 20px);
       }
     }
   }
@@ -650,8 +695,10 @@ button.button-icon-only {
   @apply relative overflow-x-hidden px-6 md:px-20;
   @extend .heyform-scrollbar;
   transition:
-    transform 500ms ease 0s,
-    opacity 200ms ease 0s;
+    transform var(--heyform-question-transition-duration) var(--heyform-question-transition-easing)
+      0s,
+    opacity var(--heyform-question-transition-duration) var(--heyform-question-transition-easing)
+      0s;
   will-change: transform, opacity;
   z-index: 6;
 
@@ -672,24 +719,52 @@ button.button-icon-only {
   }
 }
 
-.heyform-block-previous {
-  .heyform-scroll-wrapper {
-    opacity: 0;
-    transform: translateY(-100vh);
-  }
-}
-
-.heyform-block-next {
-  .heyform-scroll-wrapper {
-    opacity: 0;
-    transform: translateY(100vh);
-  }
-}
-
-.heyform-block-entered {
+.heyform-block-entered,
+.heyform-block-leaving {
   .heyform-scroll-wrapper {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.heyform-block-entering.heyform-block-direction-next {
+  .heyform-scroll-wrapper {
+    opacity: 0;
+    transform: translate3d(0, var(--heyform-question-transition-distance), 0);
+  }
+}
+
+.heyform-block-entering.heyform-block-direction-previous {
+  .heyform-scroll-wrapper {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--heyform-question-transition-distance) * -1), 0);
+  }
+}
+
+.heyform-block-leaving-active.heyform-block-direction-next {
+  .heyform-scroll-wrapper {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--heyform-question-transition-distance) * -1), 0);
+  }
+}
+
+.heyform-block-leaving-active.heyform-block-direction-previous {
+  .heyform-scroll-wrapper {
+    opacity: 0;
+    transform: translate3d(0, var(--heyform-question-transition-distance), 0);
+  }
+}
+
+.heyform-block-inactive {
+  .heyform-scroll-wrapper {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heyform-scroll-wrapper {
+    transition-duration: 1ms;
   }
 }
 
@@ -711,13 +786,16 @@ button.button-icon-only {
 }
 
 .heyform-block-title {
-  @apply mb-2 text-xl font-medium md:text-2xl;
+  @apply mb-2 text-3xl font-medium;
   color: var(--heyform-question-color);
 }
 
 .heyform-block-description {
   @apply text-lg;
   color: var(--heyform-description-color);
+  b {
+    color: var(--heyform-question-color);
+  }
 }
 
 .heyform-block-title,
@@ -726,11 +804,6 @@ button.button-icon-only {
     @apply underline;
     color: var(--heyform-answer-color);
   }
-}
-
-.heyform-block-number {
-  @apply mb-1 text-base;
-  color: var(--heyform-label-color);
 }
 
 .heyform-skip-button {
@@ -778,10 +851,10 @@ button.button-icon-only {
   @apply flex items-center justify-center;
 
   img {
-    @apply h-full w-full rounded-none object-cover;
+    @apply h-full w-full rounded-2xl object-cover;
 
     @media (min-width: 800px) {
-      @apply h-auto w-auto max-w-full;
+      @apply h-auto w-auto max-w-full rounded-2xl;
       max-height: 70%;
     }
   }
@@ -794,14 +867,16 @@ button.button-icon-only {
 
 .heyform-layout-float_left {
   @media (min-width: 800px) {
-    padding-left: 5rem;
-    padding-right: 3.5rem;
+    width: calc(50% - 20px);
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
 .heyform-layout-split_left {
   img {
-    @apply rounded-none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
@@ -812,14 +887,16 @@ button.button-icon-only {
 
 .heyform-layout-float_right {
   @media (min-width: 800px) {
-    padding-left: 3.5rem;
-    padding-right: 5rem;
+    width: calc(50% - 20px);
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
 .heyform-layout-split_right {
   img {
-    @apply rounded-none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 
@@ -830,12 +907,8 @@ button.button-icon-only {
   max-width: 45rem;
   min-height: 3.75rem;
 
-  .heyform-block-number {
-    @apply mb-0 text-xs;
-  }
-
   .heyform-block-title {
-    @apply mb-0 ml-4 flex-1 truncate text-xl;
+    @apply mb-0 flex-1 truncate text-2xl;
   }
 }
 
@@ -874,7 +947,7 @@ button.button-icon-only {
   @apply w-full border-none bg-transparent p-0 pb-2 text-2xl shadow-none outline-none transition;
   color: var(--heyform-answer-color);
   border-radius: 0;
-  border-bottom: 1px solid var(--heyform-answer-opacity-80-color);
+  border-bottom: 1px solid var(--heyform-answer-opacity-30-color);
 
   &:focus {
     @apply -mb-px border-2;
@@ -1519,8 +1592,7 @@ button.button-icon-only {
 .heyform-countdown,
 .heyform-branding,
 .heyform-pagination button.button {
-  @apply px-2.5 py-2.5 text-sm shadow-none md:py-0.5;
-  min-height: 1.875rem;
+  @apply px-2.5 py-1.5 text-sm shadow-none;
   background-color: var(--heyform-button-color);
   color: var(--heyform-button-text-color);
 
@@ -1577,13 +1649,14 @@ button.button-icon-only {
 }
 
 .heyform-branding {
-  @apply rounded;
+  @apply rounded-md;
   line-height: 1.5rem;
 }
 
 .heyform-pagination .button {
   @apply px-3 py-3 md:px-2 md:py-0.5;
 
+  .button-leading,
   .button-trailing {
     @apply m-0;
     color: var(--heyform-button-text-color);
@@ -1596,6 +1669,7 @@ button.button-icon-only {
   &[disabled] {
     @apply cursor-default opacity-100;
 
+    .button-leading,
     .button-trailing {
       @apply opacity-60;
     }
@@ -1628,7 +1702,7 @@ button.heyform-pagination-previous {
 }
 
 .heyform-validation-error {
-  @apply inline-block rounded bg-red-600 bg-opacity-10 px-2 py-1 text-sm text-red-600;
+  @apply inline-block rounded bg-red-600 bg-opacity-10 text-sm text-red-600;
 }
 
 .heyform-submit-container {
@@ -1637,7 +1711,6 @@ button.heyform-pagination-previous {
 
 button.heyform-submit-button {
   @apply relative inline-flex items-center justify-center rounded-md px-5 py-1.5 text-lg font-medium shadow-none outline-none;
-  min-width: 7.5rem;
   background-color: var(--heyform-button-color);
   color: var(--heyform-button-text-color);
 
@@ -1656,19 +1729,6 @@ button.heyform-submit-button {
 
 .heyform-justify-between {
   @apply justify-between;
-}
-
-.heyform-submit-warn {
-  @apply mt-4 text-sm;
-
-  &,
-  a {
-    color: var(--heyform-answer-color);
-  }
-
-  a {
-    @apply underline;
-  }
 }
 
 // ----------------------------------------------------------------------------
@@ -1791,7 +1851,7 @@ button.heyform-submit-button {
     }
 
     .heyform-branding {
-      @apply flex w-full items-center justify-center gap-2 text-base font-medium;
+      @apply flex w-full items-center justify-center gap-2 text-base;
 
       svg {
         @apply block h-auto w-5;
@@ -2008,7 +2068,7 @@ button.heyform-submit-button {
     }
 
     .heyform-branding {
-      @apply w-full bg-transparent text-center text-base font-bold text-black;
+      @apply w-full bg-transparent text-center text-base text-black;
     }
   }
 }

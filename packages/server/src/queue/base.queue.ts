@@ -4,6 +4,7 @@ import { Job } from 'bull'
 import { Logger } from '@utils'
 
 export interface IntegrationQueueJob {
+  formId: string
   integrationId: string
   submissionId: string
 }
@@ -27,8 +28,9 @@ export class BaseQueue {
 
   @OnQueueFailed()
   async onFailed(job: Job) {
+    const reason = job.failedReason ? `, reason: ${job.failedReason}` : ''
     this.logger.info(
-      `${job.queue.name}#${job.id} failed, attempts ${job.attemptsMade} of ${job.opts.attempts} times`
+      `${job.queue.name}#${job.id} failed, attempts ${job.attemptsMade} of ${job.opts.attempts} times${reason}`
     )
 
     if (job.attemptsMade >= job.opts.attempts) {

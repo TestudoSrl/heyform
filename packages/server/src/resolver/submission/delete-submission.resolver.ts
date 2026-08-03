@@ -1,7 +1,6 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { Auth, FormGuard } from '@decorator'
 import { DeleteSubmissionInput } from '@graphql'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { SubmissionService } from '@service'
 
 @Resolver()
@@ -9,11 +8,6 @@ import { SubmissionService } from '@service'
 export class DeleteSubmissionResolver {
   constructor(private readonly submissionService: SubmissionService) {}
 
-  /**
-   * Delete submissions
-   *
-   * @param input
-   */
   @Mutation(returns => Boolean)
   @FormGuard()
   async deleteSubmissions(@Args('input') input: DeleteSubmissionInput): Promise<boolean> {

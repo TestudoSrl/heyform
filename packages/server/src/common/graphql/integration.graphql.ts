@@ -1,63 +1,30 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { IsEmail, IsEnum, IsOptional, IsUrl } from 'class-validator'
-
-import { IntegrationStatusEnum } from '@model'
+import { IsEnum } from 'class-validator'
 
 import { FormDetailInput } from './form.graphql'
+import { IntegrationStatusEnum } from '@model'
+import { Field, InputType } from '@nestjs/graphql'
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @InputType()
-export class ThirdPartyInput extends FormDetailInput {
+export class IntegrationInput extends FormDetailInput {
   @Field()
   appId: string
 }
 
 @InputType()
-export class ThirdPartyOAuthInput extends ThirdPartyInput {
+export class IntegrationOAuthInput extends IntegrationInput {
   @Field()
   code: string
 }
 
 @InputType()
-class EmailSettingsInput {
-  @Field()
-  @IsEmail()
-  email: string
+export class UpdateIntegrationInput extends IntegrationInput {
+  @Field(type => GraphQLJSONObject)
+  config: Record<string, any>
 }
 
 @InputType()
-class GoogleAnalyticsSettingsInput {
-  @Field()
-  trackingCode: string
-}
-
-@InputType()
-class WebhookSettingsInput {
-  @Field()
-  @IsUrl()
-  webhook: string
-}
-
-@InputType()
-export class UpdateIntegrationInput extends ThirdPartyInput {
-  @Field(type => EmailSettingsInput, { nullable: true })
-  @IsOptional()
-  email?: EmailSettingsInput
-
-  @Field(type => GoogleAnalyticsSettingsInput, { nullable: true })
-  @IsOptional()
-  googleanalytics?: GoogleAnalyticsSettingsInput
-
-  @Field(type => GoogleAnalyticsSettingsInput, { nullable: true })
-  @IsOptional()
-  facebookpixel?: GoogleAnalyticsSettingsInput
-
-  @Field(type => WebhookSettingsInput, { nullable: true })
-  @IsOptional()
-  webhook?: WebhookSettingsInput
-}
-
-@InputType()
-export class UpdateIntegrationStatusInput extends ThirdPartyInput {
+export class UpdateIntegrationStatusInput extends IntegrationInput {
   @Field(type => Number)
   @IsEnum(IntegrationStatusEnum)
   status: IntegrationStatusEnum

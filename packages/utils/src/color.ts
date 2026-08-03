@@ -1,8 +1,7 @@
 import { isEmpty } from './helper'
 
 const HEX_REGEX = /^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$/i
-const RGBA_REGEX =
-  /rgba\((\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d*(?:\.\d+)?)\)/i
+const RGBA_REGEX = /rgba\((\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d*(?:\.\d+)?)\)/i
 const RGB_REGEX = /rgb\((\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d{1,3}%?)\)/i
 
 export function isHexColor(color: string): boolean {
@@ -100,20 +99,13 @@ export function invert(hex: string): string {
  * Convert rgba to a transparency-adjusted-hex
  * https://stackoverflow.com/a/15898886
  */
-export function alphaHexToRgb(
-  hex: string,
-  alpha: number,
-  backgroundHex: string
-): number[] {
+export function alphaHexToRgb(hex: string, alpha: number, backgroundHex: string): number[] {
   const hexRgb = hexToRgb(hex)
   const backgroundRgb = hexToRgb(backgroundHex)
 
   return hexRgb.map((color, index) => {
     return colorRange(
-      Math.floor(
-        colorRange(color) * alpha +
-          colorRange(backgroundRgb[index]) * (1 - alpha)
-      )
+      Math.floor(colorRange(color) * alpha + colorRange(backgroundRgb[index]) * (1 - alpha))
     )
   })
 }

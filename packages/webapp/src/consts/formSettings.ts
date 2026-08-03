@@ -5,8 +5,7 @@ export const CAPTCHA_KIND_OPTIONS = [
     label: 'Disable',
     value: CaptchaKindEnum.NONE
   },
-  { label: 'Google reCaptcha', value: CaptchaKindEnum.GOOGLE_RECAPTCHA },
-  { label: 'GeeTest CAPTCHA', value: CaptchaKindEnum.GEETEST_CAPTCHA }
+  { label: 'Google reCaptcha', value: CaptchaKindEnum.GOOGLE_RECAPTCHA }
 ]
 
 export const LOCALES_OPTIONS = [
@@ -46,8 +45,16 @@ export const FORM_LOCALES_OPTIONS = [
     value: 'fr'
   },
   {
+    label: 'Italian',
+    value: 'it'
+  },
+  {
     label: 'Polish',
     value: 'pl'
+  },
+  {
+    label: 'Portuguese (Brazil)',
+    value: 'pt-br'
   },
   {
     label: 'Turkish',

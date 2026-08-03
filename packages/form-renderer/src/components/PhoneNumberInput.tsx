@@ -1,4 +1,3 @@
-import { helper } from '@heyform-inc/utils'
 import type { PhoneNumber } from 'libphonenumber-js'
 import {
   formatIncompletePhoneNumber,
@@ -7,6 +6,8 @@ import {
 } from 'libphonenumber-js'
 import type { FC } from 'react'
 import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
+
+import { helper } from '@heyform-inc/utils'
 
 import { COUNTRIES } from '../consts'
 import { CountrySelect } from './CountrySelect'

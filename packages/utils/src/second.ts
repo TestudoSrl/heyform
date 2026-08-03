@@ -9,7 +9,7 @@ export function hs(arg: string): number | undefined {
 }
 
 export function ms(arg: string): number | undefined {
-  return _ms(arg)
+  return _ms(arg as _ms.StringValue)
 }
 
 export const toSecond = hs

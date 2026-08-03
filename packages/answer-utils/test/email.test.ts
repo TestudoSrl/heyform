@@ -1,7 +1,7 @@
-import { test, expect } from 'vitest'
-import { fieldValuesToAnswers } from '../src'
-import { test, expect } from 'vitest'
 import { FieldKindEnum } from '@heyform-inc/shared-types-enums'
+import { expect, test } from 'vitest'
+
+import { fieldValuesToAnswers } from '../src'
 
 const field = {
   id: 'EMAIL',

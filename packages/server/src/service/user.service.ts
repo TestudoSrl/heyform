@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
 import { timestamp } from '@heyform-inc/utils'
-
 import { UserModel } from '@model'
 
 @Injectable()
@@ -50,13 +49,13 @@ export class UserService {
       },
       updates
     )
-    return !!result?.ok
+    return result.acknowledged
   }
 
   public async delete(id: string): Promise<boolean> {
     const result = await this.userModel.deleteOne({
       _id: id
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 }

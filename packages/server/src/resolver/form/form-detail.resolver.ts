@@ -1,45 +1,110 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
-
-import { Auth, FormGuard } from '@decorator'
+import { Auth, FormGuard, Team } from '@decorator'
 import { FormDetailInput, FormType, PublicFormType } from '@graphql'
-import { FormModel } from '@model'
-import { AppService, FormService, IntegrationService } from '@service'
+import { date, helper } from '@heyform-inc/utils'
+import { FormModel, TeamModel } from '@model'
+import { Args, Query, Resolver } from '@nestjs/graphql'
+import { FormService, SubmissionService } from '@service'
+
+const DEFAULT_FORM_NAME = 'Untitled'
 
 @Resolver()
+@Auth()
 export class FormDetailResolver {
   constructor(
-    private readonly appService: AppService,
     private readonly formService: FormService,
-    private readonly integrationService: IntegrationService
+    private readonly submissionService: SubmissionService
   ) {}
 
   @Query(returns => FormType)
   @FormGuard()
-  @Auth()
-  async formDetail(@Args('input') input: FormDetailInput): Promise<FormModel> {
-    return this.formService.findById(input.formId)
+  async formDetail(
+    @Team() team: TeamModel,
+    @Args('input') input: FormDetailInput
+  ): Promise<FormModel> {
+    const [form, submissionCount] = await Promise.all([
+      this.formService.findById(input.formId),
+      this.submissionService.count({ formId: input.formId })
+    ])
+
+    //@ts-ignore
+    form.updatedAt = date(form.get('updatedAt')).unix()
+
+    //@ts-ignore
+    form.submissionCount = submissionCount
+
+    if (helper.isEmpty(form.name)) {
+      form.name = DEFAULT_FORM_NAME
+    }
+
+    return form
   }
+}
+
+@Resolver()
+export class PublicFormResolver {
+  constructor(private readonly formService: FormService) {}
 
   @Query(returns => PublicFormType)
   async publicForm(@Args('input') input: FormDetailInput): Promise<PublicFormType> {
     const form = await this.formService.findPublicForm(input.formId)
+
+    if (!form) {
+      throw new Error('Form not found')
+    }
+
+    if (!form.teamId) {
+      throw new Error('Form teamId is required')
+    }
+
+    if (!form.projectId) {
+      throw new Error('Form projectId is required')
+    }
+
     const integrations: Record<string, any> = {}
 
-    if (form.settings.active) {
-      const apps = await this.appService.findAllByUniqueIds(['googleanalytics', 'facebookpixel'])
-      const result = await this.integrationService.findAllInFormByApps(
-        input.formId,
-        apps.map(app => app.id)
-      )
-
-      for (const row of result) {
-        const app = apps.find(app => app.id === row.appId)
-        integrations[app.uniqueId] = (row.attributes as any).get('trackingCode')
-      }
+    if (form.settings?.active) {
+      // const apps = await this.appService.findAllByUniqueIds(['googleanalytics', 'facebookpixel'])
+      // const result = await this.integrationService.findAllInFormByApps(
+      //   input.formId,
+      //   apps.map(app => app.id)
+      // )
+      // for (const row of result) {
+      //   const app = apps.find(app => app.id === row.appId)
+      //   integrations[app.uniqueId] = (row.attributes as any).get('trackingCode')
+      // }
     }
 
     return {
-      ...form,
+      id: form.id,
+      teamId: form.teamId,
+      projectId: form.projectId,
+      memberId: form.memberId,
+      name: helper.isEmpty(form.name) ? DEFAULT_FORM_NAME : form.name,
+      description: form.description,
+      interactiveMode: form.interactiveMode,
+      kind: form.kind,
+      settings: form.settings,
+      drafts: form.drafts || form.fields || [],
+      fields: form.fields || [],
+      translations: form.translations || {},
+      hiddenFields: form.hiddenFields || [],
+      logics: form.logics || [],
+      variables: form.variables || [],
+      fieldsUpdatedAt: form.fieldsUpdatedAt || Date.now(),
+      themeSettings: form.themeSettings || {},
+      retentionAt: form.retentionAt,
+      suspended: form.suspended || false,
+      isDraft: form.isDraft || false,
+      status: form.status,
+      stripeAccount: form.stripeAccount,
+      version: form.version || 1,
+      canPublish: form.canPublish || false,
+      customReport: form.customReport || {
+        id: '',
+        hiddenFields: [],
+        theme: {},
+        enablePublicAccess: false
+      },
       integrations
     }
   }

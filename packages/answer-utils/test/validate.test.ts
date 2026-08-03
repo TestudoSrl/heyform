@@ -1,6 +1,7 @@
-import { test, expect } from 'vitest'
-import { fieldsToValidateRules, validate } from '../src'
 import { FieldKindEnum, NumberPrice } from '@heyform-inc/shared-types-enums'
+import { expect, test } from 'vitest'
+
+import { fieldsToValidateRules, validate } from '../src'
 
 test('short text', () => {
   const field = {

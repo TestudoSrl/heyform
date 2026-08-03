@@ -1,9 +1,4 @@
 {
   "extends": "./tsconfig.json",
-	"exclude": [
-		"view",
-		"node_modules",
-		"mongoose",
-		"dist"
-	]
+  "exclude": ["view", "node_modules", "mongoose", "dist"]
 }

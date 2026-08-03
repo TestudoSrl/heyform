@@ -1,4 +1,5 @@
 import { useTranslation } from '../utils'
+
 import { ThankYou } from './ThankYou'
 
 export const SuspendedMessage = () => {

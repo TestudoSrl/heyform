@@ -1,10 +1,4 @@
 import {
-  htmlUtils,
-  parsePlainAnswer,
-  validateCondition,
-  validateRequiredField
-} from '@heyform-inc/answer-utils'
-import {
   ActionEnum,
   ChoiceBadgeEnum,
   FORM_FIELD_KINDS,
@@ -14,6 +8,13 @@ import {
   NavigateAction,
   Variable
 } from '@heyform-inc/shared-types-enums'
+
+import {
+  htmlUtils,
+  parsePlainAnswer,
+  validateCondition,
+  validateRequiredField
+} from '@heyform-inc/answer-utils'
 import { helper, type } from '@heyform-inc/utils'
 
 import { CHAR_A_KEY_CODE } from '../consts'

@@ -1,15 +1,9 @@
-import {
-  MongooseModuleOptions,
-  MongooseOptionsFactory
-} from '@nestjs/mongoose/dist/interfaces/mongoose-options.interface'
+import { MongooseModuleOptions, MongooseOptionsFactory } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 
-import { clone } from '@heyform-inc/utils'
-
 import { MONGO_PASSWORD, MONGO_SSL_CA_PATH, MONGO_URI, MONGO_USER } from '@environments'
+import { clone } from '@heyform-inc/utils'
 import { Logger } from '@utils'
-
-// Setup migrations logger
 
 // Setup migrations logger
 const logger = new Logger('MongooseModule')
@@ -30,11 +24,7 @@ export class MongoService implements MongooseOptionsFactory {
       uri: MONGO_URI,
       user: MONGO_USER,
       pass: MONGO_PASSWORD,
-      sslCA: MONGO_SSL_CA_PATH,
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      useUnifiedTopology: true
+      sslCA: MONGO_SSL_CA_PATH as any
     }
   }
 }

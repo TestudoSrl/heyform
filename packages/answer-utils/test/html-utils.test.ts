@@ -1,4 +1,5 @@
-import { test, expect } from 'vitest'
+import { expect, test } from 'vitest'
+
 import { htmlUtils } from '../src/html-utils'
 
 const schema = [
@@ -47,6 +48,56 @@ test('parse html with block tags', () => {
       allowedBlockTags: ['div', 'p']
     })
   ).toMatchSnapshot()
+})
+
+test('purge removes unsafe tags and event handlers', () => {
+  expect(
+    htmlUtils.purge('<p>Hello<img src=x onerror=alert(1)><span onclick="alert(1)">world</span></p>')
+  ).toBe('<p>Hello<span>world</span></p>')
+})
+
+test('serialize escapes schema text and attributes', () => {
+  expect(
+    htmlUtils.serialize([
+      [
+        'a',
+        ['<img src=x onerror=alert(1)>'],
+        {
+          href: '" onmouseover="alert(1)'
+        }
+      ]
+    ])
+  ).toBe('<a href="&quot; onmouseover=&quot;alert(1)">&lt;img src=x onerror=alert(1)&gt;</a>')
+})
+
+test('serialize drops unsafe href protocols', () => {
+  expect(
+    htmlUtils.serialize([
+      [
+        'a',
+        ['click me'],
+        {
+          href: 'javascript:alert(1)'
+        }
+      ]
+    ])
+  ).toBe('<a>click me</a>')
+})
+
+test('serialize drops unsafe href protocols split by control characters', () => {
+  for (const href of ['java\tscript:alert(1)', 'java\nscript:alert(1)', 'vb\rscript:alert(1)']) {
+    expect(
+      htmlUtils.serialize([
+        [
+          'a',
+          ['click me'],
+          {
+            href
+          }
+        ]
+      ])
+    ).toBe('<a>click me</a>')
+  }
 })
 
 test('plain html', () => {

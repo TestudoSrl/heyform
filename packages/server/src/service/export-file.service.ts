@@ -1,7 +1,3 @@
-import { Injectable } from '@nestjs/common'
-import { parseAsync } from 'json2csv'
-
-import { htmlUtils, parsePlainAnswer } from '@heyform-inc/answer-utils'
 import {
   Answer,
   FieldKindEnum,
@@ -9,8 +5,11 @@ import {
   HiddenField,
   STATEMENT_FIELD_KINDS
 } from '@heyform-inc/shared-types-enums'
-import { helper, unixDate } from '@heyform-inc/utils'
+import { Injectable } from '@nestjs/common'
+import { parseAsync } from 'json2csv'
 
+import { htmlUtils, parsePlainAnswer } from '@heyform-inc/answer-utils'
+import { helper, unixDate } from '@heyform-inc/utils'
 import { SubmissionModel } from '@model'
 
 const FIELD_ID_KEY = '#'

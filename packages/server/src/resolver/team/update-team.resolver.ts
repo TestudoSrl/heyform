@@ -1,9 +1,10 @@
 import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
-import { Auth, Team, TeamGuard, User } from '@decorator'
+import { Auth, Team, TeamGuard } from '@decorator'
 import { UpdateTeamInput } from '@graphql'
-import { TeamModel, UserModel } from '@model'
+import { helper, pickValidValues } from '@heyform-inc/utils'
+import { TeamModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { TeamService } from '@service'
 
 @Resolver()
@@ -14,7 +15,6 @@ export class UpdateTeamResolver {
   @Mutation(returns => Boolean)
   @TeamGuard()
   async updateTeam(
-    @User() user: UserModel,
     @Team() team: TeamModel,
     @Args('input') input: UpdateTeamInput
   ): Promise<boolean> {
@@ -22,6 +22,12 @@ export class UpdateTeamResolver {
       throw new BadRequestException("You don't have permission to change the workspace settings")
     }
 
-    return await this.teamService.update(input.teamId, input)
+    const updates: Record<string, any> = pickValidValues(input as any, ['name', 'avatar'])
+
+    if (!helper.isNil(input.removeBranding)) {
+      updates.removeBranding = input.removeBranding
+    }
+
+    return await this.teamService.update(input.teamId, updates)
   }
 }

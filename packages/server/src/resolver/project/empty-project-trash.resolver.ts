@@ -1,9 +1,8 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { FormStatusEnum } from '@heyform-inc/shared-types-enums'
 
 import { Auth, ProjectGuard } from '@decorator'
 import { ProjectDetailInput } from '@graphql'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { FormService, SubmissionService } from '@service'
 
 @Resolver()
@@ -14,11 +13,6 @@ export class EmptyProjectTrashResolver {
     private readonly submissionService: SubmissionService
   ) {}
 
-  /**
-   * Delete form
-   *
-   * @param input
-   */
   @Mutation(returns => Boolean)
   @ProjectGuard()
   async emptyProjectTrash(@Args('input') input: ProjectDetailInput): Promise<boolean> {

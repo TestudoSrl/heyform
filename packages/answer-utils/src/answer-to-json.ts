@@ -1,5 +1,6 @@
-import parser from './answer-parser'
 import { Answer, FieldKindEnum } from '@heyform-inc/shared-types-enums'
+
+import parser from './answer-parser'
 
 interface AnswersToJsonOptions {
   plain?: boolean

@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - backendconfig.yaml
+  - keydb.yaml
+  - mongo.yaml
+  - network-policy.yaml
+  - app.yaml
+  - ingress.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: heyform
+    includeSelectors: false

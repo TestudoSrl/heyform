@@ -1,11 +1,18 @@
 import clsx from 'clsx'
-import type { ClipboardEvent, FC, KeyboardEvent, ChangeEvent, CompositionEvent, Ref } from 'react'
-import { startTransition, useCallback, useEffect, useRef, useState, useImperativeHandle } from 'react'
+import type { ChangeEvent, ClipboardEvent, CompositionEvent, FC, KeyboardEvent, Ref } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from 'react'
+
+import { preventDefault, stopPropagation, useTranslation } from '../utils'
 
 import { IComponentProps } from '../typings'
 import { InputRef } from './Input'
-
-import { preventDefault, stopPropagation, useTranslation } from '../utils'
 
 interface TextareaProps {
   disabled?: boolean
@@ -179,7 +186,7 @@ export const AutoResizeTextarea: FC<AutoResizeTextareaProps> = ({
   return (
     <textarea
       ref={inputRef}
-      className={clsx("heyform-autoresize-textarea", {
+      className={clsx('heyform-autoresize-textarea', {
         'heyform-autoresize-invalid': !window.CSS.supports('field-sizing', 'content')
       })}
       value={value as string}

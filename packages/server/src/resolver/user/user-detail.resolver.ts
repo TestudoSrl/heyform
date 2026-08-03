@@ -1,11 +1,11 @@
-import { Query, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
-
 import { Auth, User } from '@decorator'
 import { UserDetailType } from '@graphql'
+import { helper } from '@heyform-inc/utils'
 import { UserModel } from '@model'
+import { Query, Resolver } from '@nestjs/graphql'
 import { SocialLoginService } from '@service'
+
+const { isValid } = helper
 
 @Resolver()
 @Auth()
@@ -23,7 +23,7 @@ export class UserDetailResolver {
       avatar: user.avatar,
       lang: user.lang,
       isEmailVerified: user.isEmailVerified,
-      isSocialAccount: helper.isValid(result),
+      isSocialAccount: isValid(result),
       isDeletionScheduled: user.isDeletionScheduled,
       deletionScheduledAt: user.deletionScheduledAt
     }

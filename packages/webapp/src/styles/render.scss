@@ -1,0 +1,147 @@
+
+@import '@heyform-inc/form-renderer/style.css';
+
+.heyform-layout-float_left img,
+.heyform-layout-float_right img {
+  border-radius: 1rem;
+}
+
+.heyform-layout-split_left img {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.heyform-layout-split_right img {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+#heyform-render-root {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  background: transparent;
+}
+
+#heyform-render-root {
+  position: relative;
+  font-family: var(--heyform-font-family);
+  background-color: var(--heyform-report-background-color);
+}
+
+.grecaptcha-badge {
+  bottom: 4rem !important;
+  z-index: 20;
+}
+
+// Report
+.heyform-report {
+  @apply text-sm;
+}
+
+.heyform-report-heading {
+  @apply text-3xl font-bold;
+  color: var(--heyform-report-heading);
+}
+
+.heyform-report-subheading {
+  @apply pb-4 text-sm/6 font-medium;
+  color: var(--heyform-report-heading-a60);
+}
+
+.heyform-report-question {
+  @apply text-sm/6 font-medium;
+  color: var(--heyform-report-question);
+}
+
+.heyform-report-meta {
+  @apply text-xs/6;
+  color: var(--heyform-report-question-a60);
+}
+
+.heyform-report-content {
+  @apply mt-2;
+}
+
+.heyform-report-chart {
+  @apply space-y-2;
+}
+
+.heyform-report-chart-item {
+  @apply relative rounded-md px-3 py-2 text-sm/6;
+  background: var(--heyform-report-chart-a025);
+}
+
+.heyform-report-chart-background {
+  @apply pointer-events-none absolute bottom-0 left-0 top-0 rounded-md;
+  background: var(--heyform-report-chart-a15);
+}
+
+.heyform-report-chart-content {
+  @apply relative flex items-center justify-between;
+  color: var(--heyform-report-question);
+}
+
+.heyform-report-chart-percent {
+  @apply font-medium;
+}
+
+.heyform-report-chart-count {
+  @apply text-xs/6;
+  color: var(--heyform-report-question-a60);
+}
+
+.heyform-report-border,
+.heyform-report-divide > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--heyform-report-question-a05);
+}
+
+.heyform-report-answer {
+  @apply flex items-center justify-between gap-4 py-2 text-sm/6;
+}
+
+.heyform-report-value {
+  @apply min-w-0 flex-1 whitespace-pre-line;
+  color: var(--heyform-report-question);
+}
+
+.heyform-report-datetime {
+  @apply text-xs;
+  color: var(--heyform-report-question-a60);
+}
+
+.heyform-report-input-value {
+  @apply whitespace-nowrap py-2 text-sm/6;
+  color: var(--heyform-report-question);
+}
+
+.heyform-report-input-datetime {
+  @apply whitespace-nowrap py-2 text-right text-xs/6;
+  color: var(--heyform-report-question-a60);
+}
+
+.heyform-report-pagination {
+  @apply mt-2 border-t py-2;
+  border-color: var(--heyform-report-question-a05);
+
+  [data-slot='info'] {
+    color: var(--heyform-report-question);
+  }
+
+  button {
+    border-color: rgba(0, 0, 0, 0.1);
+
+    &,
+    &:hover {
+      background: var(--heyform-report-question);
+      color: var(--heyform-report-button-text);
+    }
+
+    &:hover {
+      @apply opacity-80;
+    }
+  }
+}

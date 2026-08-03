@@ -19,7 +19,6 @@ exports[`common file mime type 1`] = `
   "application/pdf",
   "video/mp4",
   "video/x-ms-wmv",
-  "image/svg+xml",
 ]
 `;
 

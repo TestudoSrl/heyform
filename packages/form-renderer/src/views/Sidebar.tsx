@@ -1,23 +1,23 @@
-import { helper } from '@heyform-inc/utils'
 import clsx from 'clsx'
 import type { FC } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTransition } from 'react-transition-state'
 
+import { sliceFieldsByLogics, treeFields, useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
 import { Button, CollapseIcon, XIcon } from '../components'
 import { TRANSITION_UNMOUNTED_STATES } from '../consts'
 import { useStore } from '../store'
 import type { IPartialFormField } from '../typings'
-import { questionNumber, sliceFieldsByLogics, treeFields, useTranslation } from '../utils'
 
 interface QuestionProps {
   field: IPartialFormField
-  parent?: IPartialFormField
   selectedId: string
   onClick: (id: string) => void
 }
 
-const Question: FC<QuestionProps> = ({ field, parent, selectedId, onClick }) => {
+const Question: FC<QuestionProps> = ({ field, selectedId, onClick }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const isSelected = useMemo(() => selectedId === field.id, [selectedId, field.id])
   const isGroup = useMemo(() => helper.isValidArray(field.children), [field.children])
@@ -55,7 +55,6 @@ const Question: FC<QuestionProps> = ({ field, parent, selectedId, onClick }) => 
           className="heyform-sidebar-question-title"
           onClick={handleClick}
         >
-          {field.index && `${questionNumber(field.index, parent?.index)}. `}
           {field.title}
         </div>
       </div>
@@ -63,13 +62,7 @@ const Question: FC<QuestionProps> = ({ field, parent, selectedId, onClick }) => 
       {isGroup && (
         <div className="heyform-sidebar-question-children">
           {field.children!.map(c => (
-            <Question
-              key={c.id}
-              field={c}
-              parent={field}
-              selectedId={selectedId}
-              onClick={onClick}
-            />
+            <Question key={c.id} field={c} selectedId={selectedId} onClick={onClick} />
           ))}
         </div>
       )}

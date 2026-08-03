@@ -1,6 +1,8 @@
 import { FieldKindEnum, FormField } from '@heyform-inc/shared-types-enums'
 import type { FC } from 'react'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { useTranslation } from '../utils'
 
 import { Address } from '../blocks/Address'
 import { Country } from '../blocks/Country'
@@ -27,104 +29,220 @@ import { Website } from '../blocks/Website'
 import { Welcome } from '../blocks/Welcome'
 import { YesNo } from '../blocks/YesNo'
 import { useStore } from '../store'
-import { useTranslation } from '../utils'
 import { Footer } from './Footer'
 import { Header } from './Header'
 
-function getBlock(field: FormField, blockIndex?: number) {
+const QUESTION_TRANSITION_DURATION = 1000
+type TransitionState = 'active' | 'leaving'
+
+function getBlock(
+  field: FormField,
+  blockIndex?: number,
+  transitionState: TransitionState = 'active'
+) {
   switch (field.kind) {
     case FieldKindEnum.ADDRESS:
-      return <Address key={field.id} field={field} />
+      return <Address key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.COUNTRY:
-      return <Country key={field.id} field={field} />
+      return <Country key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.FULL_NAME:
-      return <FullName key={field.id} field={field} />
+      return <FullName key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.DATE:
-      return <Date key={field.id} field={field} />
+      return <Date key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.DATE_RANGE:
-      return <DateRange key={field.id} field={field} />
+      return <DateRange key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.EMAIL:
-      return <Email key={field.id} field={field} />
+      return <Email key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.FILE_UPLOAD:
-      return <FileUpload key={field.id} field={field} />
+      return <FileUpload key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.MULTIPLE_CHOICE:
-      return <MultipleChoice key={field.id} field={field} />
+      return <MultipleChoice key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.NUMBER:
-      return <Number key={field.id} field={field} />
+      return <Number key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.OPINION_SCALE:
-      return <OpinionScale key={field.id} field={field} />
+      return <OpinionScale key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.PHONE_NUMBER:
-      return <PhoneNumber key={field.id} field={field} />
+      return <PhoneNumber key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.PICTURE_CHOICE:
-      return <PictureChoice key={field.id} field={field} />
+      return <PictureChoice key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.RATING:
-      return <Rating key={field.id} field={field} />
+      return <Rating key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.URL:
-      return <Website key={field.id} field={field} />
+      return <Website key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.YES_NO:
-      return <YesNo key={field.id} field={field} />
+      return <YesNo key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.LONG_TEXT:
-      return <LongText key={field.id} field={field} />
+      return <LongText key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.SIGNATURE:
-      return <Signature key={field.id} field={field} />
+      return <Signature key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.LEGAL_TERMS:
-      return <LegalTerms key={field.id} field={field} />
+      return <LegalTerms key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.INPUT_TABLE:
-      return <InputTable key={field.id} field={field} />
+      return <InputTable key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.SHORT_TEXT:
-      return <ShortText key={field.id} field={field} />
+      return <ShortText key={field.id} field={field} transitionState={transitionState} />
 
     case FieldKindEnum.PAYMENT:
-      return <Payment key={field.id} field={field} paymentBlockIndex={blockIndex} />
+      return (
+        <Payment
+          key={field.id}
+          field={field}
+          paymentBlockIndex={blockIndex}
+          transitionState={transitionState}
+        />
+      )
 
     default:
-      return <Statement key={field.id} field={field} />
+      return <Statement key={field.id} field={field} transitionState={transitionState} />
   }
 }
 
 const Main: FC = () => {
   const { state } = useStore()
+  const [isReducedMotion, setIsReducedMotion] = useState(false)
+  const [leavingField, setLeavingField] = useState<{
+    field: FormField
+    key: string
+  }>()
+  const previousFieldRef = useRef<FormField | undefined>(undefined)
   const paymentIndex = useMemo(
     () => state.fields.findIndex(field => field.kind === FieldKindEnum.PAYMENT),
-    []
+    [state.fields]
   )
-  const currentField = useMemo(
-    () => getBlock(state.fields[state.scrollIndex!]),
-    [state.scrollIndex]
+  const paymentField = useMemo(
+    () => (paymentIndex > -1 ? state.fields[paymentIndex] : undefined),
+    [paymentIndex, state.fields]
+  )
+  const activeField = useMemo(
+    () => state.fields[state.scrollIndex!],
+    [state.fields, state.scrollIndex]
   )
 
-  if (paymentIndex > -1) {
-    const paymentBlock = getBlock(state.fields[paymentIndex], paymentIndex)
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      setIsReducedMotion(false)
+      return
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setIsReducedMotion(mediaQuery.matches)
+
+    update()
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', update)
+    } else if (typeof mediaQuery.addListener === 'function') {
+      mediaQuery.addListener(update)
+    }
+
+    return () => {
+      if (typeof mediaQuery.removeEventListener === 'function') {
+        mediaQuery.removeEventListener('change', update)
+      } else if (typeof mediaQuery.removeListener === 'function') {
+        mediaQuery.removeListener(update)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!activeField) {
+      previousFieldRef.current = activeField
+      return
+    }
+
+    const previousField = previousFieldRef.current
+    previousFieldRef.current = activeField
+
+    if (
+      !previousField ||
+      previousField.id === activeField.id ||
+      previousField.kind === FieldKindEnum.PAYMENT
+    ) {
+      return
+    }
+
+    if (isReducedMotion) {
+      setLeavingField(undefined)
+      return
+    }
+
+    setLeavingField({
+      field: previousField,
+      key: `${previousField.id}-${window.Date.now()}`
+    })
+
+    const timeoutId = window.setTimeout(() => {
+      setLeavingField(undefined)
+    }, QUESTION_TRANSITION_DURATION)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [activeField, isReducedMotion, state.scrollTo])
+
+  const activeBlock = useMemo(() => {
+    if (!activeField || activeField.kind === FieldKindEnum.PAYMENT) {
+      return null
+    }
+
+    return getBlock(activeField)
+  }, [activeField])
+
+  const leavingBlock = useMemo(() => {
+    if (!leavingField) {
+      return null
+    }
+
+    return <div key={leavingField.key}>{getBlock(leavingField.field, undefined, 'leaving')}</div>
+  }, [leavingField])
+
+  const persistentPaymentBlock = useMemo(() => {
+    if (!paymentField) {
+      return null
+    }
+
+    return getBlock(paymentField, paymentIndex)
+  }, [paymentField, paymentIndex])
+
+  if (!activeField) {
+    return null
+  }
+
+  if (paymentField) {
+    const isCurrentBeforePayment = state.scrollIndex! < paymentIndex
 
     return (
       <>
-        {state.scrollIndex! < paymentIndex && currentField}
-        {paymentBlock}
-        {state.scrollIndex! > paymentIndex && currentField}
+        {isCurrentBeforePayment && activeBlock}
+        {persistentPaymentBlock}
+        {!isCurrentBeforePayment && activeBlock}
+        {leavingBlock}
       </>
     )
   }
 
-  return currentField
+  return (
+    <>
+      {activeBlock}
+      {leavingBlock}
+    </>
+  )
 }
 
 export const Blocks = () => {

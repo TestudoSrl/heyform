@@ -17,8 +17,7 @@ export enum FormStatusEnum {
 
 export enum CaptchaKindEnum {
   NONE = 0,
-  GOOGLE_RECAPTCHA,
-  GEETEST_CAPTCHA
+  GOOGLE_RECAPTCHA
 }
 
 export enum FieldKindEnum {
@@ -69,7 +68,15 @@ export enum FieldKindEnum {
   SUBMIT_DATE = 'submit_date',
   HIDDEN_FIELDS = 'hidden_fields',
   VARIABLE = 'variable',
-  HIDDEN_CHECKBOX = 'hidden_checkbox'
+  HIDDEN_CHECKBOX = 'hidden_checkbox',
+
+  // HeySheet custom columns
+  CUSTOM_TEXT = 'custom_text',
+  CUSTOM_SINGLE = 'custom_single',
+  CUSTOM_MULTIPLE = 'custom_multiple',
+  CUSTOM_DATE = 'custom_date',
+  CUSTOM_NUMBER = 'custom_number',
+  CUSTOM_CHECKBOX = 'custom_checkbox'
 }
 
 export enum ChoiceBadgeEnum {

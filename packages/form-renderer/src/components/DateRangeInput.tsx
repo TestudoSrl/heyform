@@ -3,8 +3,9 @@ import clsx from 'clsx'
 import type { FC } from 'react'
 import { useState } from 'react'
 
-import { IComponentProps } from '../typings'
 import { useTranslation } from '../utils'
+
+import { IComponentProps } from '../typings'
 import { DateInput } from './DateInput'
 
 interface DateRangeInputProps extends Omit<IComponentProps, 'onChange' | 'onError'> {

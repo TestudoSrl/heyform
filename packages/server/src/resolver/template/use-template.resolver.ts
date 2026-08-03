@@ -1,25 +1,20 @@
-import { BadRequestException } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
 import { CaptchaKindEnum, FormStatusEnum } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
+import { BadRequestException } from '@nestjs/common'
 
 import { Auth, ProjectGuard, Team, User } from '@decorator'
 import { UseTemplateInput } from '@graphql'
+import { helper } from '@heyform-inc/utils'
 import { TeamModel, UserModel } from '@model'
-import { FormService, TemplateService } from '@service'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
+import { FormService } from '@service'
+
+const DEFAULT_FORM_NAME = 'Untitled'
 
 @Resolver()
 @Auth()
 export class UseTemplateResolver {
-  constructor(
-    private readonly formService: FormService,
-    private readonly templateService: TemplateService
-  ) {}
+  constructor(private readonly formService: FormService) {}
 
-  /**
-   * Duplicate form from template
-   */
   @Mutation(returns => String)
   @ProjectGuard()
   async useTemplate(
@@ -27,7 +22,7 @@ export class UseTemplateResolver {
     @User() user: UserModel,
     @Args('input') input: UseTemplateInput
   ): Promise<string> {
-    const template = await this.templateService.findById(input.templateId)
+    const template = await this.formService.findById(input.templateId)
 
     if (helper.isEmpty(template)) {
       throw new BadRequestException('The template does not exist')
@@ -37,30 +32,29 @@ export class UseTemplateResolver {
       teamId: team.id,
       projectId: input.projectId,
       memberId: user.id,
-      name: `${template.name} (copy)`,
-      description: template.description,
+      name: helper.isValid(template.name?.trim()) ? template.name.trim() : DEFAULT_FORM_NAME,
       kind: template.kind,
       interactiveMode: template.interactiveMode,
+      fields: [],
+      _drafts: JSON.stringify(template.fields),
+      fieldsUpdatedAt: 0,
       settings: {
-        captchaKind: CaptchaKindEnum.NONE,
-        filterSpam: true,
         active: false,
-        published: true,
+        captchaKind: CaptchaKindEnum.NONE,
+        filterSpam: false,
         allowArchive: true,
-        requirePassword: false
+        requirePassword: false,
+        locale: 'en',
+        enableQuestionList: true,
+        enableNavigationArrows: true,
+        enableEmailNotification: true
       },
-      fields: template.fields,
       themeSettings: template.themeSettings,
-      draft: true,
+      hiddenFields: [],
+      version: 0,
       status: FormStatusEnum.NORMAL
     }
 
-    const result = await this.formService.create(form)
-
-    if (helper.isValid(result)) {
-      await this.templateService.updateUsedCount(input.templateId)
-    }
-
-    return result
+    return this.formService.create(form)
   }
 }

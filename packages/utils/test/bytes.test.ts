@@ -1,4 +1,5 @@
-import { test, expect } from 'vitest'
+import { expect, test } from 'vitest'
+
 import { bytes, formatBytes } from '../src'
 
 test('parse undefined', () => {
@@ -44,6 +45,15 @@ test('parse 5pb', () => {
   expect(bytes('5pb')).toBe(5 * 1024 * 1024 * 1024 * 1024 * 1024)
 })
 
+test('parse negative values', () => {
+  expect(bytes('-5kb')).toBe(-5 * 1024)
+})
+
+test('parse oversized string', () => {
+  const longValue = '1'.repeat(101)
+  expect(bytes(longValue)).toBe(undefined)
+})
+
 test('format 5b', () => {
   expect(formatBytes(5)).toBe('5B')
 })
@@ -66,4 +76,12 @@ test('format 5tb', () => {
 
 test('format 5pb', () => {
   expect(formatBytes(5 * 1024 * 1024 * 1024 * 1024 * 1024)).toBe('5PB')
+})
+
+test('format zero bytes', () => {
+  expect(formatBytes(0)).toBe('0B')
+})
+
+test('format negative bytes', () => {
+  expect(formatBytes(-1024)).toBe('1KB')
 })

@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
 import { helper, timestamp } from '@heyform-inc/utils'
-
 import { FormModel, SubmissionIpLimitModel } from '@model'
 
 @Injectable()
@@ -51,7 +50,7 @@ export class SubmissionIpLimitService {
         expiredAt: expiredAt === 0 || isTmpRecord ? expiredAt : undefined
       }
 
-      await this.submissionIpLimitModel.update(
+      await this.submissionIpLimitModel.updateOne(
         {
           _id: limit.id
         },
@@ -80,6 +79,6 @@ export class SubmissionIpLimitService {
         $in: ids
       }
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 }

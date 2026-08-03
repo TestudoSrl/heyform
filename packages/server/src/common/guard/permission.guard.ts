@@ -1,9 +1,14 @@
-import { BadRequestException, CanActivate, ExecutionContext, Inject } from '@nestjs/common'
+import {
+  BadRequestException,
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException
+} from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { GqlExecutionContext } from '@nestjs/graphql'
 
 import { helper, timestamp } from '@heyform-inc/utils'
-
+import { GqlExecutionContext } from '@nestjs/graphql'
 import { FormService, ProjectService, TeamService } from '@service'
 import { requestParser } from '@utils'
 
@@ -13,23 +18,21 @@ export enum PermissionScopeEnum {
   form
 }
 
+@Injectable()
 export class PermissionGuard implements CanActivate {
-  private readonly reflector: Reflector
-
   constructor(
-    @Inject('TeamService') private readonly teamService: TeamService,
-    @Inject('ProjectService') private readonly projectService: ProjectService,
-    @Inject('FormService') private readonly formService: FormService
-  ) {
-    this.reflector = new Reflector()
-  }
+    private readonly reflector: Reflector,
+    private readonly teamService: TeamService,
+    private readonly projectService: ProjectService,
+    private readonly formService: FormService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context)
-    let { req } = ctx.getContext()
+    let req = ctx.getContext()?.req
     let args = ctx.getArgs()
 
-    if (helper.isEmpty(req)) {
+    if (context.getType() === 'http' || helper.isEmpty(req) || helper.isEmpty(args?.input)) {
       req = context.switchToHttp().getRequest()
       args = {
         input: {
@@ -42,6 +45,10 @@ export class PermissionGuard implements CanActivate {
 
     const user = req.user
     const scope = this.reflector.get<PermissionScopeEnum>('scope', context.getHandler())
+
+    if (helper.isEmpty(user)) {
+      throw new UnauthorizedException('Unauthorized')
+    }
 
     let { teamId, projectId } = args.input
 
@@ -94,17 +101,18 @@ export class PermissionGuard implements CanActivate {
       throw new BadRequestException("You don't have permission to access the workspace")
     }
 
+    const isOwner = team.ownerId === user.id
+
     req.team = {
       id: teamId,
       ownerId: team.ownerId,
-      isOwner: team.ownerId === user.id,
+      isOwner,
       name: team.name,
-      role: member.role,
+      role: member?.role,
       storageQuota: team.storageQuota,
       inviteCode: team.inviteCode
     }
 
-    // Update team member last activity date
     this.teamService.updateMember(teamId, user.id, {
       lastSeenAt: timestamp()
     })

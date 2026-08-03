@@ -48,7 +48,6 @@ export function createStoreContext<S = AnyMap, A = StoreAction>(
 ): Context<StoreContext<S, A>> {
   return createContext<StoreContext<S, A>>({
     state: initialState,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     dispatch: (() => {}) as (action: A) => void
   })
 }

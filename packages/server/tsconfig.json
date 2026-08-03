@@ -33,9 +33,5 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false
   },
-	"exclude": [
-		"view",
-		"node_modules",
-		"dist"
-	]
+  "exclude": ["view", "node_modules", "dist"]
 }

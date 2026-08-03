@@ -1,6 +1,7 @@
+import { Dom, buildUrl, isMobile } from './utils'
+
 import IconLoading from './assets/icon-loading.svg'
 import { EmbedConfig, StandardSettings } from './type'
-import { Dom, buildUrl, isMobile } from './utils'
 
 const STANDARD_TEMPLATE = `
 <div class="heyform__iframe-container">
@@ -44,7 +45,8 @@ export class Standard<T extends StandardSettings> {
       if (this.settings.autoResizeHeight) {
         const rect = this.$container.rect()
 
-        height = (isMobile ? window.innerHeight : Math.min(window.innerHeight, rect.width * 0.6)) + 'px'
+        height =
+          (isMobile ? window.innerHeight : Math.min(window.innerHeight, rect.width * 0.6)) + 'px'
       }
 
       this.$container.style('height', height)

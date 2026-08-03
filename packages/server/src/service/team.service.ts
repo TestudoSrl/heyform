@@ -2,21 +2,33 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
-import { date, nanoid } from '@heyform-inc/utils'
-
 import { INVITE_CODE_EXPIRE_DAYS } from '@environments'
-import { FormModel, TeamMemberModel, TeamModel } from '@model'
+import { date, hs, nanoid, timestamp } from '@heyform-inc/utils'
+import { FormModel, TeamInvitationModel, TeamMemberModel, TeamModel } from '@model'
 
 @Injectable()
 export class TeamService {
   constructor(
     @InjectModel(TeamModel.name) private readonly teamModel: Model<TeamModel>,
     @InjectModel(TeamMemberModel.name)
-    private readonly teamMemberModel: Model<TeamMemberModel>
+    private readonly teamMemberModel: Model<TeamMemberModel>,
+    @InjectModel(TeamInvitationModel.name)
+    private readonly teamInvitationModel: Model<TeamInvitationModel>
   ) {}
 
   async findById(id: string): Promise<TeamModel | null> {
     return this.teamModel.findById(id)
+  }
+
+  async findJoinableByInvite(teamId: string, inviteCode: string): Promise<TeamModel | null> {
+    return this.teamModel.findOne({
+      _id: teamId,
+      inviteCode,
+      allowJoinByInviteLink: true,
+      inviteCodeExpireAt: {
+        $gt: timestamp()
+      }
+    })
   }
 
   async findAllBy(conditions: Record<string, any>): Promise<TeamModel[]> {
@@ -51,14 +63,26 @@ export class TeamService {
       },
       updates
     )
-    return !!result.ok
+    return result.acknowledged
+  }
+
+  public async updateAll(ids: string[], updates: Record<string, any>): Promise<boolean> {
+    const result = await this.teamModel.updateMany(
+      {
+        _id: {
+          $in: ids
+        }
+      },
+      updates
+    )
+    return result.matchedCount > 0
   }
 
   public async delete(id: string): Promise<boolean> {
     const result = await this.teamModel.deleteOne({
       _id: id
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async findMemberById(teamId: string, memberId: string): Promise<TeamMemberModel | null> {
@@ -74,21 +98,34 @@ export class TeamService {
     })
   }
 
-  public async memberCount(teamId: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.teamMemberModel.countDocuments(
-        {
-          teamId
-        },
-        (err, count) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(count)
-          }
-        }
-      )
+  public async findMemberRelationInTeams(
+    memberId: string,
+    teamIds: string[]
+  ): Promise<TeamMemberModel[]> {
+    return this.teamMemberModel.find({
+      teamId: {
+        $in: teamIds
+      },
+      memberId
     })
+  }
+
+  public async memberCount(teamId: string): Promise<number> {
+    return this.teamMemberModel.countDocuments({
+      teamId
+    })
+  }
+
+  public async membersInTeams(teamIds: string[]): Promise<any> {
+    return this.teamMemberModel
+      .find({
+        teamId: {
+          $in: teamIds
+        }
+      })
+      .sort({
+        _id: -1
+      })
   }
 
   public async memberCountMaps(teamIds: string[]): Promise<any> {
@@ -113,7 +150,7 @@ export class TeamService {
       },
       updates
     )
-    return !!result?.ok
+    return result.acknowledged
   }
 
   public async deleteMember(teamId: string, memberId: string): Promise<boolean> {
@@ -121,14 +158,50 @@ export class TeamService {
       teamId,
       memberId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async deleteAllMemberInTeam(teamId: string): Promise<boolean> {
     const result = await this.teamMemberModel.deleteMany({
       teamId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
+  }
+
+  async findInvitations(teamId: string, emails?: string[]): Promise<TeamInvitationModel[]> {
+    const conditions: Record<string, any> = {
+      teamId
+    }
+
+    if (emails) {
+      conditions.email = {
+        $in: emails
+      }
+    }
+
+    return this.teamInvitationModel.find(conditions)
+  }
+
+  async findInvitationById(invitationId: string): Promise<TeamInvitationModel | null> {
+    return this.teamInvitationModel.findById(invitationId)
+  }
+
+  async createInvitations(teamId: string, emails: string[]): Promise<any> {
+    const expireAt = timestamp() + hs('7d')
+
+    return this.teamInvitationModel.insertMany(
+      emails.map(email => ({
+        teamId,
+        email,
+        expireAt
+      }))
+    )
+  }
+
+  public async deleteInvitation(invitationId: string): Promise<any> {
+    return this.teamInvitationModel.deleteOne({
+      _id: invitationId
+    })
   }
 
   public async resetInviteCode(teamId: string): Promise<void> {

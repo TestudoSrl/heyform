@@ -1,30 +1,27 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
-
-import { flattenFields } from '@heyform-inc/answer-utils'
 import { FieldKindEnum, STATEMENT_FIELD_KINDS } from '@heyform-inc/shared-types-enums'
 
 import { Auth, Form, FormGuard } from '@decorator'
 import { FormDetailInput, FormReportType } from '@graphql'
+import { flattenFields } from '@heyform-inc/answer-utils'
 import { FormModel } from '@model'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { FormReportService, SubmissionService } from '@service'
 
 const EXCLUDE_KINDS = [
-  // Not question
   FieldKindEnum.GROUP,
-  // FieldKindEnum.STATEMENT,
-  // FieldKindEnum.DIVIDER,
-  // FieldKindEnum.PAGE_BREAK,
+
   ...STATEMENT_FIELD_KINDS,
 
-  // Choice
   FieldKindEnum.YES_NO,
   FieldKindEnum.MULTIPLE_CHOICE,
   FieldKindEnum.PICTURE_CHOICE,
   FieldKindEnum.LEGAL_TERMS,
 
-  // Rating
   FieldKindEnum.RATING,
-  FieldKindEnum.OPINION_SCALE
+  FieldKindEnum.OPINION_SCALE,
+
+  'custom_single',
+  'custom_multiple'
 ]
 
 @Resolver()

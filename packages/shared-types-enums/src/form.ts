@@ -425,15 +425,11 @@ export interface NumberCalculateAction {
   ref?: string
 }
 
-export interface StringCalculateAction
-  extends Omit<NumberCalculateAction, 'operator'> {
+export interface StringCalculateAction extends Omit<NumberCalculateAction, 'operator'> {
   operator: CalculateEnum.ADDITION | CalculateEnum.ASSIGNMENT
 }
 
-export type LogicAction =
-  | NavigateAction
-  | NumberCalculateAction
-  | StringCalculateAction
+export type LogicAction = NavigateAction | NumberCalculateAction | StringCalculateAction
 
 export interface LogicPayload {
   id: string

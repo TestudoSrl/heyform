@@ -18,9 +18,5 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "exclude": [
-    "coverage",
-    "lib",
-    "node_modules"
-  ]
+  "exclude": ["coverage", "lib", "node_modules"]
 }

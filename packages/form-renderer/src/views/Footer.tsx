@@ -1,9 +1,10 @@
 import { IconChevronDown, IconChevronUp, IconLayoutGrid } from '@tabler/icons-react'
 import type { FC } from 'react'
 
+import { useTranslation } from '../utils'
+
 import { Button, Tooltip } from '../components'
 import { useStore } from '../store'
-import { useTranslation } from '../utils'
 import { Branding } from './Branding'
 
 export const Footer: FC = () => {
@@ -38,18 +39,18 @@ export const Footer: FC = () => {
               <Tooltip ariaLabel={t('Questions')}>
                 <Button.Link
                   className="heyform-sidebar-toggle"
-                  trailing={<IconLayoutGrid />}
+                  leading={<IconLayoutGrid />}
                   onClick={handleToggleSidebar}
                 />
               </Tooltip>
             )}
 
-            {state.enableNavigationArrows && (
+            {state.enableNavigationArrows !== false && (
               <>
                 <Tooltip ariaLabel={t('Previous question')}>
                   <Button.Link
                     className="heyform-pagination-previous"
-                    trailing={<IconChevronUp />}
+                    leading={<IconChevronUp />}
                     disabled={state.scrollIndex! < 1}
                     onClick={handlePrevious}
                   />
@@ -58,7 +59,7 @@ export const Footer: FC = () => {
                 <Tooltip ariaLabel={t('Next question')}>
                   <Button.Link
                     className="heyform-pagination-next"
-                    trailing={<IconChevronDown />}
+                    leading={<IconChevronDown />}
                     disabled={
                       state.isScrollNextDisabled || state.scrollIndex! >= state.fields.length - 1
                     }

@@ -2,7 +2,7 @@ import got from 'got'
 import { OptionsOfTextResponseBody } from 'got/dist/source/types'
 
 const SEARCH_PHOTO_API_URL = 'https://api.unsplash.com/search/photos'
-const TRACK_DOWNLOAD_REGEX = /^https:\/\/api\.unsplash\.com\/photos\/[^\/]+\/download[^\/]+/i
+const TRACK_DOWNLOAD_REGEX = /^https:\/\/api\.unsplash\.com\/photos\/[^/]+\/download[^/]+/i
 
 interface User {
   id: string
@@ -42,6 +42,7 @@ interface PhotoLinks {
   self: string
   html: string
   download: string
+  download_location: string
 }
 
 export interface UN_Photo {

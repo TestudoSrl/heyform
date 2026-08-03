@@ -1,8 +1,8 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common'
-import { GqlExecutionContext } from '@nestjs/graphql'
 import 'reflect-metadata'
 
 import { defaultLocales, formatLocale } from '../social-login/utils'
+import { GqlExecutionContext } from '@nestjs/graphql'
 
 export function lang(req: any, headerName: string, whiteList: string[]): string {
   const lang = req.get(headerName)

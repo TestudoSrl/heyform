@@ -1,4 +1,5 @@
 import type { FormTheme } from '@heyform-inc/shared-types-enums'
+
 import { alpha, helper, hexToRgb, isDarkColor } from '@heyform-inc/utils'
 
 export const SYSTEM_FONTS =
@@ -27,7 +28,7 @@ export const GOOGLE_FONTS = [
   'Fjalla One',
   'Roboto',
   'Rubik',
-  'Source Sans Pro',
+  'Source Sans 3',
   'Cardo',
   'Cormorant',
   'Work Sans',
@@ -52,6 +53,10 @@ export const GOOGLE_FONTS = [
   'Noto Sans'
 ]
 
+const FONT_FAMILY_ALIASES: Record<string, string> = {
+  'Source Sans Pro': 'Source Sans 3'
+}
+
 export const DEFAULT_THEME: FormTheme = {
   fontFamily: GOOGLE_FONTS[0],
   questionTextColor: '#000',
@@ -61,10 +66,24 @@ export const DEFAULT_THEME: FormTheme = {
   backgroundColor: '#fff'
 }
 
+function isGoogleFontsEnabled() {
+  if (typeof window === 'undefined') {
+    return true
+  }
+
+  const value = (window as any).heyform?.enableGoogleFonts
+
+  return value === undefined ? true : helper.isTrue(value)
+}
+
 export function getWebFontURL(name?: string | string[]) {
-  const fontNames = ((helper.isArray(name) ? name : [name]) as string[]).filter(
-    row => row && GOOGLE_FONTS.includes(row)
-  )
+  if (!isGoogleFontsEnabled()) {
+    return ''
+  }
+
+  const fontNames = ((helper.isArray(name) ? name : [name]) as string[])
+    .map(row => (row ? FONT_FAMILY_ALIASES[row] || row : row))
+    .filter(row => row && GOOGLE_FONTS.includes(row))
 
   if (helper.isEmpty(fontNames)) {
     fontNames.push(DEFAULT_THEME.fontFamily!)
@@ -104,6 +123,10 @@ export function getTheme(theme?: FormTheme): FormTheme {
     ...theme
   }
 
+  if (newTheme.fontFamily) {
+    newTheme.fontFamily = FONT_FAMILY_ALIASES[newTheme.fontFamily] || newTheme.fontFamily
+  }
+
   if (!newTheme.fontFamily || !GOOGLE_FONTS.includes(newTheme.fontFamily)) {
     newTheme.fontFamily = DEFAULT_THEME.fontFamily
   }
@@ -129,7 +152,7 @@ export function getThemeStyle(theme: FormTheme, query?: Record<string, any>): st
   html {
     --heyform-font-family: ${theme.fontFamily};
     --heyform-question-color: ${theme.questionTextColor};
-    --heyform-description-color: ${alpha(theme.questionTextColor!, 0.7)};
+    --heyform-description-color: ${alpha(theme.questionTextColor!, 0.8)};
     --heyform-label-color: ${alpha(theme.questionTextColor!, 0.5)};
     --heyform-answer-color: ${theme.answerTextColor};
     --heyform-answer-opacity-80-color: ${alpha(theme.answerTextColor!, 0.8)};

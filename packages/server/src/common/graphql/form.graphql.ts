@@ -1,7 +1,3 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-import { IsArray, IsEnum, IsIn, IsOptional, IsUrl, Max, Min } from 'class-validator'
-import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json'
-
 import {
   ActionEnum,
   CalculateEnum,
@@ -26,8 +22,23 @@ import {
   Validation,
   Variable
 } from '@heyform-inc/shared-types-enums'
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsIn,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsUrl,
+  Max,
+  Min
+} from 'class-validator'
 
-import { FormModel, IntegrationStatusEnum } from '@model'
+import { TeamDetailInput } from './team.graphql'
+import { FormAnalyticRangeEnum, FormModel, IntegrationStatusEnum } from '@model'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json'
 
 @InputType()
 class ChoiceInput {
@@ -93,6 +104,12 @@ class SharedPropertyInput {
 
   @Field({ nullable: true })
   allowMultiple?: boolean
+
+  @Field({ nullable: true })
+  badge?: string
+
+  @Field({ nullable: true, defaultValue: true })
+  verticalAlignment?: boolean
 
   @Field(type => [ChoiceInput], { nullable: true })
   choices?: Choice[]
@@ -168,6 +185,10 @@ class SharedPropertyInput {
   @Field({ nullable: true })
   @IsOptional()
   redirectOnCompletion?: boolean
+
+  @Field({ nullable: true })
+  @IsOptional()
+  redirectDelay?: number
 }
 
 @InputType()
@@ -249,6 +270,9 @@ class FormChildFieldInput extends SharedFormFieldInput {
   @Field(type => String)
   kind: FieldKindEnum
 
+  @Field(type => PropertyInput, { nullable: true })
+  properties?: Property
+
   @Field(type => LayoutInput, { nullable: true })
   layout?: Layout
 }
@@ -283,6 +307,16 @@ export class FormsInput {
 }
 
 @InputType()
+export class RecentFormsInput extends TeamDetailInput {
+  @Field({ nullable: true, defaultValue: 10 })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(20)
+  limit?: number
+}
+
+@InputType()
 export class CreateFormInput {
   @Field()
   projectId: string
@@ -291,6 +325,7 @@ export class CreateFormInput {
   name?: string
 
   @Field(type => GraphQLJSON, { nullable: true })
+  @IsOptional()
   @IsArray()
   nameSchema?: any[]
 
@@ -304,18 +339,96 @@ export class CreateFormInput {
 }
 
 @InputType()
+export class CreateFormWithAIInput {
+  @Field()
+  projectId: string
+
+  @Field()
+  topic: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  reference?: string
+}
+
+@InputType()
 export class FormDetailInput {
   @Field()
   formId: string
 }
 
 @InputType()
-export class FormAnalyticInput extends FormDetailInput {
-  // Form analytic range days
+export class MoveFormInput extends FormDetailInput {
   @Field()
-  @Min(7)
-  @Max(365)
-  range: number
+  targetProjectId: string
+}
+
+@InputType()
+export class DuplicateFormInput {
+  @Field()
+  formId: string
+
+  @Field()
+  name: string
+}
+
+@InputType()
+export class ImportExternalFormInput {
+  @Field()
+  projectId: string
+
+  @Field()
+  @IsUrl()
+  url: string
+}
+
+@InputType()
+export class UpdateFormCustomReportInput extends FormDetailInput {
+  @Field(type => [String], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  hiddenFields?: string[]
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsObject()
+  @IsOptional()
+  theme?: Record<string, any>
+
+  @Field({ nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  enablePublicAccess?: boolean
+}
+
+@InputType()
+export class FormAnalyticInput extends FormDetailInput {
+  @Field()
+  @IsEnum(FormAnalyticRangeEnum)
+  range: FormAnalyticRangeEnum
+}
+
+@ObjectType()
+export class FormAnalyticResult {
+  @Field()
+  value: number
+
+  @Field({ nullable: true })
+  change?: number
+}
+
+@ObjectType()
+export class FormAnalyticType {
+  @Field(type => FormAnalyticResult)
+  totalVisits: FormAnalyticResult
+
+  @Field(type => FormAnalyticResult)
+  submissionCount: FormAnalyticResult
+
+  @Field(type => FormAnalyticResult)
+  completeRate: FormAnalyticResult
+
+  @Field(type => FormAnalyticResult)
+  averageTime: FormAnalyticResult
 }
 
 @InputType()
@@ -361,10 +474,6 @@ export class UpdateFormInput extends FormDetailInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  published?: boolean
-
-  @Field({ nullable: true })
-  @IsOptional()
   filterSpam?: boolean
 
   @Field({ nullable: true })
@@ -379,6 +488,7 @@ export class UpdateFormInput extends FormDetailInput {
   @IsOptional()
   languages?: string[]
 
+  //
   @Field({ nullable: true })
   @IsOptional()
   @IsUrl()
@@ -387,6 +497,10 @@ export class UpdateFormInput extends FormDetailInput {
   @Field({ nullable: true })
   @IsOptional()
   redirectOnCompletion?: boolean
+
+  @Field({ nullable: true })
+  @IsOptional()
+  redirectDelay?: number
 
   @Field({ nullable: true })
   @IsOptional()
@@ -420,6 +534,14 @@ export class UpdateFormInput extends FormDetailInput {
 
   @Field({ nullable: true })
   @IsOptional()
+  enableNavigationArrows?: boolean
+
+  @Field({ nullable: true })
+  @IsOptional()
+  emailNotification?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
   locale?: string
 
   @Field({ nullable: true })
@@ -437,6 +559,23 @@ export class UpdateFormInput extends FormDetailInput {
   @Field({ nullable: true })
   @IsOptional()
   allowArchive?: boolean
+
+  @Field({ nullable: true })
+  @IsOptional()
+  metaTitle?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  metaDescription?: string
+
+  @Field({ nullable: true })
+  @IsUrl()
+  @IsOptional()
+  metaOGImageUrl?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  enableEmailNotification?: boolean
 }
 
 @InputType()
@@ -509,6 +648,18 @@ export class UpdateFormLogicsInput extends FormDetailInput {
 }
 
 @InputType()
+export class CreateFieldsWithAIInput extends FormDetailInput {
+  @Field()
+  prompt: string
+}
+
+@InputType()
+export class CreateFormThemeWithAIInput extends CreateFieldsWithAIInput {
+  @Field()
+  theme: string
+}
+
+@InputType()
 class VariableInput {
   @Field()
   id: string
@@ -532,9 +683,30 @@ export class UpdateFormVariablesInput extends FormDetailInput {
 
 @InputType()
 export class UpdateFormSchemasInput extends FormDetailInput {
+  //
+
+  //
+
+  //
+
   @Field(type => [FormFieldInput])
   @IsArray()
-  fields: FormField[]
+  drafts: FormField[]
+
+  @Field()
+  version: number
+}
+
+@ObjectType()
+export class FormSchemasType {
+  @Field(type => [FormFieldType])
+  drafts: FormField[]
+
+  @Field()
+  version: number
+
+  @Field()
+  canPublish: boolean
 }
 
 @InputType()
@@ -556,18 +728,18 @@ export class UpdateFormFieldInput extends DeleteFormFieldInput {
 }
 
 @InputType()
-export class DeleteHiddenFieldInput {
+class HiddenFieldInput {
   @Field()
-  formId: string
+  id: string
 
   @Field()
-  fieldId: string
+  name: string
 }
 
 @InputType()
-export class CreateHiddenFieldInput extends DeleteHiddenFieldInput {
-  @Field()
-  fieldName: string
+export class UpdateHiddenFieldsInput extends FormDetailInput {
+  @Field(type => [HiddenFieldInput])
+  hiddenFields: HiddenField[]
 }
 
 @InputType()
@@ -599,14 +771,16 @@ export class FormThemeInput {
   backgroundBrightness?: number
 
   @Field({ nullable: true })
-  logo?: string
-
-  @Field({ nullable: true })
   customCSS?: string
 }
 
 @InputType()
 export class UpdateFormThemeInput extends FormDetailInput {
+  @Field({ nullable: true })
+  @IsUrl()
+  @IsOptional()
+  logo?: string
+
   @Field(type => FormThemeInput)
   theme: FormThemeInput
 }
@@ -722,6 +896,9 @@ export class FormSettingType {
   captchaKind?: number
 
   @Field({ nullable: true })
+  googleRecaptchaKey?: string
+
+  @Field({ nullable: true })
   active?: boolean
 
   @Field({ nullable: true })
@@ -743,9 +920,6 @@ export class FormSettingType {
   timeLimit?: number
 
   @Field({ nullable: true })
-  published?: boolean
-
-  @Field({ nullable: true })
   filterSpam?: boolean
 
   @Field({ nullable: true })
@@ -757,11 +931,15 @@ export class FormSettingType {
   @Field({ nullable: true })
   requirePassword?: boolean
 
+  //
   @Field({ nullable: true })
   redirectOnCompletion?: boolean
 
   @Field({ nullable: true })
   redirectUrl?: string
+
+  @Field({ nullable: true })
+  redirectDelay?: number
 
   @Field({ nullable: true })
   enableQuotaLimit?: boolean
@@ -785,6 +963,9 @@ export class FormSettingType {
   enableQuestionList?: boolean
 
   @Field({ nullable: true })
+  enableNavigationArrows?: boolean
+
+  @Field({ nullable: true })
   locale?: string
 
   @Field(type => [String], { nullable: true, defaultValue: [] })
@@ -798,10 +979,25 @@ export class FormSettingType {
 
   @Field({ nullable: true })
   closedFormDescription?: string
+
+  @Field({ nullable: true })
+  metaTitle?: string
+
+  @Field({ nullable: true })
+  metaDescription?: string
+
+  @Field({ nullable: true })
+  metaOGImageUrl?: string
+
+  @Field({ nullable: true })
+  enableEmailNotification?: boolean
 }
 
 @ObjectType()
 export class ThemeSettingsType {
+  @Field({ nullable: true })
+  logo?: string
+
   @Field(type => GraphQLJSONObject, { nullable: true })
   theme?: Record<string, any>
 }
@@ -814,7 +1010,6 @@ export class FormFieldType {
   @Field(type => GraphQLJSON, { nullable: true })
   title?: any[]
 
-  // Adapt to old version
   @Field(type => GraphQLJSON, { nullable: true })
   titleSchema?: any[]
 
@@ -864,6 +1059,10 @@ export class PageBackgroundType {
   backgroundImage?: string
 }
 
+//
+
+//
+
 @ObjectType()
 class StripeAccountType {
   @Field()
@@ -874,39 +1073,59 @@ class StripeAccountType {
 }
 
 @ObjectType()
+export class FormCustomReportType {
+  @Field()
+  id: string
+
+  @Field(type => [String], { nullable: true })
+  hiddenFields?: string[]
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  theme?: Record<string, any>
+
+  @Field({ nullable: true })
+  enablePublicAccess?: boolean
+}
+
+@ObjectType()
 export class FormType {
   @Field()
   id: string
 
-  @Field({ nullable: true })
+  @Field()
   teamId: string
 
   @Field()
   projectId: string
 
-  @Field({ nullable: true })
+  @Field()
   name: string
 
   @Field({ nullable: true })
   description?: string
 
-  @Field({ nullable: true })
+  @Field()
   interactiveMode: number
 
-  @Field({ nullable: true })
+  @Field()
   kind: number
 
-  @Field({ nullable: true })
+  @Field()
   memberId: string
 
   @Field(type => FormSettingType, { nullable: true })
   settings?: FormSettings
 
+  //
+
   @Field(type => [FormFieldType], { nullable: true })
-  fields?: FormField[]
+  drafts?: FormField[]
 
   @Field(type => [HiddenFieldType], { nullable: true })
   hiddenFields?: HiddenField[]
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  translations?: FormModel['translations']
 
   @Field(type => [GraphQLJSONObject], { nullable: true })
   logics?: Logic[]
@@ -914,17 +1133,14 @@ export class FormType {
   @Field(type => [GraphQLJSONObject], { nullable: true })
   variables?: Variable[]
 
-  @Field({ nullable: true })
-  reversion: number
-
   @Field(type => StripeAccountType, { nullable: true })
   stripeAccount?: StripeAccountType
 
   @Field(type => ThemeSettingsType, { nullable: true })
   themeSettings?: ThemeSettingsType
 
-  @Field({ nullable: true })
-  fieldUpdateAt?: number
+  @Field({ nullable: true, defaultValue: 0 })
+  fieldsUpdatedAt?: number
 
   @Field({ nullable: true })
   submissionCount?: number
@@ -935,16 +1151,30 @@ export class FormType {
   @Field({ nullable: true })
   suspended?: boolean
 
-  // HeyForm Form Builder v2.0
-  @Field({ nullable: true })
-  draft?: boolean
-
   @Field({ nullable: true })
   status?: number
+
+  @Field({ nullable: true })
+  updatedAt?: number
+
+  @Field({ nullable: true })
+  isDraft: boolean
+
+  @Field({ nullable: true })
+  version: number
+
+  @Field({ nullable: true })
+  canPublish: boolean
+
+  @Field(type => FormCustomReportType, { nullable: true })
+  customReport: FormCustomReportType
 }
 
 @ObjectType()
 export class PublicFormType extends FormType {
+  @Field(type => [FormFieldType], { nullable: true })
+  fields: FormField[]
+
   @Field(type => GraphQLJSONObject, { nullable: true })
   translations: FormModel['translations']
 
@@ -973,17 +1203,11 @@ export class SearchFormType {
   templateName?: string
 }
 
-@ObjectType()
-export class FormAnalyticType {
-  @Field()
-  totalVisits: number
+//
 
-  @Field()
-  submissionCount: number
+//
 
-  @Field()
-  averageTime: number
-}
+//
 
 @ObjectType()
 export class FormReportResponseType {
@@ -1017,7 +1241,7 @@ class FormReportAnswerType {
   @Field()
   kind: string
 
-  @Field(type => GraphQLJSON)
+  @Field(type => GraphQLJSON, { nullable: true })
   value: any
 
   @Field()
@@ -1051,8 +1275,20 @@ export class FormIntegrationType {
   appId: string
 
   @Field(type => GraphQLJSONObject)
-  attributes?: Record<string, any>
+  config?: Record<string, any>
 
   @Field(type => Number)
   status: IntegrationStatusEnum
+}
+
+@InputType()
+export class ExportFormToJSONInput extends FormDetailInput {}
+
+@InputType()
+export class ImportFormFromJSONInput {
+  @Field()
+  projectId: string
+
+  @Field()
+  formJson: string
 }

@@ -1,7 +1,15 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
-import { IsOptional, IsString } from 'class-validator'
-import { GraphQLJSONObject } from 'graphql-type-json'
 import { HiddenFieldAnswer } from '@heyform-inc/shared-types-enums'
+import { IsOptional, IsString } from 'class-validator'
+
+import { CdnTokenInput } from './user.graphql'
+import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import { GraphQLJSONObject } from 'graphql-type-json'
+
+@InputType()
+export class UploadFormFileInput extends CdnTokenInput {
+  @Field()
+  formId: string
+}
 
 @InputType()
 export class UploadFormSignatureInput {
@@ -69,43 +77,54 @@ export class CompleteSubmissionInput {
   @Field({ nullable: true })
   @IsString()
   @IsOptional()
-  lotNumber?: string
+  collaborativeToken?: string
+}
 
-  @Field({ nullable: true })
+@InputType()
+export class CollaborativeSessionInput {
+  @Field()
   @IsString()
-  @IsOptional()
-  captchaOutput?: string
+  token: string
+}
 
-  @Field({ nullable: true })
+@InputType()
+export class CreateCollaborativeSessionInput {
+  @Field()
   @IsString()
-  @IsOptional()
-  passToken?: string
+  formId: string
+}
 
-  @Field({ nullable: true })
-  @IsString()
-  @IsOptional()
-  genTime?: string
+@InputType()
+export class UpdateCollaborativeSessionInput extends CollaborativeSessionInput {
+  @Field(type => GraphQLJSONObject)
+  changes: Record<string, any>
+}
+
+@ObjectType()
+export class CollaborativeSessionType {
+  @Field()
+  token: string
+
+  @Field()
+  formId: string
+
+  @Field(type => GraphQLJSONObject)
+  values: Record<string, any>
+
+  @Field()
+  revision: number
+
+  @Field()
+  completed: boolean
+
+  @Field()
+  participantCount: number
 }
 
 @ObjectType()
 export class CompleteSubmissionType {
   @Field({ nullable: true })
   clientSecret?: string
-}
-
-@ObjectType()
-export class InitGeetestCaptchaType {
-  @Field()
-  challenge: string
-
-  @Field()
-  gt: string
-
-  @Field()
-  new_captcha: boolean
-
-  @Field()
-  success: number
 }
 
 @ObjectType()

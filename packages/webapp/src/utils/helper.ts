@@ -1,9 +1,10 @@
+import { getTheme, getThemeStyle } from '@heyform-inc/form-renderer'
 import { FormTheme } from '@heyform-inc/shared-types-enums'
+
+import { isMobilePhone } from '@heyform-inc/answer-utils'
 import { helper, qs, removeObjectNil } from '@heyform-inc/utils'
-import isMobilePhone from 'validator/lib/isMobilePhone'
 
 import { STRIPE_PUBLISHABLE_KEY } from '@/consts'
-import { getTheme, getThemeStyle } from '@/pages/form/views/FormComponents'
 
 export function urlBuilder(prefix: string, query: Record<string, any>): string {
   return prefix + '?' + qs.stringify(removeObjectNil(query), { encode: true })
@@ -79,11 +80,11 @@ export function insertStyle(id: string, style: string) {
     document.head.appendChild(styleElement)
   }
 
-  styleElement.innerHTML = style
+  styleElement.textContent = style
 }
 
 export function isPhoneNumber(arg: any): boolean {
-  return helper.isValid(arg) && isMobilePhone(arg, 'zh-CN')
+  return helper.isValid(arg) && isMobilePhone(arg)
 }
 
 const SECOND = 1
@@ -136,7 +137,7 @@ export function insertThemeStyle(customTheme?: FormTheme) {
     content += customTheme!.customCSS
   }
 
-  style.innerHTML = content
+  style.textContent = content
 }
 
 export function getFileUploadValue(v: any) {

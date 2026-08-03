@@ -1,5 +1,5 @@
-import db from './mime-db.json'
 import { isEmpty, isString } from './helper'
+import db from './mime-db.json'
 
 export function mime(path: string) {
   if (isEmpty(path) || !isString(path) || path.length > 100) {
@@ -45,8 +45,7 @@ export const commonFileMimeTypes = [
   mime('.pptx'),
   mime('.pdf'),
   mime('.mp4'),
-  mime('.wmv'),
-  mime('.svg')
+  mime('.wmv')
 ] as unknown as string[]
 
 export const IMAGE_MIME_TYPES = commonImageMimeTypes

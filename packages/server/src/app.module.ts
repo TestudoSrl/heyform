@@ -1,22 +1,33 @@
-import { HttpModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { GraphQLModule } from '@nestjs/graphql'
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { ScheduleModule } from '@nestjs/schedule'
+import { ThrottlerModule } from '@nestjs/throttler'
 import { RedisModule } from '@svtslv/nestjs-ioredis'
-
-import { GraphqlService, MongoService, RedisService } from '@config'
-import { FormBodyMiddleware, JsonBodyMiddleware, RawBodyMiddleware } from '@middleware'
-import { LowerCaseScalar } from '@utils'
 
 import * as Controllers from './controller'
 import { ModelModule } from './model/module'
-import { QueueModules, QueueProviders } from './queue'
 import * as Resolvers from './resolver'
 import { ScheduleModules, ScheduleProviders } from './schedule'
 import * as Services from './service'
+import { GraphqlService, MongoService, RedisService } from '@config'
+import {
+  AuthGuard,
+  DeviceIdGuard,
+  EndpointAnonymousIdGuard,
+  GqlThrottlerGuard,
+  PermissionGuard,
+  RoleGuard
+} from '@guard'
+import { hs } from '@heyform-inc/utils'
+import { FormBodyMiddleware, JsonBodyMiddleware, RawBodyMiddleware } from '@middleware'
+import { GraphQLModule } from '@nestjs/graphql'
+import { ScheduleModule } from '@nestjs/schedule'
+import { LowerCaseScalar } from '@utils'
+
+import { QueueModules, QueueProviders } from './queue'
 
 @Module({
-  imports: [...QueueModules, ...ScheduleModules, HttpModule, ScheduleModule.forRoot(), ModelModule],
+  imports: [...QueueModules, ...ScheduleModules, ScheduleModule.forRoot(), ModelModule],
   providers: [
     ...Object.values(QueueProviders),
     ...Object.values(ScheduleProviders),
@@ -27,9 +38,26 @@ import * as Services from './service'
 class ServiceModule {}
 
 @Module({
-  imports: [ServiceModule],
+  imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: hs('1m'),
+        limit: 1000
+      }
+    ]),
+    ServiceModule
+  ],
   controllers: [...Object.values(Controllers)],
-  providers: [...Object.values(Resolvers), LowerCaseScalar]
+  providers: [
+    ...Object.values(Resolvers),
+    AuthGuard,
+    DeviceIdGuard,
+    EndpointAnonymousIdGuard,
+    GqlThrottlerGuard,
+    PermissionGuard,
+    RoleGuard,
+    LowerCaseScalar
+  ]
 })
 class ResolverModule {}
 
@@ -41,7 +69,8 @@ class ResolverModule {}
     MongooseModule.forRootAsync({
       useClass: MongoService
     }),
-    GraphQLModule.forRootAsync({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
       useClass: GraphqlService
     }),
     ServiceModule,
@@ -54,12 +83,12 @@ export class AppModule implements NestModule {
     consumer
       .apply(RawBodyMiddleware)
       .forRoutes({
-        path: '/payment/*',
+        path: 'payment/(.*)',
         method: RequestMethod.POST
       })
       .apply(FormBodyMiddleware)
-      .forRoutes('*')
+      .forRoutes('{*path}')
       .apply(JsonBodyMiddleware)
-      .forRoutes('*')
+      .forRoutes('{*path}')
   }
 }

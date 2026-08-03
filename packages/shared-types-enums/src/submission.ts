@@ -1,9 +1,6 @@
 import type { ContactModel } from './audience'
 import type { FieldKindEnum } from './enums/form'
-import type {
-  SubmissionCategoryEnum,
-  SubmissionStatusEnum
-} from './enums/submission'
+import type { SubmissionCategoryEnum, SubmissionStatusEnum } from './enums/submission'
 import type { HiddenField, Property, Variable } from './form'
 
 export interface SharedColumns {

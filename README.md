@@ -1,11 +1,13 @@
+<br /><br />
+
 <div align="center">
   <h1 align="center">
     <img alt="heyform logo" height="60" src="./assets/images/logo.svg">
   </h1>
-  <p>HeyForm is an open-source form builder that allows anyone to create engaging conversational forms for surveys, questionnaires, quizzes, and polls. No coding skills required.</p>
+  <p><b>Open-source form builder, built for small business success </b> </p>
 </div>
 <p align="center">
-  <a target="_blank" href="https://heyform.net">Website</a> | <a target="_blank" href="https://docs.heyform.net">Documentation</a> | <a target="_blank" href="https://heyform.net/blog">Blog</a> | <a target="_blank" href="https://twitter.com/HeyformHQ">Twitter</a>
+  <a target="_blank" href="https://heyform.net">Website</a> | <a target="_blank" href="https://docs.heyform.net">Documentation</a> | <a target="_blank" href="https://heyform.net/blog">Blog</a>
 </p>
 
 <p align="center">
@@ -20,19 +22,19 @@ HeyForm simplifies the creation of conversational forms, making it accessible fo
 
 ### Build Forms with Ease
 
-- 📝 **Versatile Inputs**: From basic text, email, and phone number fields to advanced options like picture choices, date pickers, and file uploads, HeyForm supports a wide array of input types.
-- 🧠 **Smart Logic**: Conditional logic and URL redirections for dynamic, adaptable forms.
-- 🔗 **Powerful Integrations**: Connect with webhooks, analytics, marketing platforms, and tools like Zapier and Make.com.
+- **Versatile Inputs**: From basic text, email, and phone number fields to advanced options like picture choices, date pickers, and file uploads, HeyForm supports a wide array of input types.
+- **Smart Logic**: Conditional logic and URL redirections for dynamic, adaptable forms.
+- **Powerful Integrations**: Connect with webhooks, analytics, marketing platforms, and tools like Zapier and Make.com.
 
 ### Customize to Your Brand
 
-- 🎨 **Visual Themes**: Tailor the look and feel of your forms to match your brand identity with customizable fonts, colors, backgrounds, and more.
-- ✨ **Advanced Theming**: Gain greater control with extensive customization options, including custom CSS for deeper personalization.
+- **Visual Themes**: Tailor the look and feel of your forms to match your brand identity with customizable fonts, colors, backgrounds, and more.
+- **Advanced Theming**: Gain greater control with extensive customization options, including custom CSS for deeper personalization.
 
 ### Analyze and Act on Data
 
-- 📊 **Insightful Analytics**: Gain insights with detailed analytics, including drop-off rates and completion rates.
-- 📤 **Data Export**: Easily export your form results to CSV for further analysis or integration into your systems.
+- **Insightful Analytics**: Gain insights with detailed analytics, including drop-off rates and completion rates.
+- **Data Export**: Easily export your form results to CSV for further analysis or integration into your systems.
 
 ## Getting started with HeyForm
 
@@ -47,6 +49,7 @@ Choosing our hosted version not only saves a significant amount of time and reso
 └── packages
     ├── answer-utils       (form submission utils for server and webapp)
     ├── embed              (form embed javascript library)
+    ├── form-renderer      (form rendering library)
     ├── shared-types-enums (shared types/enums for server and webapp)
     ├── utils              (common utils for server and webapp)
     ├── server             (node server)
@@ -58,10 +61,6 @@ Choosing our hosted version not only saves a significant amount of time and reso
 Interested in self-hosting HeyForm on your server? Take a look at the [self-hosting installation instructions](https://docs.heyform.net/open-source/self-hosting).
 
 ### One Click Deployment
-
-<a href="https://railway.app/template/f5vBKm?referralCode=bDs1YJ">
-	<img src="https://railway.app/button.svg" alt="Deploy on Railway" height="36" />
-</a>
 
 <a href="https://zeabur.com/templates/9YAUUO" style="margin-left:8px">
 	<img src="https://zeabur.com/button.svg" alt="Deploy on Zeabur" />

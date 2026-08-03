@@ -1,16 +1,16 @@
 import { BadRequestException, UseGuards } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
 
 import { BCRYPT_SALT } from '@environments'
 import { ResetPasswordInput } from '@graphql'
-import { BrowserIdGuard } from '@guard'
+import { DeviceIdGuard } from '@guard'
+import { helper } from '@heyform-inc/utils'
+import { UserLangEnum } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { AuthService, MailService, UserService } from '@service'
-import { passwordHash } from '@utils'
+import { GqlLang, passwordHash } from '@utils'
 
 @Resolver()
-@UseGuards(BrowserIdGuard)
+@UseGuards(DeviceIdGuard)
 export class ResetPasswordResolver {
   constructor(
     private readonly mailService: MailService,
@@ -19,14 +19,16 @@ export class ResetPasswordResolver {
   ) {}
 
   @Mutation(returns => Boolean)
-  async resetPassword(@Args('input') input: ResetPasswordInput): Promise<boolean> {
+  async resetPassword(
+    @GqlLang() lang: UserLangEnum,
+    @Args('input') input: ResetPasswordInput
+  ): Promise<boolean> {
     const user = await this.userService.findByEmail(input.email)
 
     if (helper.isEmpty(user)) {
       throw new BadRequestException('The email address does not exist')
     }
 
-    // // Check if reset password attempts is exceeded
     const key = `limit:reset_password:${user.id}`
 
     await this.authService.attemptsCheck(key, async () => {
@@ -42,7 +44,8 @@ export class ResetPasswordResolver {
       password: await passwordHash(input.password, BCRYPT_SALT)
     })
 
-    this.mailService.passwordChangeAlert(user.email)
+    await this.authService.invalidateSessions(user.id)
+    this.mailService.passwordChangeAlert(user.email, lang)
 
     return true
   }

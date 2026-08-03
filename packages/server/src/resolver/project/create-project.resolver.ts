@@ -1,11 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
-
 import { Auth, Team, TeamGuard, User } from '@decorator'
 import { CreateProjectInput } from '@graphql'
+import { helper } from '@heyform-inc/utils'
 import { TeamModel, UserModel } from '@model'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { ProjectService } from '@service'
+
+const { uniqueArray } = helper
 
 @Resolver()
 @Auth()
@@ -25,13 +25,13 @@ export class CreateProjectResolver {
       ownerId: user.id
     })
 
-    const memberIds: string[] = helper.uniqueArray([
+    const memberIds: string[] = uniqueArray([
       team.ownerId,
+
       user.id,
       ...(helper.isValidArray(input.memberIds) ? input.memberIds : [])
     ])
 
-    // Link members with project
     await this.projectService.addMembers(
       memberIds.map(memberId => ({
         projectId,

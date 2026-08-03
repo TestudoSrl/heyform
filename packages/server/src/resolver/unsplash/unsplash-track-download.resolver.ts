@@ -1,10 +1,8 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
-
-import { helper } from '@heyform-inc/utils'
-
 import { Auth } from '@decorator'
 import { UNSPLASH_CLIENT_ID } from '@environments'
 import { UnsplashTrackDownloadInput } from '@graphql'
+import { helper } from '@heyform-inc/utils'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { Unsplash } from '@utils'
 
 @Resolver()

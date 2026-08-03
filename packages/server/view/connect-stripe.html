@@ -14,7 +14,7 @@
 	if (window.opener && window.opener.origin === origin) {
 		var data = {
 			source: 'heyform-connect-stripe',
-			payload: {{{json rendererData}}}
+			payload: {{{json payload}}}
 		};
 		window.opener.postMessage(data, origin);
 	}

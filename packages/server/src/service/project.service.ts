@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
 import { helper } from '@heyform-inc/utils'
-
 import { ProjectMemberModel, ProjectModel } from '@model'
 
 @Injectable()
@@ -23,6 +22,10 @@ export class ProjectService {
       .sort({
         createdAt: -1
       })
+  }
+
+  async findOne(conditions: any) {
+    return this.projectModel.findOne(conditions)
   }
 
   async findById(id: string): Promise<ProjectModel | null> {
@@ -54,14 +57,14 @@ export class ProjectService {
       },
       updates
     )
-    return !!result.ok
+    return result.acknowledged
   }
 
   public async delete(id: string): Promise<boolean> {
     const result = await this.projectModel.deleteOne({
       _id: id
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async findMemberById(
@@ -71,6 +74,13 @@ export class ProjectService {
     return this.projectMemberModel.findOne({
       projectId,
       memberId
+    })
+  }
+
+  public async findProjectByMemberId(memberId: string, projectId: string) {
+    return this.projectMemberModel.findOne({
+      memberId,
+      projectId
     })
   }
 
@@ -88,25 +98,13 @@ export class ProjectService {
   }
 
   public async memberCount(projectId: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.projectMemberModel.countDocuments(
-        {
-          projectId
-        },
-        (err, count) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(count)
-          }
-        }
-      )
+    return this.projectMemberModel.countDocuments({
+      projectId
     })
   }
 
   public async addMembers(members: any): Promise<any> {
     return this.projectMemberModel.insertMany(members, {
-      // see https://docs.mongodb.com/php-library/master/reference/method/MongoDBCollection-insertMany/
       ordered: false
     })
   }
@@ -121,7 +119,7 @@ export class ProjectService {
       projectId,
       memberId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async deleteMembers(projectId: string, memberIds: string[]): Promise<boolean> {
@@ -131,7 +129,7 @@ export class ProjectService {
         $in: memberIds
       }
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async deleteMemberInProjects(projectIds: string[], memberId: string): Promise<boolean> {
@@ -141,27 +139,23 @@ export class ProjectService {
       },
       memberId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
   public async deleteAllMemberInProject(projectId: string): Promise<boolean> {
     const result = await this.projectMemberModel.deleteMany({
       projectId
     })
-    return result?.n > 0
+    return (result.deletedCount ?? 0) > 0
   }
 
-  /**
-   * Create a project for every new team
-   */
-  async createByNewTeam(teamId: string, ownerId: string, userName: string): Promise<void> {
+  async createByNewTeam(teamId: string, ownerId: string, projectName: string): Promise<void> {
     const projectId = await this.create({
       teamId,
-      name: `${userName}'s project`,
+      name: projectName,
       ownerId
     })
 
-    // Link member with project
     await this.createMember({
       projectId,
       memberId: ownerId

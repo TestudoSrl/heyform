@@ -1,10 +1,11 @@
-import { helper } from '@heyform-inc/utils'
 import type { FC } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import Signature_pad from 'signature_pad'
 
-import { IComponentProps } from '../typings'
 import { useTranslation } from '../utils'
+import { helper } from '@heyform-inc/utils'
+
+import { IComponentProps } from '../typings'
 import { Button } from './Button'
 
 interface SignaturePadProps extends Omit<IComponentProps, 'onChange'> {

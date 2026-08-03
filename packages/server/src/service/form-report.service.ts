@@ -1,19 +1,17 @@
+import { FieldKindEnum } from '@heyform-inc/shared-types-enums'
 import { InjectQueue } from '@nestjs/bull'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Queue } from 'bull'
 import { Model } from 'mongoose'
 
-import { flattenFields } from '@heyform-inc/answer-utils'
-import { FieldKindEnum } from '@heyform-inc/shared-types-enums'
-import { helper } from '@heyform-inc/utils'
-
-import { FORM_REPORT_RATE } from '@environments'
-import { FormReportModel, FormReportResponse } from '@model'
-
 import { FormService } from './form.service'
 import { RedisService } from './redis.service'
 import { SubmissionService } from './submission.service'
+import { FORM_REPORT_RATE } from '@environments'
+import { flattenFields } from '@heyform-inc/answer-utils'
+import { helper } from '@heyform-inc/utils'
+import { FormReportModel, FormReportResponse } from '@model'
 
 @Injectable()
 export class FormReportService {
@@ -86,10 +84,12 @@ export class FormReportService {
           continue
         }
 
-        switch (field.kind) {
+        switch (field.kind as any) {
           case FieldKindEnum.YES_NO:
           case FieldKindEnum.MULTIPLE_CHOICE:
           case FieldKindEnum.PICTURE_CHOICE:
+          case 'custom_single':
+          case 'custom_multiple':
             const choices = field.properties.choices
 
             if (helper.isValidArray(choices)) {
@@ -123,6 +123,11 @@ export class FormReportService {
       }
 
       response.average = parseFloat((response.average / response.count).toFixed(1))
+
+      if (isNaN(response.average)) {
+        response.average = 0
+      }
+
       responses.push(response)
     }
 
@@ -150,6 +155,6 @@ export class FormReportService {
       },
       updates
     )
-    return !!result?.ok
+    return result.acknowledged
   }
 }

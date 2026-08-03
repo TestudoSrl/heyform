@@ -1,0 +1,1575 @@
+{
+  "languages": {
+    "de": {
+      "original": "Deutsch",
+      "translated": "德語"
+    },
+    "en": {
+      "original": "English",
+      "translated": "英語"
+    },
+    "fr": {
+      "original": "Français",
+      "translated": "法語"
+    },
+    "it": {
+      "original": "Italiano",
+      "translated": "義大利語"
+    },
+    "ja": {
+      "original": "日本語",
+      "translated": "日語"
+    },
+    "pl": {
+      "original": "Polski",
+      "translated": "波蘭語"
+    },
+    "zh-cn": {
+      "original": "簡體中文",
+      "translated": "簡體中文"
+    },
+    "zh-tw": {
+      "original": "繁體中文（台灣）",
+      "translated": "繁體中文（台灣）"
+    },
+    "pt-br": {
+      "original": "Português (Brasil)",
+      "translated": "巴西葡萄牙語"
+    }
+  },
+  "timezones": {
+    "niue": "紐埃",
+    "samoa": "薩摩亞",
+    "cookislands": "庫克群島",
+    "hawaiialeutian": "夏威夷-阿留申",
+    "tahiti": "大溪地",
+    "marquesas": "馬克薩斯",
+    "gambier": "甘比爾",
+    "hawaiialeutianadak": "夏威夷-阿留申（阿達克）",
+    "anchorage": "安克雷奇",
+    "juneau": "朱諾",
+    "metlakatla": "梅特拉卡特拉",
+    "nome": "諾姆",
+    "sitka": "錫特卡",
+    "yakutat": "亞庫塔特",
+    "pitcairn": "皮特凱恩",
+    "mexicanpacific": "墨西哥太平洋",
+    "dawsoncreek": "道森溪",
+    "fortnelson": "納爾遜堡",
+    "phoenix": "鳳凰城",
+    "losangeles": "洛杉磯",
+    "tijuana": "提華納",
+    "vancouver": "溫哥華",
+    "dawson": "道森市",
+    "whitehorse": "白馬市",
+    "belize": "貝里斯",
+    "costarica": "哥斯大黎加",
+    "elsalvador": "薩爾瓦多",
+    "guatemala": "瓜地馬拉",
+    "managua": "馬那瓜",
+    "regina": "里賈納",
+    "swiftcurrent": "斯威夫特卡倫特",
+    "tegucigalpa": "德古西加巴",
+    "easterisland": "復活節島",
+    "galapagos": "加拉巴哥群島",
+    "chihuahua": "奇瓦瓦州",
+    "mazatlan": "馬薩特蘭",
+    "boise": "博伊西",
+    "cambridgebay": "劍橋灣",
+    "denver": "丹佛",
+    "edmonton": "埃德蒙頓",
+    "inuvik": "伊努維克",
+    "ojinaga": "奧希納加",
+    "yellowknife": "黃刀鎮",
+    "eirunepe": "埃魯內佩",
+    "riobranco": "里奧布蘭科",
+    "bahiabanderas": "班德拉斯灣",
+    "beulahnorthdakota": "北達科他州比尤拉",
+    "centernorthdakota": "北達科他州中心",
+    "chicago": "芝加哥",
+    "knoxindiana": "印第安納州諾克斯",
+    "matamoros": "馬塔莫羅斯",
+    "menominee": "梅諾米尼",
+    "merida": "梅里達",
+    "mexicocity": "墨西哥城",
+    "monterrey": "蒙特雷",
+    "newsalemnorthdakota": "北達科他州新塞勒姆",
+    "rainyriver": "雨河",
+    "rankininlet": "蘭金灣",
+    "resolute": "雷索盧特",
+    "tellcityindiana": "印第安納州特爾城",
+    "winnipeg": "溫尼伯",
+    "colombia": "哥倫比亞",
+    "cancun": "坎昆",
+    "jamaica": "牙買加",
+    "panama": "巴拿馬",
+    "ecuador": "厄瓜多爾",
+    "peru": "秘魯",
+    "boavista": "博阿維斯塔",
+    "campogrande": "大坎普",
+    "cuiaba": "庫亞巴",
+    "manaus": "馬瑙斯",
+    "portovelho": "波多韋柳",
+    "barbados": "巴巴多斯",
+    "martinique": "馬提尼克",
+    "puertorico": "波多黎各",
+    "santodomingo": "聖多明各",
+    "bolivia": "玻利維亞",
+    "chile": "智利",
+    "cuba": "古巴",
+    "detroit": "底特律",
+    "grandturk": "大特克",
+    "indianapolis": "印第安納波利斯",
+    "iqaluit": "伊魁特",
+    "louisville": "路易斯維爾",
+    "marengoindiana": "印第安納州馬倫戈",
+    "monticellokentucky": "肯塔基州蒙蒂塞洛",
+    "newyork": "紐約",
+    "nipigon": "尼皮貢",
+    "pangnirtung": "潘尼爾頓",
+    "petersburgindiana": "印第安納州彼得斯堡",
+    "portauprince": "太子港",
+    "thunderbay": "雷灣",
+    "toronto": "多倫多",
+    "vevayindiana": "印第安納州維維",
+    "vincennesindiana": "印第安納州文森斯",
+    "winamacindiana": "印第安納州威納馬克",
+    "guyana": "圭亞那",
+    "paraguay": "巴拉圭",
+    "venezuela": "委內瑞拉",
+    "buenosaires": "布宜諾斯艾利斯",
+    "catamarca": "卡塔馬卡",
+    "cordoba": "科爾多瓦",
+    "jujuy": "胡胡伊",
+    "larioja": "拉里奧哈",
+    "mendoza": "門多薩",
+    "riogallegos": "里奧加耶戈斯",
+    "salta": "薩爾塔",
+    "sanjuan": "聖胡安",
+    "sanluis": "聖路易斯",
+    "tucuman": "圖庫曼",
+    "ushuaia": "烏斯懷亞",
+    "bermuda": "百慕大",
+    "glacebay": "冰灣",
+    "goosebay": "鵝灣",
+    "halifax": "哈利法克斯",
+    "moncton": "蒙克頓",
+    "thule": "圖勒",
+    "araguaina": "阿拉瓜伊納",
+    "bahia": "巴伊亞",
+    "belem": "貝倫",
+    "fortaleza": "福塔雷薩",
+    "maceio": "馬塞約",
+    "recife": "累西腓",
+    "santarem": "聖塔倫",
+    "saopaulo": "聖保羅",
+    "falklandislands": "福克蘭群島",
+    "frenchguiana": "法屬圭亞那",
+    "palmer": "帕爾默",
+    "puntaarenas": "蓬塔阿雷納斯",
+    "rothera": "羅瑟拉",
+    "suriname": "蘇利南",
+    "uruguay": "烏拉圭",
+    "newfoundland": "紐芬蘭",
+    "fernandodenoronha": "費爾南多·迪諾羅尼亞",
+    "southgeorgia": "南喬治亞島",
+    "stpierremiquelon": "聖皮埃爾和密克隆",
+    "westgreenland": "西格陵蘭",
+    "capeverde": "佛得角",
+    "azores": "亞速爾",
+    "coordinateduniversal": "協調世界時",
+    "eastgreenland": "東格陵蘭",
+    "greenwichmean": "格林尼治標準時間",
+    "abidjan": "阿比讓",
+    "bissau": "比紹",
+    "danmarkshavn": "丹麥港",
+    "monrovia": "蒙羅維亞",
+    "reykjavik": "雷克雅未克",
+    "sãotomé": "聖多美",
+    "algiers": "阿爾及爾",
+    "tunis": "突尼西亞",
+    "ireland": "愛爾蘭",
+    "morocco": "摩洛哥",
+    "unitedkingdom": "英國",
+    "lagos": "拉各斯",
+    "ndjamena": "恩賈梅納",
+    "canary": "加那利",
+    "faroe": "法羅",
+    "lisbon": "里斯本",
+    "madeira": "馬德拉",
+    "westernsahara": "西撒哈拉",
+    "juba": "朱巴",
+    "khartoum": "喀土穆",
+    "maputo": "馬普托",
+    "windhoek": "溫得和克",
+    "amsterdam": "阿姆斯特丹",
+    "andorra": "安道爾",
+    "belgrade": "貝爾格萊德",
+    "berlin": "柏林",
+    "brussels": "布魯塞爾",
+    "budapest": "布達佩斯",
+    "ceuta": "休達",
+    "copenhagen": "哥本哈根",
+    "gibraltar": "直布羅陀",
+    "luxembourg": "盧森堡",
+    "madrid": "馬德里",
+    "malta": "馬耳他",
+    "monaco": "摩納哥",
+    "oslo": "奧斯陸",
+    "paris": "巴黎",
+    "prague": "布拉格",
+    "rome": "羅馬",
+    "stockholm": "斯德哥爾摩",
+    "tirane": "地拉那",
+    "vienna": "維也納",
+    "warsaw": "華沙",
+    "zurich": "蘇黎世",
+    "cairo": "開羅",
+    "kaliningrad": "加里寧格勒",
+    "tripoli": "的黎波里",
+    "southafrica": "南非",
+    "troll": "特羅爾",
+    "baghdad": "巴格達",
+    "qatar": "卡塔爾",
+    "riyadh": "利雅得",
+    "eastAfrica": "東非",
+    "amman": "安曼",
+    "athens": "雅典",
+    "beirut": "貝魯特",
+    "bucharest": "布加勒斯特",
+    "chisinau": "基希納烏",
+    "damascus": "大馬士革",
+    "gaza": "加薩",
+    "hebron": "希伯崙",
+    "helsinki": "赫爾辛基",
+    "kiev": "基輔",
+    "nicosia": "尼科西亞",
+    "riga": "里加",
+    "sofia": "索非亞",
+    "tallinn": "塔林",
+    "uzhhorod": "烏日霍羅德",
+    "vilnius": "維爾紐斯",
+    "zaporozhye": "扎波羅熱",
+    "famagusta": "法馬古斯塔",
+    "israel": "以色列",
+    "kirov": "基洛夫",
+    "minsk": "明斯克",
+    "moscow": "莫斯科",
+    "simferopol": "辛菲羅波爾",
+    "turkey": "土耳其",
+    "volgograd": "伏爾加格勒",
+    "armenia": "亞美尼亞",
+    "astrakhan": "阿斯特拉罕",
+    "azerbaijan": "阿塞拜疆",
+    "georgia": "喬治亞",
+    "gulf": "海灣",
+    "mauritius": "模里西斯",
+    "réunion": "留尼汪",
+    "samara": "薩馬拉",
+    "saratov": "薩拉托夫",
+    "seychelles": "塞舌爾",
+    "ulyanovsk": "烏里揚諾夫斯克",
+    "afghanistan": "阿富汗",
+    "iran": "伊朗",
+    "frenchSouthernAntarctic": "法屬南部和南極領地",
+    "maldives": "馬爾地夫",
+    "mawson": "莫森",
+    "pakistan": "巴基斯坦",
+    "tajikistan": "塔吉克",
+    "turkmenistan": "土庫曼",
+    "samarkand": "撒馬爾罕",
+    "tashkent": "塔什干",
+    "aktau": "阿克套",
+    "aqtobe": "阿克托別",
+    "atyrau": "阿特勞",
+    "oral": "烏拉爾河畔奧拉爾斯克市（簡稱：奧拉爾） ",
+    "qyzylorda": "克孜勒奧爾達",
+    "yekaterinburg": "葉卡捷琳堡",
+    "colombo": "科倫坡",
+    "kolkata": "加爾各答",
+    "nepal": "尼泊爾",
+    "bangladesh": "孟加拉國",
+    "bhutan": "不丹",
+    "almaty": "阿拉木圖",
+    "kostanay": "科斯塔奈",
+    "indianOcean": "印度洋",
+    "kyrgyzstan": "吉爾吉斯斯坦",
+    "omsk": "鄂木斯克",
+    "urumqi": "烏魯木齊",
+    "vostok": "東方",
+    "cocosIslands": "科科斯群島",
+    "myanmar": "緬甸",
+    "barnaul": "巴爾瑙爾",
+    "christmasIsland": "聖誕島",
+    "davis": "戴維斯",
+    "hovd": "科布多",
+    "bangkok": "曼谷",
+    "hoChiMinhCity": "胡志明市",
+    "krasnoyarsk": "克拉斯諾亞爾斯克",
+    "novokuznetsk": "新庫茲涅茨克",
+    "novosibirsk": "新西伯利亞",
+    "tomsk": "托木斯克",
+    "jakarta": "雅加達",
+    "pontianak": "坤甸",
+    "australianWestern": "澳大利亞西部",
+    "bruneiDarussalam": "汶萊達魯薩蘭國",
+    "centralIndonesia": "印尼中部",
+    "macao": "澳門",
+    "shanghai": "上海",
+    "hongKong": "香港",
+    "irkutsk": "伊爾庫茨克",
+    "kualaLumpur": "吉隆坡",
+    "kuching": "古晉",
+    "philippine": "菲律賓",
+    "singapore": "新加坡",
+    "taipei": "台北",
+    "choibalsan": "喬巴山",
+    "ulaanbaatar": "烏蘭巴托",
+    "australianCentralWestern": "澳大利亞中西部",
+    "eastTimor": "東帝汶",
+    "easternIndonesia": "印尼東部",
+    "japan": "日本",
+    "pyongyang": "平壤",
+    "seoul": "首爾",
+    "palau": "帕勞",
+    "chita": "赤塔",
+    "khandyga": "坎迪加",
+    "yakutsk": "雅庫茨克",
+    "australianCentral": "澳大利亞中部",
+    "adelaide": "阿德萊德",
+    "brokenHill": "布羅肯希爾",
+    "brisbane": "布里斯本",
+    "lindeman": "林德曼",
+    "chamorro": "查莫羅",
+    "chuuk": "丘克群島",
+    "hobart": "霍巴特",
+    "macquarie": "麥夸里",
+    "melbourne": "墨爾本",
+    "sydney": "雪梨",
+    "papuaNewGuinea": "巴布亞新幾內亞",
+    "ustNera": "烏斯季涅拉",
+    "vladivostok": "海參崴",
+    "lordHowe": "豪勳爵島",
+    "bougainville": "布干維爾",
+    "casey": "凱西站",
+    "kosrae": "科斯雷島",
+    "magadan": "馬加丹",
+    "newCaledonia": "新喀里多尼亞",
+    "norfolkIsland": "諾福克島",
+    "ponape": "波納佩",
+    "sakhalin": "庫頁島",
+    "solomonIslands": "所羅門群島",
+    "srednekolymsk": "中科雷姆斯克",
+    "vanuatu": "瓦努阿圖",
+    "anadyr": "阿納德爾",
+    "fiji": "斐濟",
+    "gilbertIslands": "吉爾伯特群島",
+    "kwajalein": "夸賈林",
+    "majuro": "馬朱羅",
+    "nauru": "瑙魯",
+    "newZealand": "紐西蘭",
+    "petropavlovskKamchatski": "彼得羅巴甫洛夫斯克-堪察加",
+    "tuvalu": "圖瓦盧",
+    "wakeIsland": "威克島",
+    "wallisFutuna": "瓦利斯和富圖納群島",
+    "chatham": "查塔姆群島",
+    "apia": "阿皮亞",
+    "phoenixIslands": "菲尼克斯群島",
+    "tokelau": "托克勞",
+    "tonga": "湯加",
+    "lineIsLands": "萊恩群島"
+  },
+  "components": {
+    "add": "添加",
+    "apply": "應用",
+    "cancel": "取消",
+    "change": "更改",
+    "close": "關閉",
+    "confirm": "確認",
+    "continue": "繼續",
+    "copy": "複製",
+    "copied": "已複製",
+    "delete": "刪除",
+    "enabled": "啟用",
+    "disabled": "停用",
+    "duplicate": "建立副本",
+    "expand": "展開",
+    "edit": "編輯",
+    "next": "下一步",
+    "optional": "可選",
+    "permanentlyDelete": "永久刪除",
+    "previous": "上一步",
+    "publish": "發佈",
+    "print": "Print",
+    "revert": "還原",
+    "refresh": "刷新數據",
+    "rename": "重新命名",
+    "restore": "恢復",
+    "remove": "移除",
+    "send": "發送",
+    "save": "保存",
+    "share": "分享",
+    "saveChanges": "儲存更改",
+    "pagination": {
+      "title": "第 {{page}} 頁，共 {{maxPage}} 頁",
+      "previous": "上一頁",
+      "next": "下一頁"
+    },
+    "uploader": {
+      "headline": "上傳文件或拖放到此處",
+      "subHeadline": "{{fileTypes}}，最大為 {{maxSize}}",
+      "reselectFile": "重新選擇文件上傳",
+      "invalidType": "不支援的文件類型",
+      "exceedsMaxSize": "您選擇的文件超過了 {{maxSize}} 的限制",
+      "uploading": "正在上傳..."
+    },
+    "password": {
+      "invalid": "密碼必須至少包含8個字符，且至少包含1個大寫字母，1個小寫字母和1個數字。"
+    },
+    "imagePicker": {
+      "image": "圖片",
+      "unsplash": {
+        "title": "Unsplash",
+        "search": "搜索 Unsplash 圖片",
+        "emptyState": "未找到結果"
+      },
+      "gradient": {
+        "title": "漸層"
+      }
+    },
+    "datePicker": {
+      "time": "時間"
+    },
+    "error": {
+      "title": "發生錯誤",
+      "message": "請稍候再試。如果錯誤持續發生，請聯絡我們。",
+      "retry": "重試"
+    },
+    "moveto": "移動到"
+  },
+  "login": {
+    "title": "登入",
+    "headline": "👋 歡迎回來！",
+    "subHeadline": "登入您的帳戶或者<a>創建新帳戶</a>",
+    "continueWith": "或者繼續使用",
+    "email": {
+      "label": "電子郵件地址",
+      "required": "電子郵件地址不能為空",
+      "invalid": "無效的電子郵件地址"
+    },
+    "password": {
+      "label": "密碼",
+      "required": "密碼不能為空",
+      "maxLength": "密碼必須少於100個字符。"
+    },
+    "forgotPassword": "忘記密碼？"
+  },
+  "signUp": {
+    "title": "創建帳戶",
+    "name": {
+      "label": "姓名",
+      "required": "姓名不能為空"
+    },
+    "haveAccount": "已經有帳戶了？<a>登入</a>。"
+  },
+  "forgotPassword": {
+    "title": "忘記密碼？",
+    "subHeadline": "我們將向您發送帶有驗證碼的電子郵件",
+    "toLogin": "返回 <a>登入</a>"
+  },
+  "resetPassword": {
+    "title": "重置密碼",
+    "subHeadline": "我們已向您的信箱 {{email}} 發送了一個6位數的驗證碼，請查收。",
+    "verificationCode": {
+      "label": "驗證碼",
+      "required": "驗證碼不能為空"
+    },
+    "newPassword": {
+      "label": "新密碼"
+    },
+    "repeatPassword": {
+      "label": "確認新密碼",
+      "invalid": "新密碼和確認密碼不匹配。"
+    }
+  },
+  "verifyEmail": {
+    "title": "驗證電子郵件地址",
+    "subHeadline": "我們已向您的信箱 {{email}} 發送了一封包含6位數驗證碼的電子郵件，請查收。",
+    "resend": "沒有收到驗證碼？<button>重新發送</button>",
+    "resendLabel": "沒有收到驗證碼？",
+    "resendAction": "重新發送",
+    "resendCountdown": "{{seconds}}秒後可重新發送",
+    "resendCooldown": "{{seconds}}秒後可請求新的驗證碼。"
+  },
+  "oauth": {
+    "title": "授權",
+    "headline": "連接 {{name}}",
+    "subHeadline": "使用 {{name}} 將 HeyForm 與您喜歡的應用程式整合，例如聊天、電子郵件或簡訊。",
+    "would": "{{name}} 希望能夠：",
+    "scopes": [
+      "工作區讀取",
+      "檢索您 HeyForm 帳戶中所有工作區的數據",
+      "項目讀取",
+      "檢索您 HeyForm 工作區中所有項目的數據",
+      "表單讀取",
+      "檢索您 HeyForm 項目中所有表單的數據",
+      "提交讀取",
+      "檢索您收集的表單提交數據",
+      "讀取帳戶",
+      "檢索您的 HeyForm 帳戶資訊"
+    ]
+  },
+  "workspace": {
+    "notExist": "該工作區不存在。",
+    "backHome": "返回 HeyForm",
+    "appearance": {
+      "title": "外觀",
+      "system": "系統偏好",
+      "light": "明亮模式",
+      "dark": "黑暗模式"
+    },
+    "sidebar": {
+      "workspaces": "工作區",
+      "projects": "專案",
+      "noProjects": "您可以聯絡工作區擁有者將您添加到一個項目中，或您可以創建一個新項目。",
+      "search": "搜尋",
+      "viewProfile": "查看資料",
+      "accountSettings": "帳戶設定",
+      "language": "語言",
+      "version": "版本 {{version}}",
+      "logout": "退出登入",
+      "resources": "資源",
+      "gettingStarted": "入門指南",
+      "help": "幫助中心",
+      "template": "模板",
+      "whatsNew": "新功能"
+    },
+    "creation": {
+      "title": "創建工作區",
+      "headline": "創建新工作區",
+      "subHeadline": "工作區是一個共享環境，成員可以在其中進行協作。創建工作區後，您可以邀請其他人加入。",
+      "name": {
+        "label": "工作區名稱",
+        "required": "工作區名稱不能為空"
+      },
+      "logo": "標誌 <span>($t(components.optional))</span>"
+    },
+    "invitation": {
+      "title": "邀請",
+      "headline": "您已被邀請加入 <span1>{{owner}}</span1> 的工作區：<span2>{{name}}</span2>",
+      "subHeadline": "立即加入工作區並開始協作吧！",
+      "join": "加入"
+    }
+  },
+  "dashboard": {
+    "title": "儀表板",
+    "morning": "早安，{{name}}",
+    "afternoon": "午安，{{name}}",
+    "evening": "晚安，{{name}}",
+    "overview": "概覽",
+    "forms": "表單",
+    "submission": "提交",
+    "resetsOn": "將於 {{date}} 重置",
+    "members": "成員",
+    "storage": "儲存空間",
+    "recentForms": "最近的表單",
+    "noForms": "工作區中沒有表單",
+    "pickTemplate": "只需選擇一個模板或從空白表單開始。",
+    "search": {
+      "actions": "操作項目",
+      "navigation": "導航",
+      "newWorkspace": "新工作區",
+      "newProject": "新專案",
+      "newForm": "新增表單",
+      "forms": "表單列表",
+      "selectProject": "在專案中創建表單",
+      "placeholder": "搜尋表單和幫助文件",
+      "emptyState": "未找到結果。"
+    }
+  },
+  "members": {
+    "title": "成員管理",
+    "name": "姓名",
+    "role": "角色",
+    "you": "你",
+    "owner": "所有者",
+    "member": "成員",
+    "lastSeen": "最後上線",
+    "menuTip": "轉移、刪除等...",
+    "remove": {
+      "title": "移除",
+      "headline": "您確定要把 {{name}} 從此工作區移除嗎？",
+      "subHeadline": "一旦確認，該成員將無法訪問此工作區的數據。",
+      "confirm": "移除"
+    },
+    "transfer": {
+      "title": "轉移所有權",
+      "headline": "您確定要將此工作區轉移給 {{name}} 嗎？",
+      "subHeadline": "一旦確認轉移，您將不再是此工作區的所有者。",
+      "confirm": "轉移"
+    },
+    "leave": {
+      "title": "離開工作區",
+      "headline": "您確定要離開此工作區嗎？",
+      "subHeadline": "一旦確認離開，您將無法訪問此工作區的數據。",
+      "confirm": "離開"
+    },
+    "invite": {
+      "title": "邀請成員",
+      "headline": "邀請成員",
+      "subHeadline": "通過電子郵件邀請您的隊友加入工作區。邀請有效期為7天。",
+      "addMore": "添加更多",
+      "required": "電子郵件地址不能為空",
+      "sentSuccess_one": "{{count}} 封邀請已發送",
+      "sentSuccess_other": "{{count}} 封邀請已發送",
+      "sentSuccessMessage": "已通知受邀成員通過電子郵件註冊 HeyForm"
+    }
+  },
+  "settings": {
+    "title": "工作區設置",
+    "branding": {
+      "title": "品牌",
+      "removeBrandingHeadline": "移除 HeyForm 品牌",
+      "removeBrandingSubHeadline": "為了讓 HeyForm 完全屬於您的品牌，移除表單頁腳中的 HeyForm 標誌。",
+      "viewBrandKit": "查看",
+      "logo": {
+        "title": "商標",
+        "required": "商標不能為空白",
+        "invalid": "此商標不是有效的網址"
+      },
+      "theme": "主題",
+      "presetThemes": "預設主題",
+      "brandKitHeadline": "品牌工具包",
+      "brandKitSubHeadline": "使用品牌工具包，無縫應用您工作區的視覺資產到您的表單上。上傳您的商標並創建一個工作區每位成員都能運用的主題。",
+      "brandKitPreview": {
+        "number": "問題 1",
+        "title": "您的名字是什麼？",
+        "description": "請在這裡輸入您的名字",
+        "input": "您的答案在此填寫",
+        "next": "下一步"
+      }
+    },
+    "exportData": {
+      "title": "匯出資料",
+      "description": "通過電子郵件獲取包含所有表單和設定的文件。",
+      "button": "請求您的數據",
+      "successTip": "當導出準備好後，您將收到包含下載鏈接的電子郵件。"
+    },
+    "deletion": {
+      "title": "刪除工作區",
+      "description": "刪除工作區將永久刪除所有表單和數據，請謹慎操作！",
+      "button": "刪除此工作區",
+      "headline": "驗證工作區刪除請求",
+      "sentSuccess": "刪除驗證碼已發送",
+      "sentFailed": "刪除驗證碼發送失敗",
+      "tip1": "如果您確定要繼續刪除工作區 <strong>{{name}}</strong>，請繼續操作。",
+      "tip2": "請注意，此操作不可逆，並將永久刪除與此工作區相關的所有數據。",
+      "tip3": "一旦您確認刪除工作區，將無法再訪問該工作區的數據。",
+      "code": {
+        "label": "輸入發送到 <strong>{{email}}</strong> 的刪除驗證碼。",
+        "required": "驗證碼不能為空"
+      }
+    },
+    "general": {
+      "title": "一般",
+      "name": "名稱",
+      "logo": "商標",
+      "pickLogo": "選擇一個適合您的工作區的商標。"
+    },
+    "form": {
+      "exportImport": "匯出/匯入",
+      "exportImportDescription": "將此表單匯出為JSON檔案，或匯入JSON檔案以建立新表單。",
+      "exportJson": "匯出為JSON"
+    }
+  },
+  "project": {
+    "menuTip": "重新命名、刪除等...",
+    "forms": {
+      "title": "表單",
+      "headline": "項目中沒有表單"
+    },
+    "trash": {
+      "title": "回收站",
+      "headline": "回收站中沒有表單",
+      "subHeadline": "表單將在30天後從回收站中永久刪除。",
+      "delete": {
+        "headline": "您確定要永久刪除表單：{{name}} 嗎？",
+        "subHeadline": "一旦確認刪除表單，與該表單相關的所有數據將被永久刪除。"
+      },
+      "tip": "您可以在最近30天內恢復任何已刪除的表單。<a>閱讀更多 <icon /></a>"
+    },
+    "members": {
+      "title": "成員",
+      "headline": "本項目中的成員",
+      "subHeadline": "只有<strong>被添加到此項目</strong>的用戶才能訪問其數據，包括表單、提交和其他信息。",
+      "addMember": "添加成員到此項目",
+      "unjoinedMembers": "未加入的成員",
+      "add": "添加",
+      "addSuccess": "成員已成功添加",
+      "addFailed": "添加成員失敗",
+      "remove": "移除",
+      "removeSuccess": "成員已成功移除",
+      "removeFailed": "移除成員失敗",
+      "leave": "離開",
+      "leaveSuccess": "您已成功離開項目",
+      "leaveFailed": "離開項目失敗"
+    },
+    "creation": {
+      "title": "創建項目",
+      "headline": "創建一個新項目",
+      "subHeadline": "項目是工作區內的子組，您可以添加成員以協作處理表單和集成。",
+      "name": {
+        "label": "名稱",
+        "required": "名稱不能為空"
+      },
+      "logo": "標誌 <span>($t(components.optional))</span>",
+      "addMembers": "添加成員到此專案"
+    },
+    "rename": {
+      "headline": "重新命名此專案",
+      "name": {
+        "label": "名稱",
+        "required": "名稱不能為空"
+      }
+    },
+    "delete": {
+      "headline": "確認刪除專案請求",
+      "sentSuccess": "刪除驗證碼已發送",
+      "sentFailed": "刪除驗證碼發送失敗",
+      "tip1": "如果您確定要刪除專案 <strong>{{name}}</strong>，請繼續操作。",
+      "tip2": "請注意，此操作不可逆，將永久刪除與該專案相關的所有資料。",
+      "tip3": "一旦確認刪除專案，您將無法再訪問該專案的數據。",
+      "code": {
+        "label": "請輸入發送到 <strong>{{email}}</strong> 的刪除代碼。",
+        "required": "驗證碼不能為空"
+      },
+      "confirm": "刪除專案"
+    },
+    "moveto": {
+      "headline": "將 '{{name}}' 移動到",
+      "project": {
+        "required": "專案不可為空"
+      }
+    }
+  },
+  "form": {
+    "menuTip": "重新命名、建立副本等...",
+    "metadata2_zero": "暫無提交 · 剩餘 {{date}}",
+    "metadata2_one": "{{count}} 條提交 · 剩餘 {{date}}",
+    "metadata2_other": "{{count}} 條提交 · 剩餘 {{date}}",
+    "editForm": "編輯表單",
+    "active": "活躍",
+    "draft": "草稿",
+    "suspended": "已暫停",
+    "closed": "已關閉",
+    "duplicate": "{{name}} (副本)",
+    "moveToTrash": "移至回收站",
+    "copyLinkToShare": "複製連結以分享",
+    "creation": {
+      "title": "創建表單",
+      "headline": "創建一個新表單",
+      "project": {
+        "label": "專案",
+        "required": "專案不能為空"
+      },
+      "name": {
+        "label": "表單名稱",
+        "required": "表單名稱不能為空"
+      },
+      "scratch": {
+        "headline": "從頭開始",
+        "subHeadline": "獲取一個空白畫布，從可用的問題類型中構建"
+      },
+      "template": {
+        "headline": "選擇範本",
+        "subHeadline": "從精心設計的範本中選擇，即刻開始使用"
+      },
+      "ai": {
+        "headline": "使用 AI 創建",
+        "subHeadline": "在幾秒鐘內生成自訂問題"
+      },
+      "defaultName": "未命名"
+    },
+    "chat": {
+      "title": "HeyForm AI 助理",
+      "welcome": "歡迎使用 HeyForm 的 AI 助理！這是一個由尖端 AI 技術驅動的創新功能，旨在幫助您創建表單問題和邏輯。",
+      "compose": "問我任何問題...",
+      "fieldsUpdated": "您的表單問題已更新。",
+      "logicUpdated": "您的表單邏輯已更新。",
+      "themeUpdated": "您的表單主題已更新。"
+    },
+    "rename": {
+      "headline": "重新命名此表單",
+      "name": {
+        "label": "名稱",
+        "required": "名稱不能為空"
+      }
+    },
+    "analytics": {
+      "title": "數據分析",
+      "views": "瀏覽量",
+      "submissions": "提交數",
+      "completeRate": "完成率",
+      "averageDuration": "平均時長",
+      "7d": "最近一週",
+      "1m": "最近一個月",
+      "3m": "最近三個月",
+      "6m": "最近六個月",
+      "1y": "最近一年",
+      "7dTrend": "比上週 {{change}}%",
+      "1mTrend": "比上個月 {{change}}%",
+      "3mTrend": "比三個月前 {{change}}%",
+      "6mTrend": "比六個月前 {{change}}%",
+      "1yTrend": "比一年前 {{change}}%",
+      "report": {
+        "headline": "報告",
+        "submission_zero": "暫無提交",
+        "submission_one": "{{count}} 次提交",
+        "submission_other": "{{count}} 次提交",
+        "submission2_zero": "暫無提交 · 平均 {{average}}",
+        "submission2_one": "{{count}} 次提交 · 平均 {{average}}",
+        "submission2_other": "{{count}} 次提交 · 平均 {{average}}"
+      }
+    },
+    "submissions": {
+      "title": "提交列表",
+      "headline": "暫無提交",
+      "subHeadline": "在線分享表單以吸引更多受眾。",
+      "inbox": "收件箱",
+      "spam": "垃圾郵件",
+      "view": "查看",
+      "downloadCSV": "下載 CSV",
+      "maximize": "最大化表格",
+      "minimize": "最小化表格",
+      "moveTo": "移動到 {{name}}",
+      "detail": {
+        "headline": "提交詳情",
+        "menuTip": "列印及更多..."
+      }
+    },
+    "integrations": {
+      "title": "集成應用程式",
+      "connect": "連接",
+      "connectWith": "連接 {{name}}",
+      "readMore": "了解更多關於 {{name}} 集成的資訊 <icon />",
+      "reporting": "報告",
+      "analytics": "分析",
+      "marketing": "行銷",
+      "automation": "自動化",
+      "customerSupport": "客戶支援",
+      "developerTools": "開發者工具",
+      "productivity": "生產力",
+      "itEngineering": "IT 與工程",
+      "fileManagement": "文件管理",
+      "mapFields": {
+        "headline": "映射欄位",
+        "subHeadline": "將 HeyForm 映射到 {{name}} 欄。如果您更改了 {{name}} 上的欄，請在此處更新，否則整合將無法正常運作。",
+        "requried": "映射欄位不能為空",
+        "leftPlaceholder": "選擇一個 HeyForm 問題",
+        "rightPlaceholder": "{{name}} 列",
+        "requireLeft": "欄位 {{index}} 的左側不能為空",
+        "requireRight": "欄位 {{index}} 的右側不能為空",
+        "addMore": "添加欄位"
+      },
+      "authorization": {
+        "headline": "授權",
+        "subHeadline": "首先，請授權 HeyForm 訪問您的數據。",
+        "loginWith": "使用 {{name}} 登錄"
+      },
+      "webhook": {
+        "label": "端點 URL",
+        "invalid": "端點 URL 無效"
+      },
+      "telegram": {
+        "label": "聊天 ID",
+        "required": "聊天 ID 不能為空",
+        "footer": "將 <a>@HeyForm_bot</a> 添加到您的 Telegram 群組，並在群組中輸入 <code>/start@HeyForm_bot</code>。然後您將收到一條包含聊天 ID 的消息。"
+      },
+      "legacyslack": {
+        "label": "Webhook URL",
+        "invalid": "Webhook URL 無效",
+        "footer": "創建您的 <a1>Slack 應用程式</a1>，啟用 <a2>Incoming Webhooks</a2>，然後在此處貼上 Webhook URL。"
+      },
+      "slack": {
+        "channel": {
+          "headline": "頻道"
+        }
+      },
+      "lark": {
+        "label": "Webhook URL",
+        "invalid": "Webhook URL 無效",
+        "footer": "在您的群組中添加一個<a>自定義機器人</a>，然後在此處貼上 Webhook URL。"
+      },
+      "email": {
+        "label": "電子郵件地址",
+        "invalid": "無效的電子郵件地址",
+        "deprecation": "此整合功能已被淘汰，請改在<a>表單設定</a>中設置。"
+      },
+      "facebookpixel": {
+        "label": "Pixel ID",
+        "required": "Pixel ID 不能為空",
+        "placeholder": "例如 100xxxxxxxxxxxxx",
+        "footer": "複製並貼上您的 Facebook Pixel ID 到這裡。<a>如何找到我的 Pixel ID</a>？"
+      },
+      "googleanalytics": {
+        "label": "追蹤代碼",
+        "required": "追蹤代碼不能為空",
+        "placeholder": "例如 UA-XXXXX-Y",
+        "footer": "複製並貼上您的 Google Analytics 追蹤代碼到下面。<a>如何找到我的追蹤代碼</a>？"
+      },
+      "googledrive": {
+        "drive": {
+          "headline": "選擇一個雲端硬碟",
+          "footer": "您可以選擇自己的 Google 雲端硬碟或您連接的 <a>Google 共享雲端硬碟</a>。"
+        },
+        "folder": {
+          "headline": "選擇一個資料夾",
+          "footer": "您可以選擇一個資料夾來存放從 HeyForm 上傳的檔案。"
+        }
+      },
+      "googlesheets": {
+        "spreadsheet": "選擇一個試算表",
+        "worksheet": "選擇一個工作表"
+      },
+      "osticket": {
+        "serverURL": {
+          "headline": "伺服器 URL",
+          "footer": "伺服器 URL 是您訪問系統前端的 URL。例如 <span>https://support.domain.com</span>。"
+        },
+        "apiKey": {
+          "headline": "API 金鑰",
+          "footer": "通過進入管理面板的 <a>管理 -> API 金鑰</a> 生成一個 API 令牌，確保它具有創建工單的權限。"
+        },
+        "userName": {
+          "headline": "使用者名稱"
+        },
+        "emailAddress": {
+          "headline": "電子郵件地址"
+        },
+        "phoneNumber": {
+          "headline": "電話號碼（可選）"
+        },
+        "subject": {
+          "headline": "主題"
+        },
+        "message": {
+          "headline": "訊息"
+        }
+      },
+      "hubspot": {
+        "fullName": {
+          "headline": "全名"
+        },
+        "jobTitle": {
+          "headline": "職位（可選）"
+        }
+      },
+      "mailChimp": {
+        "audience": {
+          "headline": "受眾",
+          "placeholder": "選擇一個受眾"
+        },
+        "subscriberEmail": {
+          "headline": "訂閱者信箱"
+        },
+        "address": {
+          "headline": "地址"
+        }
+      },
+      "airtable": {
+        "base": {
+          "headline": "資料庫"
+        },
+        "table": {
+          "headline": "資料表"
+        }
+      },
+      "monday": {
+        "board": {
+          "headline": "看板"
+        },
+        "group": {
+          "headline": "分組（可選）"
+        },
+        "itemName": {
+          "headline": "項目名稱"
+        },
+        "columnValues": {
+          "headline": "欄位值（可選）"
+        }
+      },
+      "supportPal": {
+        "systemURL": {
+          "headline": "系統 URL",
+          "subHeadline": "伺服器 URL 是您訪問系統前端的地址。例如：<span>https://support.domain.com</span>。"
+        },
+        "token": {
+          "headline": "API 權杖",
+          "subHeadline": "通過進入操作面板的設定 -> 一般 -> API 權杖生成 API 權杖，確保它具有讀寫權限。"
+        },
+        "userName": {
+          "headline": "使用者名稱（可選）"
+        },
+        "email": {
+          "headline": "電子郵件地址（可選）"
+        },
+        "subject": {
+          "headline": "主題"
+        },
+        "text": {
+          "headline": "文字"
+        },
+        "department": {
+          "headline": "部門"
+        },
+        "priority": {
+          "headline": "優先順序"
+        },
+        "status": {
+          "headline": "狀態"
+        }
+      },
+      "notion": {
+        "database": {
+          "headline": "資料庫"
+        }
+      },
+      "apps": {
+        "webhook": {
+          "description": "透過 Webhook 整合，你可以在收到每次提交後立即將其傳送到任意 URL。",
+          "settings": {
+            "endpointUrl": {
+              "label": "端點 URL"
+            }
+          }
+        }
+      }
+    },
+    "share": {
+      "title": "分享表單",
+      "unpublishedTip": "此表單有未發佈的變更。請先發佈最新版本再分享此表單。",
+      "collaborative": {
+        "headline": "共享回答",
+        "subHeadline": "建立特殊連結，讓多人共同填寫同一份回答。變更會自動同步，整個群組只需提交一次。連結將在30天後到期。",
+        "create": "建立共享連結",
+        "createAnother": "建立另一份共享回答",
+        "participants": "{{count}} 人在線"
+      },
+      "link": {
+        "headline": "分享連結",
+        "viaX": "分享到 X",
+        "viaFacebook": "分享到 Facebook",
+        "viaLinkedIn": "分享到 LinkedIn",
+        "qrcode": {
+          "title": "通過二維碼分享",
+          "headline": "嵌入表單",
+          "subHeadline": "以下是一些將表單集成到網站中的選項。",
+          "download": "下載"
+        },
+        "email": {
+          "title": "通過電子郵件分享",
+          "subject": "能否花點時間填寫這個 heyform？",
+          "body": "如果您能填寫這個表單，我們將不勝感激：{{url}}。謝謝。"
+        },
+        "useCustomDomain": "使用自定義域名"
+      },
+      "settings": {
+        "headline": "連結設定",
+        "subHeadline": "設定當您在社交媒體上分享連結時，您的表單將如何顯示。",
+        "title": "標題",
+        "description": "描述",
+        "preview": {
+          "headline": "預覽",
+          "subHeadline": "HeyForm 自動為您生成一個<a>Open Graph</a>圖像。您也可以<button>上傳自己的圖像</button>。",
+          "uploadTitle": "上傳您自己的 Open Graph 圖像",
+          "uploadDescription": "建議大小：1200x630 | JPG, PNG。"
+        }
+      },
+      "embed": {
+        "title": "嵌入",
+        "headline": "嵌入表單",
+        "subHeadline": "以下是一些將表單整合到網站中的選項。",
+        "standard": "標準",
+        "modal": "模態框",
+        "popup": "彈出框",
+        "fullpage": "全頁",
+        "getCode": "獲取代碼",
+        "settings": "設定",
+        "width": "寬度",
+        "height": "高度",
+        "auto": "自動",
+        "fixed": "固定",
+        "size": "模態大小",
+        "small": "小",
+        "medium": "中",
+        "large": "大",
+        "launch": "啟動",
+        "click": "按鈕點擊時",
+        "load": "頁面加載時",
+        "delay": "延遲後",
+        "exit": "退出意圖時",
+        "scroll": "滾動後",
+        "triggerBackground": "觸發背景",
+        "triggerText": "觸發文本",
+        "hideAfterSubmit": "提交後關閉",
+        "secondsDelay": "秒延遲",
+        "pageScrolled": "頁面滾動百分比",
+        "position": "位置",
+        "bottomLeft": "左下角",
+        "bottomRight": "右下角",
+        "transparentBackground": "透明背景",
+        "code": {
+          "headline": "將 HeyForm 添加到您的網站",
+          "subHeadline": "將以下代碼片段粘貼到您網站的body部分。"
+        }
+      }
+    },
+    "settings": {
+      "title": "表單設置",
+      "general": {
+        "title": "常規",
+        "archive": {
+          "headline": "提交存檔",
+          "subHeadline": "如果您不希望 HeyForm 保存您的提交數據，可以關閉提交存檔功能。"
+        },
+        "redirect": {
+          "headline": "完成後重定向",
+          "subHeadline": "當表單提交後重定向到自訂的 URL。",
+          "placeholder": "在此處輸入重定向 URL，例如：https://example.com",
+          "invalidUrl": "重定向 URL 無效"
+        },
+        "progressBar": {
+          "headline": "進度條",
+          "subHeadline": "您可以輕鬆地讓受訪者了解他們離完成表單還有多遠。"
+        },
+        "viewQuestions": {
+          "headline": "查看所有問題",
+          "subHeadline": "您可以啟用此功能，以允許受訪者瀏覽所有問題。"
+        },
+        "navigationArrows": {
+          "headline": "導航箭頭",
+          "subHeadline": "您可以啟用此功能，讓受訪者在問題之間導航。"
+        }
+      },
+      "access": {
+        "title": "存取權限",
+        "closeForm": {
+          "headline": "關閉表單",
+          "subHeadline": "您可以關閉此表單，停止接收新的提交並阻止公共訪問。"
+        },
+        "scheduledDate": {
+          "headline": "在預定日期關閉表單",
+          "subHeadline": "如果您希望在特定日期範圍內接收提交，可以在此設置開始和結束日期。",
+          "startDate": "開始日期",
+          "endDate": "結束日期"
+        },
+        "countdown": {
+          "headline": "倒計時",
+          "subHeadline": "如果您希望在倒計時結束後阻止提交，可以在此設置允許的時間。",
+          "days": "天",
+          "seconds": "秒",
+          "minutes": "分鐘",
+          "hours": "小時"
+        },
+        "limitIP": {
+          "headline": "限制同一 IP 地址的提交頻率",
+          "subHeadline": "如果您希望限制同一 IP 地址在一段時間內的提交次數，可以在此設置。",
+          "times": "次數",
+          "inEvery": "每隔"
+        },
+        "quotaLimit": {
+          "headline": "限制提交數量",
+          "subHeadline": "這允許您設置您的表單允許的特定總提交數量。",
+          "invalid": "提交數量無效"
+        },
+        "closedMessage": {
+          "headline": "表單關閉訊息",
+          "subHeadline": "如果您通過上述選項關閉表單，收件人將看到這些內容。",
+          "title": "關閉訊息標題",
+          "description": "關閉訊息描述"
+        }
+      },
+      "translations": {
+        "title": "多語言支持",
+        "primaryLanguage": {
+          "headline": "主要語言",
+          "subHeadline": "選擇受訪者將看到的表單主要語言。適用於非自訂文本，如默認按鈕、驗證錯誤等。"
+        },
+        "translations": {
+          "headline": "翻譯",
+          "subHeadline": "通過 <a>OpenAI ChatGPT</a> 自動將表單的問題翻譯成您選擇的語言。",
+          "placeholder": "選擇語言"
+        }
+      },
+      "emailNotification": {
+        "title": "電子郵件通知",
+        "self": {
+          "headline": "自我郵件通知",
+          "subHeadline": "有人完成此表單時收到郵件通知。"
+        },
+        "respondent": {
+          "headline": "受訪者郵件通知",
+          "subHeadline": "表單提交後向受訪者發送自訂文本郵件。"
+        }
+      },
+      "protection": {
+        "title": "保護",
+        "password": {
+          "headline": "密碼保護",
+          "subHeadline": "用一個簡單易記的密碼保護您的表單。"
+        },
+        "bot": {
+          "headline": "機器人預防",
+          "subHeadline": "通過啟用驗證碼防止機器人提交。"
+        },
+        "antiSpam": {
+          "headline": "防垃圾提交",
+          "subHeadline": "您可以啟用此功能以防止垃圾提交。"
+        }
+      }
+    },
+    "builder": {
+      "title": "建構器",
+      "question": {
+        "menuTip": "建立副本、刪除等...",
+        "title": "問題",
+        "answer": "答案",
+        "recommended": "推薦",
+        "multipleChoice": "多項選擇",
+        "phoneNumber": "電話號碼",
+        "shortText": "簡短文本",
+        "longText": "長文本",
+        "questionGroup": "問題組",
+        "statement": "聲明",
+        "pictureChoice": "圖片選擇",
+        "yesNo": "是/否",
+        "email": "電子郵件",
+        "fullName": "全名",
+        "opinionScale": "意見量表",
+        "dateTime": "日期時間",
+        "dateRange": "日期範圍",
+        "fileUpload": "檔案上傳",
+        "address": "地址",
+        "country": "國家",
+        "legalTerms": "法律條款",
+        "signature": "簽名",
+        "website": "網站",
+        "inputTable": "輸入表",
+        "submitDate": "提交日期",
+        "hiddenFields": "隱藏字段",
+        "contactInfo": "聯繫信息",
+        "choices": "選項",
+        "text": "文本",
+        "number": "數字",
+        "rating": "評分",
+        "data": "數據",
+        "formStructure": "表單結構",
+        "legalConsent": "法律同意",
+        "date": "日期",
+        "payment": "支付",
+        "string": "字串",
+        "welcome": "歡迎畫面",
+        "thankYou": "結束畫面"
+      },
+      "sidebar": {
+        "questions": "問題",
+        "addQuestion": "添加問題",
+        "endings": "結局",
+        "addEndingTip": "新增一個新的結局。您可以創建多個結局並實施邏輯來決定人們會看到哪一個。"
+      },
+      "compose": {
+        "question": "輸入問題",
+        "description": "添加描述（可選）",
+        "pasteLink": "貼上或輸入連結",
+        "choicePlaceholder": "選項",
+        "otherChoice": "其他",
+        "addChoice": "新增選項",
+        "dateRangeTo": "至",
+        "addColumn": "新增欄位",
+        "columnPlaceholder": "欄 {{index}}"
+      },
+      "settings": {
+        "title": "設定",
+        "required": "必填",
+        "dateFormat": "日期格式",
+        "timeField": "時間字段",
+        "multipleSelection": "多選",
+        "randomize": "隨機化",
+        "allowOther": "“其他”選項",
+        "total": "總計",
+        "labels": "標籤",
+        "leftLabel": "左標籤",
+        "centerLabel": "中標籤",
+        "rightLabel": "右標籤",
+        "defaultCountry": "預設國家",
+        "buttonText": "按鈕文本",
+        "redirect": "完成後重定向",
+        "shape": "形狀",
+        "star": "星星",
+        "heart": "心形",
+        "crown": "皇冠",
+        "happy": "開心",
+        "thumb_up": "點讚",
+        "layout": "佈局",
+        "brightness": "亮度",
+        "questionType": {
+          "headline": "更改問題類型？",
+          "subHeadline": "不同的問題類型有不同的數據結構。切換可能會導致部分回應丟失。\n請在繼續之前匯出您的回應。"
+        },
+        "payment": {
+          "title": "支付",
+          "headline": "連接到 Stripe",
+          "subHeadline": "<div>通過 Stripe 直接在您的銀行帳戶中收款。</div><div>免費HeyForm用戶收款時需支付<a>5% HeyForm 傭金 + Stripe 交易費。</a></div><div>要取消5%的 HeyForm 傭金，請升級到<button>HeyForm Premium</button>。</div>",
+          "stripeAccount": "Stripe 帳戶",
+          "revoke": "撤銷",
+          "price": "價格",
+          "currency": "貨幣",
+          "eur": "EUR — 歐元",
+          "gbp": "GBP — 英鎊",
+          "usd": "USD — 美元",
+          "aud": "AUD — 澳大利亞元",
+          "cad": "CAD — 加拿大元",
+          "chf": "CHF — 瑞士法郎",
+          "nok": "NOK — 挪威克朗",
+          "sek": "SEK — 瑞典克朗",
+          "dkk": "DKK — 丹麥克朗",
+          "mxn": "MXN — 墨西哥比索",
+          "nzd": "NZD — 紐西蘭元",
+          "brl": "BRL — 巴西雷亞爾"
+        },
+        "multipleChoice": {
+          "unlimited": "不限",
+          "exactNumber": "確切數量",
+          "range": "範圍",
+          "badge": {
+            "title": "徽章",
+            "letter": "字母",
+            "number": "數字"
+          },
+          "verticalAlignment": "垂直對齊"
+        }
+      },
+      "design": {
+        "title": "設計",
+        "theme": {
+          "title": "主題",
+          "success": "主題已成功更新。",
+          "failed": "更新主題失敗"
+        },
+        "customize": {
+          "title": "自訂義",
+          "systemFonts": "系統字體",
+          "question": "問題",
+          "answer": "答案",
+          "buttons": "按鈕",
+          "buttonText": "按鈕文本",
+          "background": "背景",
+          "backgroundImage": "背景圖片",
+          "brightness": "亮度",
+          "customCSS": "自訂 CSS"
+        }
+      },
+      "logic": {
+        "title": "邏輯",
+        "hiddenFields": {
+          "menuTip": "編輯、刪除等...",
+          "subHeadline": "隱藏欄位使您能夠追蹤調查對象。它們對填寫表單的人是不可見的，但可以高效地收集和利用數據。",
+          "addHiddenField": "添加隱藏欄位",
+          "updateHiddenField": "更新隱藏欄位",
+          "name": "名稱",
+          "headline": "隱藏欄位",
+          "emptyState": "隱藏欄位允許進行不可見的高效數據收集。 <a>了解更多 <icon /></a>"
+        },
+        "variable": {
+          "headline": "變數",
+          "subHeadline": "表單變數表示基於受訪者回應的隱藏計算值。例如，它可以用於計算測驗的分數。",
+          "addVariable": "添加變數",
+          "updateVariable": "更新變數",
+          "type": "類型",
+          "name": "名稱",
+          "defaultValue": "預設值",
+          "emptyState": "變量從回應中計算隱藏值。 <a>了解更多 <icon /></a>"
+        },
+        "rule": {
+          "headline": "規則",
+          "bulkEdit": {
+            "headline": "批次編輯",
+            "subHeadline": "一次批量編輯多個問題的邏輯。"
+          },
+          "removeAll": "全部移除",
+          "when": "當",
+          "then": "則",
+          "deleteRule": "刪除規則",
+          "singleRule": "已設定1條規則",
+          "multipleRules": "已設定{{count}}條規則",
+          "redirect": "完成後重新導向",
+          "required": "邏輯規則不能為空",
+          "addRule": "添加規則",
+          "ruleCount_one": "已設定1條規則",
+          "ruleCount_other": "已設定{{count}}條規則",
+          "is": "等於",
+          "isNot": "不等於",
+          "contains": "包含",
+          "doesNotContain": "不包含",
+          "startsWith": "以...開始",
+          "endsWith": "以...結束",
+          "equal": "=",
+          "notEqual": "!=",
+          "greaterThan": ">",
+          "lessThan": "<",
+          "greaterOrEqualThan": ">=",
+          "lessOrEqualThan": "<=",
+          "isBefore": "在...之前",
+          "isAfter": "在...之後",
+          "isEmpty": "為空",
+          "isNotEmpty": "不為空",
+          "addition": "加 (+)",
+          "subtraction": "減 (-)",
+          "multiplication": "乘 (×)",
+          "division": "除 (÷)",
+          "assignment": "賦值 (=)",
+          "navigate": "跳轉到",
+          "calculate": "計算",
+          "emptyState": "邏輯使表單能對回應做出反應。 <a>了解更多 <icon /></a>"
+        }
+      },
+      "preview": {
+        "title": "預覽",
+        "desktop": "桌面版",
+        "mobile": "手機版"
+      },
+      "mention": {
+        "mention": "提及問題",
+        "hiddenfield": "提及隱藏欄位",
+        "variable": "提及變數",
+        "emptyState": "未找到結果。"
+      },
+      "navbar": {
+        "syncing": "儲存問題中..."
+      }
+    },
+    "suspend": {
+      "headline": "表單已被暫停",
+      "subHeadline": "如果您對暫停有疑問，請點擊下方按鈕聯繫我們。",
+      "contactUs": "聯繫我們"
+    },
+    "metadata_zero": "尚無提交 · 編輯於 {{date}}",
+    "metadata_one": "{{count}} 次提交 · 編輯於 {{date}}",
+    "metadata_other": "{{count}} 次提交 · 編輯於 {{date}}",
+    "metadata3_zero": "<span>{{status}}</span> · $t(form.metadata)",
+    "metadata3_one": "<span>{{status}}</span> · $t(form.metadata)",
+    "metadata3_other": "<span>{{status}}</span> · $t(form.metadata)",
+    "template": {
+      "headline": "範本",
+      "categories": [
+        "調查問卷",
+        "潛在客戶生成",
+        "客戶支援",
+        "回饋意見",
+        "員工/工作申請",
+        "預訂與訂單",
+        "行銷推廣",
+        "註冊",
+        "教育",
+        "活動",
+        "醫療保健",
+        "申請",
+        "問卷與測驗",
+        "遠端工作",
+        "聯絡方式",
+        "商業",
+        "COVID-19 疫情相關資訊",
+        "投票",
+        "請求",
+        "銀行與金融",
+        "捐款與慈善"
+      ],
+      "use": "使用此範本"
+    },
+    "ai": {
+      "topic": {
+        "label": "您想要創建什麼？",
+        "description": "請盡可能詳細地提供您希望創建的表單資訊。",
+        "ideasForYou": "給您的點子",
+        "examples": [
+          "建立一個工作申請表來收集候選人的詳細資料和履歷。",
+          "顧客滿意度調查，以評估產品質量和顧客服務。",
+          "給我一個活動註冊表來收集參加者信息。"
+        ],
+        "required": "此欄位不可為空"
+      },
+      "reference": {
+        "label": "參考資料（選填）",
+        "description": "提供參考資料後，AI 將嚴格根據所指定的範圍生成問題和選項。"
+      },
+      "submit": "生成問題"
+    },
+    "customReport": {
+      "title": "自訂報告",
+      "metadata_zero": "尚無提交",
+      "metadata_one": "{{count}} 次提交",
+      "metadata_other": "{{count}} 次提交",
+      "enablePublicAccess": "啟用公開訪問",
+      "copyLink": "複製報告連結",
+      "theme": "主題",
+      "heading": "標題字句",
+      "question": "問題",
+      "chart": "圖表",
+      "background": "背景",
+      "showQuestion": "顯示問題",
+      "hideQuestion": "隱藏問題"
+    }
+  },
+  "user": {
+    "headline": "帳戶設定",
+    "subHeadline": "帳戶設定的更改將應用於您所有的工作區。",
+    "avatar": {
+      "headline": "頭像",
+      "subHeadline": "預設使用 Gravatar 作為您的 HeyForm 頭像，您可以在這裡上傳自訂頭像。"
+    },
+    "name": "您的姓名",
+    "email": {
+      "headline": "更改電子郵件地址",
+      "subHeadline": "我們將發送一個6位數的驗證碼到您的電子郵件。",
+      "label": "電子郵件地址",
+      "invalid": "電子郵件地址無效",
+      "code": {
+        "label": "請輸入發送到<strong>{{email}}</strong>的驗證碼。",
+        "required": "驗證碼不能為空"
+      },
+      "button": "更改電子郵件地址"
+    },
+    "password": {
+      "headline": "更改密碼",
+      "subHeadline": "我們將發送一個6位數的驗證碼到您的電子郵件。",
+      "button": "更改密碼"
+    },
+    "deletion": {
+      "headline": "刪除帳戶",
+      "subHeadline": "這將永久刪除您的整個帳戶。您的所有表單、提交和工作區都將被刪除。",
+      "tip": "此操作無法撤銷。這將永久刪除您的整個帳戶。您創建的所有工作區將被刪除，您也將從所有共享工作區中移除。\n如果您確定要繼續刪除您的帳戶，請在下方繼續。",
+      "code": {
+        "label": "請輸入發送到<strong>{{email}}</strong>的刪除碼。",
+        "required": "驗證碼不能為空"
+      },
+      "sentSuccess": "已發送刪除驗證碼",
+      "sentFailed": "發送刪除驗證碼失敗",
+      "button": "删除我的帐户",
+      "scheduled": {
+        "title": "您的帳戶已安排删除",
+        "description": "包括但不限於工作区、项目、表单和提交内容在内的所有账户数据将在删除请求后的{{remainingTime}}小时内被永久删除。\n如果这是一个错误操作，您可以在下方取消账户删除。",
+        "cancel": "取消排程刪除"
+      }
+    }
+  },
+  "template": {
+    "use": {
+      "title": "範本",
+      "workspace": "工作區",
+      "createWorkspace": "建立工作區",
+      "project": "專案",
+      "createProject": "建立專案",
+      "submit": "從此範本開始使用"
+    }
+  }
+}

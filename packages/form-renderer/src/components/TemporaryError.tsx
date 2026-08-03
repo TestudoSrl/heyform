@@ -1,8 +1,9 @@
 import type { FC } from 'react'
 import { useEffect, useRef } from 'react'
 
-import { IComponentProps } from '../typings'
 import { useTranslation } from '../utils'
+
+import { IComponentProps } from '../typings'
 
 interface TemporaryErrorProps extends IComponentProps {
   error: Error

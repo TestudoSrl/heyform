@@ -2,8 +2,9 @@ import clsx from 'clsx'
 import type { FC } from 'react'
 import { useEffect } from 'react'
 
-import { useStore } from '../store'
 import { isURL } from '../utils'
+
+import { useStore } from '../store'
 import { WelcomeBranding } from '../views/Branding'
 import type { BlockProps } from './Block'
 import { Block } from './Block'
