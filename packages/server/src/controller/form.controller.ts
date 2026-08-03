@@ -11,7 +11,7 @@ import {
 
 @Controller()
 export class FormController {
-  @Get('/form/:formId')
+  @Get(['/form/:formId', '/form/:formId/shared/:collaborationToken'])
   async index(@Res() res: Response) {
     return res.render('index', {
       heyform: {
