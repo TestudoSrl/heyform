@@ -1,11 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import { createHash } from 'crypto'
 import { Model } from 'mongoose'
 
 import { CollaborativeSessionModel } from '../model/collaborative-session.model'
 import { FormModel } from '../model/form.model'
 import { flattenFields } from '@heyform-inc/answer-utils'
 import { timestamp } from '@heyform-inc/utils'
+
+const PARTICIPANT_ACTIVE_WINDOW_SECONDS = 10
 
 @Injectable()
 export class CollaborativeSessionService {
@@ -22,6 +25,30 @@ export class CollaborativeSessionService {
     return this.collaborativeSessionModel.findById(token)
   }
 
+  async touch(token: string, participantId: string): Promise<CollaborativeSessionModel | null> {
+    return this.collaborativeSessionModel.findOneAndUpdate(
+      {
+        _id: token,
+        expiresAt: { $gt: new Date() }
+      },
+      {
+        $set: {
+          [`participants.${this.participantKey(participantId)}`]: timestamp()
+        }
+      },
+      { new: true }
+    )
+  }
+
+  activeParticipantCount(
+    session: CollaborativeSessionModel,
+    currentTimestamp = timestamp()
+  ): number {
+    return Object.values(session.participants || {}).filter(
+      lastSeenAt => Number(lastSeenAt) >= currentTimestamp - PARTICIPANT_ACTIVE_WINDOW_SECONDS
+    ).length
+  }
+
   async findActive(token: string, formId: string): Promise<CollaborativeSessionModel | null> {
     return this.collaborativeSessionModel.findOne({
       _id: token,
@@ -34,7 +61,8 @@ export class CollaborativeSessionService {
   async update(
     token: string,
     form: FormModel,
-    changes: Record<string, any>
+    changes: Record<string, any>,
+    participantId?: string
   ): Promise<CollaborativeSessionModel> {
     const fieldIds = new Set(flattenFields(form.fields || [], true).map(field => field.id))
     const entries = Object.entries(changes || {}).filter(([fieldId]) => fieldIds.has(fieldId))
@@ -58,6 +86,10 @@ export class CollaborativeSessionService {
       } else {
         $set[`values.${fieldId}`] = value
       }
+    }
+
+    if (participantId) {
+      $set[`participants.${this.participantKey(participantId)}`] = timestamp()
     }
 
     const update: Record<string, any> = { $inc: { revision: 1 } }
@@ -104,5 +136,9 @@ export class CollaborativeSessionService {
       { $set: { completedAt: timestamp() } },
       { new: true }
     )
+  }
+
+  private participantKey(participantId: string): string {
+    return createHash('sha256').update(participantId).digest('hex')
   }
 }

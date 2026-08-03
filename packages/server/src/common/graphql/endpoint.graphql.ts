@@ -116,6 +116,9 @@ export class CollaborativeSessionType {
 
   @Field()
   completed: boolean
+
+  @Field()
+  participantCount: number
 }
 
 @ObjectType()

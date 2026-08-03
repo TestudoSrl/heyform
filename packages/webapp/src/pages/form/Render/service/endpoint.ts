@@ -31,6 +31,7 @@ const COLLABORATIVE_SESSION_GQL = `query collaborativeSession($input: Collaborat
     values
     revision
     completed
+    participantCount
   }
 }`
 
@@ -41,6 +42,7 @@ const UPDATE_COLLABORATIVE_SESSION_GQL = `mutation updateCollaborativeSession($i
     values
     revision
     completed
+    participantCount
   }
 }`
 
@@ -50,6 +52,7 @@ export interface CollaborativeSession {
   values: Record<string, Any>
   revision: number
   completed: boolean
+  participantCount: number
 }
 
 export class EndpointService {

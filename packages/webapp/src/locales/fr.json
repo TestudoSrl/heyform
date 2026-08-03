@@ -1056,7 +1056,8 @@
         "headline": "Réponse partagée",
         "subHeadline": "Créez un lien spécial pour permettre à plusieurs personnes de remplir ensemble une seule réponse. Les modifications sont synchronisées et le groupe ne soumet qu'une fois. Le lien expire après 30 jours.",
         "create": "Créer un lien partagé",
-        "createAnother": "Créer une autre réponse partagée"
+        "createAnother": "Créer une autre réponse partagée",
+        "participants": "{{count}} en ligne"
       },
       "link": {
         "headline": "Lien à partager",

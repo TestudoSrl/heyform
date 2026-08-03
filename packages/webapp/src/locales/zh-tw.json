@@ -1052,7 +1052,8 @@
         "headline": "共享回答",
         "subHeadline": "建立特殊連結，讓多人共同填寫同一份回答。變更會自動同步，整個群組只需提交一次。連結將在30天後到期。",
         "create": "建立共享連結",
-        "createAnother": "建立另一份共享回答"
+        "createAnother": "建立另一份共享回答",
+        "participants": "{{count}} 人在線"
       },
       "link": {
         "headline": "分享連結",

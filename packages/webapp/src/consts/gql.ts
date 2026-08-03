@@ -634,6 +634,7 @@ export const CREATE_COLLABORATIVE_SESSION_GQL = gql`
       values
       revision
       completed
+      participantCount
     }
   }
 `

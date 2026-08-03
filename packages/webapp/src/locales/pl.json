@@ -1052,7 +1052,8 @@
         "headline": "Wspólna odpowiedź",
         "subHeadline": "Utwórz specjalny link, aby kilka osób mogło wspólnie wypełnić jedną odpowiedź. Zmiany są synchronizowane, a grupa wysyła formularz tylko raz. Link wygasa po 30 dniach.",
         "create": "Utwórz wspólny link",
-        "createAnother": "Utwórz kolejną wspólną odpowiedź"
+        "createAnother": "Utwórz kolejną wspólną odpowiedź",
+        "participants": "{{count}} online"
       },
       "link": {
         "headline": "Link do udostępnienia",

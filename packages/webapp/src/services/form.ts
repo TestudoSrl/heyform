@@ -61,6 +61,7 @@ export class FormService {
     values: Record<string, Any>
     revision: number
     completed: boolean
+    participantCount: number
   }> {
     return apollo.mutate({
       mutation: CREATE_COLLABORATIVE_SESSION_GQL,

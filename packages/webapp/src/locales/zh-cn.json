@@ -1052,7 +1052,8 @@
         "headline": "共享回答",
         "subHeadline": "创建一个特殊链接，让多人共同填写同一份回答。更改会自动同步，整个小组只需提交一次。链接将在30天后过期。",
         "create": "创建共享链接",
-        "createAnother": "创建另一份共享回答"
+        "createAnother": "创建另一份共享回答",
+        "participants": "{{count}} 人在线"
       },
       "link": {
         "headline": "分享链接",

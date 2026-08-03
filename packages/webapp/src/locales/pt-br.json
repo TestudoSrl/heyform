@@ -1114,7 +1114,8 @@
         "headline": "Resposta compartilhada",
         "subHeadline": "Crie um link especial para que várias pessoas preencham juntas uma única resposta. As alterações são sincronizadas e o grupo envia apenas uma vez. O link expira após 30 dias.",
         "create": "Criar link compartilhado",
-        "createAnother": "Criar outra resposta compartilhada"
+        "createAnother": "Criar outra resposta compartilhada",
+        "participants": "{{count}} online"
       },
       "link": {
         "headline": "Compartilhar link",

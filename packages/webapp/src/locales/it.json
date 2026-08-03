@@ -1114,7 +1114,8 @@
         "headline": "Risposta condivisa",
         "subHeadline": "Crea un link speciale per permettere a più persone di compilare insieme un'unica risposta. Le modifiche vengono sincronizzate e il gruppo invia una sola volta. Il link scade dopo 30 giorni.",
         "create": "Crea link condiviso",
-        "createAnother": "Crea un'altra risposta condivisa"
+        "createAnother": "Crea un'altra risposta condivisa",
+        "participants": "{{count}} online"
       },
       "link": {
         "headline": "Link di condivisione",
