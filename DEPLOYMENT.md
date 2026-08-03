@@ -83,3 +83,32 @@ matching the existing Omnia development deployment in the same Cloudflare
 zone. MongoDB, KeyDB, and uploads use separate `standard-rwo` persistent
 volumes; deleting the workload does not delete those claims. Network policies
 allow MongoDB and KeyDB ingress only from the HeyForm application pods.
+
+## Automatic deployment from GitHub
+
+Every push to `main` runs `.github/workflows/deploy-main.yml`. The workflow follows the
+same build/deploy separation used by Omnia:
+
+1. run the HTTP/GraphQL server E2E suite;
+2. build the production image and push commit and `main-latest` tags;
+3. deploy the immutable build digest to `testudo-dev/europe-west1/tst-kube`;
+4. wait for MongoDB, KeyDB, and HeyForm rollouts;
+5. verify the Deployment digest and call the public `/health/ready` endpoint.
+
+GitHub authenticates to Google Cloud through Workload Identity Federation. OpenTofu owns
+the dedicated service account, OIDC provider, Artifact Registry writer binding, and GKE
+deployment role. No Google service-account key is stored in GitHub. The repository variables
+used by the workflow are non-sensitive identifiers:
+
+- `GCP_PROJECT_ID`
+- `GCP_REGION`
+- `GKE_CLUSTER`
+- `GKE_NAMESPACE`
+- `GAR_REPOSITORY`
+- `GCP_WORKLOAD_IDENTITY_PROVIDER`
+- `GCP_SERVICE_ACCOUNT`
+- `HEYFORM_SMOKE_URL`
+
+The application encryption/session keys remain only in the existing Kubernetes
+`heyform-secrets` Secret. The workflow verifies that Secret exists and deliberately never
+creates or rotates it.

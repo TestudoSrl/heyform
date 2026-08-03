@@ -1,8 +1,9 @@
 name: Server E2E
 
 on:
+  workflow_call:
   push:
-    branches: [next, main]
+    branches: [next]
     paths:
       - 'packages/server/**'
       - 'packages/shared-types-enums/**'

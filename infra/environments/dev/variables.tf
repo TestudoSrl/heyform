@@ -26,3 +26,21 @@ variable "subdomain" {
   type        = string
   default     = "heyform"
 }
+
+variable "artifact_registry_repository" {
+  description = "Artifact Registry repository receiving HeyForm images."
+  type        = string
+  default     = "docker-repo-dev"
+}
+
+variable "github_repository" {
+  description = "GitHub repository allowed to deploy HeyForm."
+  type        = string
+  default     = "TestudoSrl/heyform"
+}
+
+variable "github_workload_identity_pool_id" {
+  description = "Existing Google Workload Identity pool used by GitHub Actions."
+  type        = string
+  default     = "github-pool"
+}

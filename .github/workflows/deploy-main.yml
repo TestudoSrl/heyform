@@ -1,0 +1,172 @@
+name: Build and deploy HeyForm
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: heyform-production
+  cancel-in-progress: false
+
+env:
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ vars.GCP_REGION }}
+  GKE_CLUSTER: ${{ vars.GKE_CLUSTER }}
+  GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE }}
+  GAR_REPOSITORY: ${{ vars.GAR_REPOSITORY }}
+  IMAGE_NAME: heyform
+  SMOKE_URL: ${{ vars.HEYFORM_SMOKE_URL }}
+
+jobs:
+  test:
+    name: Server E2E gate
+    uses: ./.github/workflows/server-e2e.yml
+
+  build:
+    name: Build and push image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      image: ${{ steps.image.outputs.uri }}
+      digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          token_format: access_token
+
+      - name: Log in to Artifact Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.GCP_REGION }}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Set image URI
+        id: image
+        run: echo "uri=${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${GAR_REPOSITORY}/${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ steps.image.outputs.uri }}:${{ github.sha }}
+            ${{ steps.image.outputs.uri }}:main-latest
+          cache-from: type=registry,ref=${{ steps.image.outputs.uri }}:buildcache
+          cache-to: type=registry,ref=${{ steps.image.outputs.uri }}:buildcache,mode=max,image-manifest=true,oci-mediatypes=true
+          provenance: false
+
+      - name: Build summary
+        run: |
+          {
+            echo "**Image:** \`${{ steps.image.outputs.uri }}@${{ steps.build.outputs.digest }}\`"
+            echo "**Commit:** \`${GITHUB_SHA}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    name: Deploy to tst-kube
+    needs: [test, build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: production
+      url: https://heyform.testudosrl.dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v3
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GCP_REGION }}
+
+      - name: Pin overlay to the built digest
+        env:
+          IMAGE: ${{ needs.build.outputs.image }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+        run: |
+          FILE=k8s/overlays/dev/kustomization.yaml
+
+          if [[ ! "$DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "::error::Invalid image digest: $DIGEST"
+            exit 1
+          fi
+
+          if [ "$(grep -Ec '^[[:space:]]+digest: sha256:[0-9a-f]{64}$' "$FILE")" -ne 1 ]; then
+            echo "::error::Expected exactly one pinned digest in $FILE"
+            exit 1
+          fi
+
+          sed -i -E "s|^([[:space:]]+)digest: sha256:[0-9a-f]{64}$|\\1digest: ${DIGEST}|" "$FILE"
+          grep -F "digest: ${DIGEST}" "$FILE"
+          echo "DEPLOYED_IMAGE=${IMAGE}@${DIGEST}" >> "$GITHUB_ENV"
+
+      - name: Verify persistent application secret
+        run: kubectl -n "$GKE_NAMESPACE" get secret heyform-secrets >/dev/null
+
+      - name: Apply Kubernetes manifests
+        run: kubectl apply -k k8s/overlays/dev
+
+      - name: Wait for workloads
+        run: |
+          kubectl -n "$GKE_NAMESPACE" rollout status statefulset/mongo --timeout=10m
+          kubectl -n "$GKE_NAMESPACE" rollout status statefulset/keydb --timeout=10m
+          kubectl -n "$GKE_NAMESPACE" rollout status deployment/heyform --timeout=10m
+
+      - name: Verify deployed digest
+        run: |
+          RUNNING_IMAGE=$(kubectl -n "$GKE_NAMESPACE" get deployment heyform -o jsonpath='{.spec.template.spec.containers[?(@.name=="heyform")].image}')
+          echo "Running image: $RUNNING_IMAGE"
+          test "$RUNNING_IMAGE" = "$DEPLOYED_IMAGE"
+
+      - name: Smoke test
+        run: |
+          for attempt in $(seq 1 60); do
+            CODE=$(curl -sS -o /dev/null -w '%{http_code}' "$SMOKE_URL" --max-time 10 || true)
+            echo "attempt ${attempt}: HTTP ${CODE}"
+            [ "$CODE" = "200" ] && exit 0
+            sleep 5
+          done
+
+          echo "::error::Smoke test failed: $SMOKE_URL did not return HTTP 200"
+          exit 1
+
+      - name: Deployment summary
+        run: |
+          {
+            echo "**Cluster:** \`${GKE_CLUSTER}\`"
+            echo "**Namespace:** \`${GKE_NAMESPACE}\`"
+            echo "**Image:** \`${DEPLOYED_IMAGE}\`"
+            echo "**Smoke test:** [${SMOKE_URL}](${SMOKE_URL})"
+          } >> "$GITHUB_STEP_SUMMARY"
