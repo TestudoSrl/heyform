@@ -34,4 +34,4 @@ labels:
 images:
   - name: heyform
     newName: europe-west1-docker.pkg.dev/testudo-dev/docker-repo-dev/heyform
-    digest: sha256:ed1654c3808a4059aa5fb87e440bdaed37805264ad8fa61f131d2626aa357371
+    digest: sha256:cccd030a4b844226adb9df0c484111f4f62519123a9bae98b8d7599a3faa4953
