@@ -31,7 +31,8 @@ export class CreateCollaborativeSessionResolver {
       formId: session.formId,
       values: session.values || {},
       revision: session.revision,
-      completed: false
+      completed: false,
+      participantCount: 0
     }
   }
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, UseGuards } from '@nestjs/common'
+import { BadRequestException, Headers, UseGuards } from '@nestjs/common'
 
 import {
   CollaborativeSessionInput,
@@ -19,9 +19,10 @@ export class CollaborativeSessionResolver {
 
   @Query(returns => CollaborativeSessionType)
   async collaborativeSession(
+    @Headers('x-anonymous-id') anonymousId: string,
     @Args('input') input: CollaborativeSessionInput
   ): Promise<CollaborativeSessionType> {
-    const session = await this.collaborativeSessionService.findByToken(input.token)
+    const session = await this.collaborativeSessionService.touch(input.token, anonymousId)
 
     if (!session || session.expiresAt <= new Date()) {
       throw new BadRequestException('The shared response does not exist or has expired')
@@ -32,6 +33,7 @@ export class CollaborativeSessionResolver {
 
   @Mutation(returns => CollaborativeSessionType)
   async updateCollaborativeSession(
+    @Headers('x-anonymous-id') anonymousId: string,
     @Args('input') input: UpdateCollaborativeSessionInput
   ): Promise<CollaborativeSessionType> {
     const session = await this.collaborativeSessionService.findByToken(input.token)
@@ -47,7 +49,7 @@ export class CollaborativeSessionResolver {
     }
 
     return this.toType(
-      await this.collaborativeSessionService.update(input.token, form, input.changes)
+      await this.collaborativeSessionService.update(input.token, form, input.changes, anonymousId)
     )
   }
 
@@ -57,7 +59,8 @@ export class CollaborativeSessionResolver {
       formId: session.formId,
       values: session.values || {},
       revision: session.revision || 0,
-      completed: session.completedAt > 0
+      completed: session.completedAt > 0,
+      participantCount: this.collaborativeSessionService.activeParticipantCount(session)
     }
   }
 }

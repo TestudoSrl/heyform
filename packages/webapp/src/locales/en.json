@@ -1114,7 +1114,8 @@
         "headline": "Shared response",
         "subHeadline": "Create a special link so several people can fill in one response together. Changes are synchronized and the group submits only once. The link expires after 30 days.",
         "create": "Create shared link",
-        "createAnother": "Create another shared response"
+        "createAnother": "Create another shared response",
+        "participants": "{{count}} online"
       },
       "link": {
         "headline": "Share Link",

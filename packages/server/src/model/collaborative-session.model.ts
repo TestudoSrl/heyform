@@ -22,6 +22,9 @@ export class CollaborativeSessionModel extends Document {
   @Prop({ default: 0 })
   completedAt: number
 
+  @Prop({ type: Object, default: {} })
+  participants: Record<string, number>
+
   @Prop({
     type: Date,
     default: () => new Date(Date.now() + COLLABORATIVE_SESSION_LIFETIME)

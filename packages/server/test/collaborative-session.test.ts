@@ -69,9 +69,53 @@ async function testClaimsOneExactRevision() {
   assert.strictEqual(capturedFilter?.completedAt, 0)
 }
 
+async function testTracksAnonymousParticipantPresence() {
+  let capturedFilter: Record<string, any> | undefined
+  let capturedUpdate: Record<string, any> | undefined
+
+  const model = {
+    findOneAndUpdate: async (filter: Record<string, any>, update: Record<string, any>) => {
+      capturedFilter = filter
+      capturedUpdate = update
+      return { id: 'shared_token' }
+    }
+  }
+  const service = new CollaborativeSessionService(model as any)
+
+  await service.touch('shared_token', 'anonymous_browser_id')
+
+  const participantEntries = Object.entries(capturedUpdate?.$set || {})
+
+  assert.strictEqual(capturedFilter?._id, 'shared_token')
+  assert.ok(capturedFilter?.expiresAt?.$gt instanceof Date)
+  assert.strictEqual(participantEntries.length, 1)
+  assert.match(participantEntries[0][0], /^participants\.[a-f0-9]{64}$/)
+  assert.strictEqual(typeof participantEntries[0][1], 'number')
+}
+
+function testCountsOnlyRecentlyActiveParticipants() {
+  const service = new CollaborativeSessionService({} as any)
+  const currentTimestamp = 1_000
+
+  const count = service.activeParticipantCount(
+    {
+      participants: {
+        active: currentTimestamp,
+        boundary: currentTimestamp - 10,
+        inactive: currentTimestamp - 11
+      }
+    } as any,
+    currentTimestamp
+  )
+
+  assert.strictEqual(count, 2)
+}
+
 async function run() {
   await testUpdatesOnlyPublishedFormFields()
   await testClaimsOneExactRevision()
+  await testTracksAnonymousParticipantPresence()
+  testCountsOnlyRecentlyActiveParticipants()
 }
 
 if (require.main === module) {

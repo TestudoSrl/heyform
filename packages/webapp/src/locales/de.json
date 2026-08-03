@@ -1052,7 +1052,8 @@
         "headline": "Gemeinsame Antwort",
         "subHeadline": "Erstellen Sie einen speziellen Link, damit mehrere Personen gemeinsam eine einzige Antwort ausfüllen können. Änderungen werden synchronisiert und die Gruppe sendet nur einmal ab. Der Link läuft nach 30 Tagen ab.",
         "create": "Gemeinsamen Link erstellen",
-        "createAnother": "Weitere gemeinsame Antwort erstellen"
+        "createAnother": "Weitere gemeinsame Antwort erstellen",
+        "participants": "{{count}} online"
       },
       "link": {
         "headline": "Link teilen",
